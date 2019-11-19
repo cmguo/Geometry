@@ -88,8 +88,14 @@ QPainterPath Line::path()
     bool solid;
     fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
     fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
-    ph.moveTo(pt1);
-    ph.lineTo(pt2);
+    QPointF dir(pt2 - pt1);
+    QPointF udir = dir / length(dir);
+    udir = QPointF(-udir.y(), udir.x()) * HIT_DIFF / 2;
+    ph.moveTo(pt1 - udir);
+    ph.lineTo(pt2 - udir);
+    ph.lineTo(pt2 + udir);
+    ph.lineTo(pt1 + udir);
+    ph.closeSubpath();
     return ph;
 }
 

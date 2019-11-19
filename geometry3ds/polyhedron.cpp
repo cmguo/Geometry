@@ -2,6 +2,8 @@
 
 #include <QPainter>
 
+//#define POLYHEDRON_DEBUG
+
 Polyhedron::Polyhedron(Resource * res)
     : Geometry3D(res)
 {
@@ -41,6 +43,7 @@ QPainterPath Polyhedron::path()
     QPainterPath ph;
     if (pointCount() < 4)
         return ph;
+    ph.setFillRule(Qt::WindingFill);
     QVector<QPointF> points(pointCount());
     QVector<bool> hidden(pointCount());
     collect(points, hidden);
@@ -48,12 +51,17 @@ QPainterPath Polyhedron::path()
     for (int l :lines_) {
         int s = l & 0xff;
         int e = (l >> 8) & 0xff;
-        if (hidden[s] || hidden[e]) continue;
+        //if (hidden[s] || hidden[e]) continue;
         if (s != last)
             ph.moveTo(points[s]);
         ph.lineTo(points[e]);
         last = e;
     }
+#ifdef POLYHEDRON_DEBUG
+    for (int i = 0; i < pointCount(); ++i) {
+        ph.addText(points[i] + QPointF(10, -5), QFont(), QString("%1").arg(i));
+    }
+#endif
     return ph;
 }
 
@@ -96,9 +104,20 @@ bool Polyhedron::setPoint(int index, const QVector3D &pt)
     return true;
 }
 
+QVector<QPointF> Polyhedron::movePoints()
+{
+    QVector<QPointF> points(pointCount());
+    QVector<bool> hidden(pointCount());
+    collect(points, hidden);
+    return points;
+}
+
 int Polyhedron::hit(QPointF &pt)
 {
-    return Geometry3D::hit(pt);
+    QVector<QPointF> points(pointCount());
+    QVector<bool> hidden(pointCount());
+    collect(points, hidden);
+    return attachToPoints(points, pt);
 }
 
 bool Polyhedron::move(int elem, const QPointF &pt)

@@ -21,10 +21,6 @@ public:
     virtual bool empty() const override;
 
 public:
-    static qreal length(QPointF const & vec);
-
-    static qreal length2(QPointF const & vec);
-
     static qreal angle(QPointF const & vec);
 
     static void rotate(QPointF & pt, QPointF const & angle);
@@ -33,14 +29,6 @@ public:
 
     static qreal dist2PointToSegment(QPointF const & p1, QPointF const & p2,
                                     QPointF const & p, QPointF & rp);
-
-    static void attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p);
-
-    static void attachToLines(QPointF const & p1, QPointF & p);
-
-    static void attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p);
-
-    static void attachToPoints(QVector<QPointF> const & pts, QPointF & p);
 
     static QPointF nearestPointAtVerticalBisector(QPointF const & p1, QPointF const & p2,
                                    QPointF const & p);

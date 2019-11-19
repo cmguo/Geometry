@@ -14,6 +14,8 @@ public:
     GeometryEditItem(QGraphicsItem * parent)
         : QGraphicsPathItem(parent)
     {
+        setPen(Qt::NoPen);
+        setBrush(QColor("#007AFF"));
     }
 
     void setEditPoints(QVector<QPointF> const & points)
@@ -21,12 +23,12 @@ public:
         shape_ = QPainterPath();
         QPainterPath drawShape;
         QRectF circle(0, 0, 40, 40);
-        QRectF box(0, 0, 8, 8);
+        QRectF box(0, 0, 14, 14);
         for (QPointF const & pt : points) {
             circle.moveCenter(pt);
             shape_.addEllipse(circle);
             box.moveCenter(pt);
-            drawShape.addRect(box);
+            drawShape.addEllipse(box);
         }
         setPath(drawShape);
     }

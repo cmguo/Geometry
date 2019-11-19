@@ -19,6 +19,13 @@ public:
     virtual QVector3D point(int index) override;
 
     virtual bool move(int elem, const QPointF &pt) override;
+
+protected:
+    void setMoveElem(int elem);
+
+protected:
+    int moveElem_ = 1;
+    bool inner_ = false; // inner control point 2,3,5,6
 };
 
 #endif // CUBOID_H

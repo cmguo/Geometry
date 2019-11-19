@@ -16,6 +16,12 @@ public:
 public:
     virtual QPainterPath path() override;
 
+    virtual QVector<QPointF> movePoints() override;
+
+    virtual int hit(QPointF & pt) override;
+
+    virtual bool move(int elem, QPointF const & pt) override;
+
 public slots:
     void draw(QPainter *painter);
 

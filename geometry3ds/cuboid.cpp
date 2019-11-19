@@ -7,13 +7,13 @@ Cuboid::Cuboid(Resource * res)
     makeLine(1, 2);
     makeLine(2, 3);
     makeLine(3, 0);
-    makeLine(0, 4);
-    makeLine(4, 5);
-    makeLine(5, 6);
-    makeLine(6, 7);
-    makeLine(7, 4);
+    makeLine(0, 6);
+    makeLine(6, 5);
+    makeLine(5, 4);
+    makeLine(4, 7);
+    makeLine(7, 6);
     makeLine(7, 3);
-    makeLine(6, 2);
+    makeLine(4, 2);
     makeLine(5, 1);
 }
 
@@ -24,6 +24,7 @@ Cuboid::Cuboid(QPointF const & pt)
 
 Cuboid::Cuboid(Cuboid const & o)
     : Polyhedron(o)
+    , moveElem_(o.moveElem_)
 {
 }
 
@@ -38,19 +39,33 @@ QVector3D Cuboid::point(int index)
         QPointF pt1 = points_[0];
         QPointF pt2 = points_[1];
 #ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        qreal y0 = 0;
-        qreal z0 = -pt2.y();
-        qreal h = (pt2.y() - pt1.y()) / (1 + CO);
-        qreal x0 = pt1.x() - CO * h;
-        qreal w = pt2.x() - x0;
+        qreal x0, y0, z0;
+        qreal w, h;
+        if (inner_) {
+            x0 = pt1.x();
+            y0 = 0;
+            h = (pt2.y() - pt1.y()) / (1 - CO);
+            z0 = -pt1.y() - h;
+            w = pt2.x() - pt1.x() - h * CO;
+        } else {
+            y0 = 0;
+            z0 = -pt2.y();
+            h = (pt2.y() - pt1.y()) / (1 + CO);
+            x0 = pt1.x() - CO * h;
+            w = pt2.x() - x0;
+        }
+        /*
         if (QByteArray("Cube") == metaObject()->className()) {
             qDebug() << "Cube";
             if (qAbs(w) < qAbs(h)) {
                 w = w > 0 ? qAbs(h) : -qAbs(h);
             } else {
                 h = h > 0 ? qAbs(w) : -qAbs(w);
+                x0 = pt1.x() - CO * h;
+                z0 = -(h * (1 + CO) + pt1.y());
             }
         }
+        */
 #else
         qreal x0 = 0;
         qreal y0 = 0;
@@ -75,13 +90,13 @@ QVector3D Cuboid::point(int index)
 #endif
     switch (index) {
     case 0:
-    case 4:
+    case 6:
         break;
     case 1:
     case 5:
         pt.setX(pt.x() + size_.x()); break;
     case 2:
-    case 6:
+    case 4:
         pt.setX(pt.x() + size_.x());
 #ifndef POLYHEDRON_ISOMETRIC_PROJECTION
         pt.setZ(pt.z() + size_.z());
@@ -101,7 +116,19 @@ QVector3D Cuboid::point(int index)
     return pt;
 }
 
+void Cuboid::setMoveElem(int elem)
+{
+    if (moveElem_ != elem) {
+        int fix = (8 - elem);
+        if ((fix % 4) == 0) fix -= 4;
+        points_[0] = PO.map(point(fix)).toPointF();
+        moveElem_ = elem;
+        inner_ = QVector<int>({2,3,5,6}).contains(elem);
+    }
+}
+
 bool Cuboid::move(int elem, const QPointF &pt)
 {
-    return Polyhedron::move(elem, pt);
+    setMoveElem(elem);
+    return Polyhedron::move(1, pt);
 }

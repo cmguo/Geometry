@@ -7,14 +7,14 @@ using namespace QtPromise;
 Geometry::Geometry(Resource * res)
     : ResourceView(res, CanCopy)
     , dirty_(false)
-    , color_(Qt::black)
+    , color_(Qt::white)
     , width_(1.0)
 {
 }
 
 Geometry::Geometry(QString const & type)
     : ResourceView(new Resource(type), CanCopy)
-    , color_(Qt::black)
+    , color_(Qt::white)
     , width_(1.0)
 {
 }
@@ -130,3 +130,75 @@ bool Geometry::move(int elem, const QPointF &pt)
     }
     return false;
 }
+
+qreal Geometry::length(QPointF const & vec)
+{
+    return sqrt(QPointF::dotProduct(vec, vec));
+}
+
+qreal Geometry::length2(QPointF const & vec)
+{
+    return QPointF::dotProduct(vec, vec);
+}
+
+void Geometry::attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p)
+{
+    QPointF d = p2 - p1;
+    qreal dot1 = QPointF::dotProduct(d, p - p1);
+    qreal dot2 = QPointF::dotProduct(d, d);
+    qreal r = dot1 / dot2;
+    QPointF rp = p1 + d * r;
+    if (length2(rp - p) < HIT_DIFF_DIFF)
+        p = rp;
+}
+
+static const qreal SQRT3W = 173.20508075688772935274463415059;
+
+void Geometry::attachToLines(QPointF const & p1, QPointF & p)
+{
+    attachToLines(p1, {QPointF(100, 100), QPointF(100, -100),
+                       QPointF(100, SQRT3W), QPointF(100, -SQRT3W),
+                       QPointF(SQRT3W, 100), QPointF(SQRT3W, -100)}, p);
+}
+
+int Geometry::attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p)
+{
+    qreal min = HIT_DIFF_DIFF;
+    QPointF result;
+    int index = -1;
+    for (int i = 0; i < dirs.size(); ++i) {
+        QPointF d = dirs[i];
+        qreal dot1 = QPointF::dotProduct(d, p - p1);
+        qreal dot2 = QPointF::dotProduct(d, d);
+        qreal r = dot1 / dot2;
+        QPointF rp = p1 + d * r;
+        r = length2(rp - p);
+        qDebug() << r;
+        if (r < min) {
+            result = rp;
+            min = r;
+            index = i;
+        }
+    }
+    if (min < HIT_DIFF_DIFF)
+        p = result;
+    return index;
+}
+
+int Geometry::attachToPoints(QVector<QPointF> const & pts, QPointF & p)
+{
+    qreal min = HIT_DIFF_DIFF;
+    int result = -1;
+    for (int i = 0; i < pts.size(); ++i) {
+        QPointF const & pt = pts[i];
+        qreal r = length2(pt - p);
+        if (r < min) {
+            result = i;
+            min = r;
+        }
+    }
+    if (result >= 0)
+        p = pts[result];
+    return result;
+}
+

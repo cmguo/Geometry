@@ -26,16 +26,6 @@ bool Geometry2D::empty() const
             && res_->url().query().length() == 0;
 }
 
-qreal Geometry2D::length(QPointF const & vec)
-{
-    return sqrt(QPointF::dotProduct(vec, vec));
-}
-
-qreal Geometry2D::length2(QPointF const & vec)
-{
-    return QPointF::dotProduct(vec, vec);
-}
-
 qreal Geometry2D::angle(QPointF const & vec) // axis angle
 {
     if (qFuzzyIsNull(vec.x()))
@@ -75,61 +65,6 @@ qreal Geometry2D::dist2PointToSegment(QPointF const & p1, QPointF const & p2,
     qreal r = dot1 / dot2;
     rp = p1 + d * r;
     return QPointF::dotProduct(p - rp, p - rp);
-}
-
-void Geometry2D::attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p)
-{
-    QPointF d = p2 - p1;
-    qreal dot1 = QPointF::dotProduct(d, p - p1);
-    qreal dot2 = QPointF::dotProduct(d, d);
-    qreal r = dot1 / dot2;
-    QPointF rp = p1 + d * r;
-    if (length2(rp - p) < HIT_DIFF_DIFF)
-        p = rp;
-}
-
-static const qreal SQRT3W = 173.20508075688772935274463415059;
-
-void Geometry2D::attachToLines(QPointF const & p1, QPointF & p)
-{
-    attachToLines(p1, {QPointF(100, 100), QPointF(100, -100),
-                       QPointF(100, SQRT3W), QPointF(100, -SQRT3W),
-                       QPointF(SQRT3W, 100), QPointF(SQRT3W, -100)}, p);
-}
-
-void Geometry2D::attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p)
-{
-    qreal min = HIT_DIFF_DIFF;
-    QPointF result;
-    for (QPointF const & d : dirs) {
-        qreal dot1 = QPointF::dotProduct(d, p - p1);
-        qreal dot2 = QPointF::dotProduct(d, d);
-        qreal r = dot1 / dot2;
-        QPointF rp = p1 + d * r;
-        r = length2(rp - p);
-        qDebug() << r;
-        if (r < min) {
-            result = rp;
-            min = r;
-        }
-    }
-    if (min < HIT_DIFF_DIFF)
-        p = result;
-}
-
-void Geometry2D::attachToPoints(QVector<QPointF> const & pts, QPointF & p)
-{
-    qreal min = HIT_DIFF_DIFF;
-    QPointF result;
-    for (QPointF const & pt : pts) {
-        qreal r = length2(pt - p);
-        if (r < min) {
-            result = pt;
-            min = r;
-        }
-    }
-    if (min < HIT_DIFF_DIFF)
-        p = result;
 }
 
 QPointF Geometry2D::nearestPointAtVerticalBisector(QPointF const & pt1, QPointF const & pt2,

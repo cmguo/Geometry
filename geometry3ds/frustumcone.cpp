@@ -22,7 +22,55 @@ FrustumCone::FrustumCone(FrustumCone const & o)
 
 qreal FrustumCone::r2(qreal r)
 {
+    if (points_.size() == 3) {
+        return qAbs(points_[2].x() - points_[0].x());
+    }
     return r / 2;
+}
+
+QVector<QPointF> FrustumCone::movePoints()
+{
+    QVector<QPointF> points(points_);
+    QPointF pt1(points_[0]);
+    QPointF pt2(points_[1]);
+    points.append(QPointF(pt1.x() * 2 - pt2.x(), pt2.y()));
+    qreal r = pt2.x() - pt1.x();
+    qreal r2 = this->r2(r);
+    if (!qFuzzyIsNull(r2)) {
+        QPointF rx2(r2, 0);
+        points.append(pt1 - rx2);
+        points.append(pt1 + rx2);
+    }
+    return points;
+}
+
+int FrustumCone::hit(QPointF & pt)
+{
+    int elem = Geometry3D::hit(pt);
+    if (elem == 2)
+        elem = 3;
+    return elem;
+}
+
+bool FrustumCone::move(int elem, QPointF const & pt)
+{
+    QPointF p(pt);
+    if (elem == 0)
+        p.setX(points_[0].x());
+    else if (elem == 2)
+        elem = 1;
+    if (elem < 2)
+        return Geometry3D::move(elem, p);
+    if (elem == 3 || elem == 4) {
+        p.setY(points_[0].y());
+        elem = 3;
+        if (points_.size() == 2)
+            points_.append(p);
+        else
+            points_[2] = p;
+        return true;
+    }
+    return false;
 }
 
 #ifdef CIRCLE_OBLIQUE_PROJECTION
@@ -162,9 +210,10 @@ QPainterPath FrustumCone::path()
     QPainterPath ph;
     if (points_.size() < 2)
         return ph;
+    ph.setFillRule(Qt::WindingFill);
     QPointF pt1(points_[0]);
     QPointF pt2(points_[1]);
-    qreal r = pt2.x() - pt1.x();
+    qreal r = qAbs(pt2.x() - pt1.x());
     //qreal h = (pt2.y() - pt1.y()) / (CIY * 2);
     qreal r2 = this->r2(r);
     //qreal y0 = (pt1.x() * CIY + pt1.y() * CIX) / (CIX * CIY * 2.0) + h;
@@ -175,27 +224,22 @@ QPainterPath FrustumCone::path()
     //size_ = QVector3D(float(r), float(r), float(h));
     QPointF RX(r, 0);
     //QPointF RY(0, r * CIXY);
-    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
-    rect.moveCenter(center);
-    ph.addEllipse(rect);
-    if (!qFuzzyIsNull(r2)) {
-        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
-        rect2.moveCenter(pt1);
-        ph.addEllipse(rect2);
-    }
+    ph.moveTo(center + RX);
     if (qFuzzyIsNull(r2)) {
-        ph.moveTo(center + RX);
         ph.lineTo(pt1);
         ph.lineTo(center - RX);
-        ph.closeSubpath();
     } else {
         QPointF R2(r2, 0);
-        ph.moveTo(pt1 + R2);
-        ph.lineTo(pt1 - R2);
-        ph.lineTo(center - RX);
-        ph.lineTo(center + RX);
-        ph.closeSubpath();
+        ph.moveTo(center + RX);
+        ph.lineTo(pt1 + R2);
+        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
+        rect2.moveCenter(pt1);
+        ph.arcTo(rect2, 0, 180.0);
     }
+    ph.lineTo(center - RX);
+    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
+    rect.moveCenter(center);
+    ph.arcTo(rect, 180.0, 180.0);
     return ph;
 }
 

@@ -19,3 +19,12 @@ qreal Cylinder::r2(qreal r)
 {
     return r;
 }
+
+bool Cylinder::move(int elem, QPointF const & pt)
+{
+    if (elem == 3 || elem == 4) {
+        QPointF p(pt.x(), points_[1].y());
+        return FrustumCone::move(1, p);
+    }
+    return FrustumCone::move(elem, pt);
+}

@@ -13,6 +13,9 @@ public:
 
     Cylinder(Cylinder const & o);
 
+public:
+    virtual bool move(int elem, QPointF const & pt) override;
+
 protected:
     virtual qreal r2(qreal r) override;
 };

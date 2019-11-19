@@ -3,6 +3,7 @@
 #include "geometry.h"
 #include "views/whitecanvas.h"
 #include "views/itemselector.h"
+#include "geometry2ds/line.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneEvent>
@@ -106,6 +107,11 @@ void GeometryControl::select(bool selected)
         editing_ = false;
         GeometryItem * item = static_cast<GeometryItem *>(item_);
         item->showEditor(false);
+    } else if (selected && res_->metaObject() == &Line::staticMetaObject) {
+        WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
+                    realItem_->parentItem()->parentItem());
+        canvas->selector()->selectImplied(realItem_);
+        edit();
     }
     Control::select(selected);
 }
