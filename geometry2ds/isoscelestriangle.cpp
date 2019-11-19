@@ -43,7 +43,13 @@ bool IsoscelesTriangle::move(int elem, const QPointF &pt)
         attachToPoints(pts, p);
         return Triangle::move(0, p);
     } else if (elem < 3) {
-        return moveKeepAngle(elem, pt);
+        QPointF p(pt);
+        attachToLines(points_[0], p);
+        if (elem == 2) {
+            elem = 1;
+            p.setX(points_[0].x() * 2 - p.x());
+        }
+        return Triangle::move(elem, p);
     } else {
         return Triangle::move(elem, pt);
     }

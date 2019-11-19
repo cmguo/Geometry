@@ -15,6 +15,14 @@ Triangle::Triangle(Triangle const & o)
 {
 }
 
+void Triangle::movePoint(QPointF const & pt)
+{
+    if (points_.size() == 1) {
+        points_.append(pt);
+    }
+    move(points_.size() - 1, pt); // hande attach
+}
+
 int Triangle::pointCount()
 {
     return points_.size() == 2 ? 3 : 1;

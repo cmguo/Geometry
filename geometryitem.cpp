@@ -18,7 +18,7 @@ public:
 
     void setEditPoints(QVector<QPointF> const & points)
     {
-        shape_.clear();
+        shape_ = QPainterPath();
         QPainterPath drawShape;
         QRectF circle(0, 0, 40, 40);
         QRectF box(0, 0, 8, 8);

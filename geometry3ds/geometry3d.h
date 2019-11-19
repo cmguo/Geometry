@@ -38,6 +38,9 @@ protected:
     // sqrt(6.0f) / 6.0f
     static constexpr qreal CIY = 0.40824829046386301636621401245098;
 
+    // sqrt(3.0f) / 3.0f
+    static constexpr qreal CIXY = 0.5;//0.57735026918962576450914878050196;
+
     static QMatrix4x4 PI;
 
 protected:

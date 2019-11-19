@@ -65,19 +65,26 @@ void Geometry::addPoint(const QPointF &pt)
 
 void Geometry::movePoint(const QPointF &pt)
 {
-    if (points_.size() > 1)
-        points_.pop_back();
-    points_.append(pt);
+    if (points_.size() == 1) {
+        points_.append(pt);
+    } else {
+        points_.back() = pt;
+    }
     dirty_ = true;
 }
 
-bool Geometry::commit(const QPointF & pt)
+bool Geometry::commitPoint(const QPointF & pt)
 {
     (void) pt;
     if (points_.size() == 1) {
         movePoint(points_.first() + QPointF(80, 80));
     }
     return true;
+}
+
+bool Geometry::moveTempPoint(const QPointF &pt)
+{
+    return false;
 }
 
 bool Geometry::canFinish()

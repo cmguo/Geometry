@@ -10,6 +10,7 @@
 #include "rectangle.h"
 #include "square.h"
 #include "polygon.h"
+#include "arbitrarypolygon.h"
 #include "regularpolygon.h"
 #include "righttrapezoid.h"
 #include "isopopetrapezoid.h"
@@ -29,7 +30,7 @@ REGISTER_GEOMETRY_2D(Parallelogram, "parallelogram")
 REGISTER_GEOMETRY_2D(Diamond, "diamond")
 REGISTER_GEOMETRY_2D(Rectangle, "rectangle")
 REGISTER_GEOMETRY_2D(Square, "square")
-REGISTER_GEOMETRY_2D(Polygon, "polygon")
+REGISTER_GEOMETRY_2D(ArbitraryPolygon, "arbitrarypolygon")
 REGISTER_GEOMETRY_2D(Line,
                   "line.o-d,line.o-b,dashline.b-ha,dotline.so-ra,dashdotline.so-a");
 REGISTER_GEOMETRY_2D(RegularPolygon,

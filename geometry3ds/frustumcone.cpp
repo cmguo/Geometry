@@ -174,12 +174,12 @@ QPainterPath FrustumCone::path()
     //origin_ = QVector3D(float(x0), float(y0), float(z0));
     //size_ = QVector3D(float(r), float(r), float(h));
     QPointF RX(r, 0);
-    //QPointF RY(0, r / sqrt(3.0));
-    QRectF rect(-r, -r / sqrt(3.0), r * 2, r * 2 / sqrt(3.0));
+    //QPointF RY(0, r * CIXY);
+    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
     rect.moveCenter(center);
     ph.addEllipse(rect);
     if (!qFuzzyIsNull(r2)) {
-        QRectF rect2(-r2, -r2 / sqrt(3.0), r2 * 2, r2 * 2 / sqrt(3.0));
+        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
         rect2.moveCenter(pt1);
         ph.addEllipse(rect2);
     }
@@ -211,9 +211,9 @@ void FrustumCone::draw(QPainter *painter)
     qreal r2 = this->r2(r);
     QPointF center(pt1.x(), pt2.y());
     QPointF RX(r, 0);
-    QPointF RY(0, r / sqrt(3.0));
+    QPointF RY(0, r * CIXY);
     // draw circle, two halfs, one solid line, one dash line
-    QRectF rect(-r, -r / sqrt(3.0), r * 2, r * 2 / sqrt(3.0));
+    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
     rect.moveCenter(center);
     {
         QPainterPath ph2;
@@ -233,7 +233,7 @@ void FrustumCone::draw(QPainter *painter)
     // top cirle
     QPointF RX2(r2, 0);
     if (!qFuzzyIsNull(r2)) {
-        QRectF rect2(-r2, -r2 / sqrt(3.0), r2 * 2, r2 * 2 / sqrt(3.0));
+        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
         rect2.moveCenter(pt1);
         {
             QPainterPath ph2;
@@ -256,7 +256,7 @@ void FrustumCone::draw(QPainter *painter)
     QPointF py1 = pt1;
     QPointF py2 = pt1;
     if (!qFuzzyIsNull(r2)) {
-        QPointF RY2(0, r2 / sqrt(3.0));
+        QPointF RY2(0, r2 * CIXY);
         px1 += RX2;
         px2 -= RX2;
         py1 += RY2;

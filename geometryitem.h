@@ -12,6 +12,11 @@ public:
 
     void showEditor(bool show);
 
+    QGraphicsPathItem * editItem()
+    {
+        return editItem_;
+    }
+
 private:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                        QWidget *widget = nullptr) override;

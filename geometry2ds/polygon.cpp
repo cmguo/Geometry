@@ -1,4 +1,5 @@
 #include "polygon.h"
+#include "arbitrarypolygon.h"
 
 #include <QtMath>
 #include <QFont>
@@ -18,25 +19,6 @@ Polygon::Polygon(Polygon const & o)
 {
 }
 
-bool Polygon::commit(const QPointF &pt)
-{
-    if (metaObject() != &Polygon::staticMetaObject) {
-        return Geometry2D::commit(pt);
-    }
-    if (pointCount() < 4)
-        return false;
-    QPointF d = pt - points_.first();
-    if (QPointF::dotProduct(d, d) >= HIT_DIFF_DIFF)
-        return false;
-    points_.pop_back();
-    return true;
-}
-
-bool Polygon::canFinish()
-{
-    return pointCount() > 2;
-}
-
 QPainterPath Polygon::path()
 {
     QPainterPath ph;
@@ -48,7 +30,7 @@ QPainterPath Polygon::path()
     polygon.append(first);
     for (int i = 1; i < pointCount(); ++i)
         polygon.append(nextPoint(i, hint));
-    if (metaObject() != &Polygon::staticMetaObject
+    if (metaObject() != &ArbitraryPolygon::staticMetaObject
             || (flags_ & DrawFinised)) {
         polygon.append(first);
     }
@@ -256,8 +238,9 @@ void Polygon::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
         path.moveTo(lp);
         path.lineTo(rpt);
         path.lineTo(np);
-        path.addText(txt, QFont(), QString("90°"));
-    } else {
+        //path.addText(txt, QFont(), QString("90°"));
+    } else if (qFuzzyCompare(angle, 30.0)
+               || qFuzzyCompare(angle, 45.0) || qFuzzyCompare(angle, 60.0)) {
         QRectF bound(-14.14, -14.14, 28.28, 28.28);
         bound.moveCenter(pt);
         qreal r1 = Geometry2D::angle(lpt - pt);

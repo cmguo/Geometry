@@ -26,7 +26,9 @@ public:
 
     virtual void movePoint(QPointF const & pt);
 
-    virtual bool commit(QPointF const & pt);
+    virtual bool commitPoint(QPointF const & pt);
+
+    virtual bool moveTempPoint(QPointF const & pt);
 
     virtual bool canFinish();
 

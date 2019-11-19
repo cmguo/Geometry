@@ -100,21 +100,26 @@ void Line::draw(QPainter *painter)
     QPointF pt1 = points_[0];
     QPointF pt2 = points_[1];
     painter->setPen(QPen(color_, width_));
-    QPainterPath ph;
-    bool solid = false;
-    fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
-    if (solid)
-        painter->setBrush(color_);
-    else
-        painter->setBrush(QBrush());
-    painter->drawPath(ph);
-    ph.clear();
-    fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
-    if (solid)
-        painter->setBrush(color_);
-    else
-        painter->setBrush(QBrush());
-    painter->drawPath(ph);
+    {
+        QPainterPath ph;
+        bool solid = false;
+        fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
+        if (solid)
+            painter->setBrush(color_);
+        else
+            painter->setBrush(QBrush());
+        painter->drawPath(ph);
+    }
+    {
+        QPainterPath ph;
+        bool solid = false;
+        fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
+        if (solid)
+            painter->setBrush(color_);
+        else
+            painter->setBrush(QBrush());
+        painter->drawPath(ph);
+    }
     QPen pen(color_, width_);
     switch (lineType_) {
     case Solid:

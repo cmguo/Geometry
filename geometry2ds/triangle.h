@@ -14,6 +14,8 @@ public:
     Triangle(Triangle const & o);
 
 public:
+    virtual void movePoint(QPointF const & pt) override;
+
     virtual int pointCount() override;
 
     virtual bool setPoint(int index, const QPointF &pt) override;

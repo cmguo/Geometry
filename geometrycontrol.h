@@ -4,6 +4,8 @@
 #include <core/control.h>
 
 #include <QColor>
+#include <QPointF>
+#include <QVector>
 
 class Geometry;
 

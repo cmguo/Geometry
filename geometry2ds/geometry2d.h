@@ -20,7 +20,7 @@ public:
 public:
     virtual bool empty() const override;
 
-protected:
+public:
     static qreal length(QPointF const & vec);
 
     static qreal length2(QPointF const & vec);

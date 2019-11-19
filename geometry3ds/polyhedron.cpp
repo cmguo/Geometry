@@ -17,10 +17,10 @@ Polyhedron::Polyhedron(Polyhedron const & o)
 {
 }
 
-bool Polyhedron::commit(const QPointF &pt)
+bool Polyhedron::commitPoint(const QPointF &pt)
 {
     if (metaObject() != &Polyhedron::staticMetaObject) {
-        return Geometry3D::commit(pt);
+        return Geometry3D::commitPoint(pt);
     }
     if (pointCount() < 4)
         return false;

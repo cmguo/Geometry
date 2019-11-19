@@ -6,7 +6,8 @@ HEADERS += \
     $$PWD/frustumcone.h \
     $$PWD/geometry3d.h \
     $$PWD/geometry3ds.h \
-    $$PWD/polyhedron.h
+    $$PWD/polyhedron.h \
+    $$PWD/sphere.h
 
 SOURCES += \
     $$PWD/cone.cpp \
@@ -15,4 +16,5 @@ SOURCES += \
     $$PWD/cylinder.cpp \
     $$PWD/frustumcone.cpp \
     $$PWD/geometry3d.cpp \
-    $$PWD/polyhedron.cpp
+    $$PWD/polyhedron.cpp \
+    $$PWD/sphere.cpp

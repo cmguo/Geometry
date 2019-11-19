@@ -16,7 +16,7 @@ public:
     Polyhedron(Polyhedron const & o);
 
 public:
-    virtual bool commit(const QPointF &pt) override;
+    virtual bool commitPoint(const QPointF &pt) override;
 
     virtual bool canFinish() override;
 

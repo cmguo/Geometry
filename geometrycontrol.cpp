@@ -1,13 +1,15 @@
 #include "geometrycontrol.h"
 #include "geometryitem.h"
 #include "geometry.h"
+#include "views/whitecanvas.h"
+#include "views/itemselector.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneEvent>
 #include <QPen>
 
 static char const * toolstr =
-        "edit()|编辑|:/showboard/icons/icon_delete.png;"
+        "edit()|编辑|HideSelector|:/showboard/icons/icon_delete.png;"
         "setColor(QColor)|颜色|Popup|:/showboard/icons/icon_delete.png;"
         "setLineWidth(qreal)|线宽|Popup|:/showboard/icons/icon_delete.png;";
 
@@ -71,8 +73,9 @@ QString GeometryControl::toolsString(QString const & parent) const
 QGraphicsItem * GeometryControl::create(ResourceView * res)
 {
     Geometry * gh = qobject_cast<Geometry *>(res);
-    QGraphicsPathItem * item = new GeometryItem();
+    GeometryItem * item = new GeometryItem();
     item->setBrush(QColor(0, 0, 255, 20));
+    item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
     QWeakPointer<int> life(this->life());
     if (!gh->empty()) {
         gh->load().then([item, gh, life]() {
@@ -99,10 +102,10 @@ Control::SelectMode GeometryControl::selectTest(QPointF const & point)
 
 void GeometryControl::select(bool selected)
 {
-    if (!selected && editing_) {
-        //editing_ = false;
-        //GeometryItem * item = static_cast<GeometryItem *>(item_);
-        //item->showEditor(false);
+    if (editing_) {
+        editing_ = false;
+        GeometryItem * item = static_cast<GeometryItem *>(item_);
+        item->showEditor(false);
     }
     Control::select(selected);
 }
@@ -198,22 +201,42 @@ bool GeometryControl::event(QEvent *event)
             updateTransform();
             updateGraph(graph);
         } else {
-            if (graph->commit(me->pos())) {
+            if (graph->commitPoint(me->pos())) {
                 graph->finish(bounds().center());
                 flags_ |= DrawFinished;
+                updateGraph(graph);
                 updateTransform();
+                WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
+                            realItem_->parentItem()->parentItem());
+                canvas->selector()->selectImplied(realItem_);
+                edit();
             } else if (graph->canFinish()) {
                 me->setFlags(static_cast<Qt::MouseEventFlags>(256));
+                updateGraph(graph);
             }
-            updateGraph(graph);
         }
         return true;
     }
+    case QEvent::GraphicsSceneHoverMove:
+        if (!(flags_ & DrawFinished)) {
+            QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
+            if (graph->moveTempPoint(me->pos())) {
+                 updateGraph(graph);
+                 return true;
+            }
+        }
+        break;
     case QEvent::User:
         graph->finish(bounds().center());
         flags_ |= DrawFinished;
         updateTransform();
         updateGraph(graph);
+        {
+            WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
+                        realItem_->parentItem()->parentItem());
+            canvas->selector()->selectImplied(realItem_);
+        }
+        edit();
         break;
     default:
         break;

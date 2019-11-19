@@ -14,10 +14,6 @@ public:
     Polygon(Polygon const & o);
 
 public:
-    virtual bool commit(const QPointF &pt) override;
-
-    virtual bool canFinish() override;
-
     virtual QPainterPath path() override;
 
     virtual QVector<QPointF> movePoints() override;
@@ -66,6 +62,7 @@ protected:
 
     static void addAngleLabeling(QPainterPath & path, QPointF const & lpt, QPointF const & pt,
                           QPointF const & npt, qreal angle);
+
 };
 
 #endif // POLYGON_H
