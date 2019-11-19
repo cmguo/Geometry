@@ -15,7 +15,7 @@ private:
     virtual QWidget * createWidget(ResourceView *res) override;
 
 private:
-    void buttonClicked(ToolButton * button);
+    void buttonClicked(QList<ToolButton *> const & buttons);
 
 private:
     QList<ToolButton *> buttons_;

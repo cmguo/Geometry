@@ -28,6 +28,11 @@ QPainterPath Ellipse::path()
     return ph;
 }
 
+QVector<QPointF> Ellipse::movePoints()
+{
+    return QVector<QPointF>();
+}
+
 int Ellipse::hit(QPointF &pt)
 {
     QPointF center = (points_.back() + points_.front()) / 2.0;

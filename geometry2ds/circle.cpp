@@ -30,6 +30,21 @@ QPainterPath Circle::path()
     return ph;
 }
 
+QVector<QPointF> Circle::movePoints()
+{
+    QVector<QPointF> points;
+    QPointF c(points_.front());
+    QPointF off(points_.back() - c);
+    points.append(points_[1]);
+    off = QPointF(-off.y(), off.x());
+    points.append(c + off);
+    off = QPointF(-off.y(), off.x());
+    points.append(c + off);
+    off = QPointF(-off.y(), off.x());
+    points.append(c + off);
+    return points;
+}
+
 int Circle::hit(QPointF &pt)
 {
     QPointF off(points_.back() - points_.front());
@@ -43,4 +58,11 @@ int Circle::hit(QPointF &pt)
         return 1;
     }
     return -1;
+}
+
+bool Circle::move(int elem, QPointF const & pt)
+{
+    if (elem < 4)
+        return  Geometry2D::move(1, pt);
+    return false;
 }

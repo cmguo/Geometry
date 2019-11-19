@@ -16,6 +16,8 @@ public:
 public:
     virtual QPainterPath path() override;
 
+    virtual QVector<QPointF> movePoints() override;
+
     virtual int hit(QPointF &pt) override;
 };
 

@@ -16,9 +16,14 @@ public:
 public:
     virtual QPainterPath path() override;
 
+    virtual QVector<QPointF> movePoints() override;
+
     virtual int hit(QPointF &pt) override;
 
     virtual bool move(int elem, QPointF const & pt) override;
+
+private:
+    qreal angle_ = 0.0;
 };
 
 #endif // SECTOR_H

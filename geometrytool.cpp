@@ -17,7 +17,8 @@ GeometryTool::GeometryTool(ResourceView *res)
     type.remove("tool");
     ResourceFactory * factory = ResourceManager::instance()->getFactory(type);
     for (QString const & f : factory->resourceTypes()) {
-        ToolButton * btn = new ToolButton({factory->newUrl(f).toString(), f, QVariant()});
+        ToolButton * btn = new ToolButton(
+            {factory->newUrl(f).toString(), f, nullptr, QVariant()});
         buttons_.append(btn);
     }
 }
@@ -27,14 +28,14 @@ QWidget * GeometryTool::createWidget(ResourceView *res)
     (void) res;
     ToolbarWidget * widget = new ToolbarWidget(false);
     widget->setToolButtons(buttons_);
-    void (ToolbarWidget::*sig)(ToolButton * button) = &ToolbarWidget::buttonClicked;
+    void (ToolbarWidget::*sig)(QList<ToolButton *> const &) = &ToolbarWidget::buttonClicked;
     QObject::connect(widget, sig, this, &GeometryTool::buttonClicked);
     return widget;
 }
 
-void GeometryTool::buttonClicked(ToolButton * button)
+void GeometryTool::buttonClicked(QList<ToolButton *> const & buttons)
 {
     WhiteCanvas * canvas = static_cast<WhiteCanvas*>(item_->parentItem()->parentItem());
-    canvas->getToolControl("drawing")->setProperty("newUrl", button->name);
+    canvas->getToolControl("drawing")->setProperty("newUrl", buttons.back()->name);
     canvas->showToolControl("drawing");
 }

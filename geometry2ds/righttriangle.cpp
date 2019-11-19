@@ -26,11 +26,15 @@ QPointF RightTriangle::point(int index)
 bool RightTriangle::move(int elem, const QPointF &pt)
 {
     if (elem == 0) {
-        Triangle::move(3, pt);
-        return Triangle::move(0, pt);
+        QPointF p(pt);
+        attachToLines(points_[1], p);
+        Triangle::move(3, p);
+        return Triangle::move(0, p);
     } else if (elem == 1) {
-        Triangle::move(5, pt);
-        return Triangle::move(1, pt);
+        QPointF p(pt);
+        attachToLines(points_[0], p);
+        Triangle::move(5, p);
+        return Triangle::move(1, p);
     } else if (elem == 2) {
         return moveKeepAngle(elem, pt);
     } else {

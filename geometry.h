@@ -5,7 +5,7 @@
 
 #include <QtPromise>
 
-#include <QList>
+#include <QVector>
 #include <QPointF>
 #include <QColor>
 
@@ -48,6 +48,8 @@ public:
 public:
     virtual QPainterPath path() = 0;
 
+    virtual QVector<QPointF> movePoints();
+
 public:
     virtual QtPromise::QPromise<void> load();
 
@@ -64,7 +66,7 @@ protected:
     static constexpr qreal HIT_DIFF_DIFF = 100.0;
 
 protected:
-    QList<QPointF> points_;
+    QVector<QPointF> points_;
     bool dirty_;
 
 protected:

@@ -18,22 +18,26 @@ public slots:
 
     void setLineWidth(qreal width);
 
+    void edit();
+
 protected:
     virtual QGraphicsItem * create(ResourceView * res) override;
 
     virtual void attached() override;
 
-    virtual QString toolsString() const override;
+    virtual QString toolsString(QString const & parent) const override;
 
 protected:
     virtual void updateTransform() override;
 
     virtual SelectMode selectTest(QPointF const & point) override;
 
+    virtual void select(bool selected) override;
+
 protected:
     virtual void setPen(QPen const & pen);
 
-    virtual void updateGraph(Geometry * gh);
+    virtual void updateGraph(Geometry * geometry);
 
     virtual QRectF bounds();
 
@@ -45,7 +49,9 @@ private:
 
 private:
     int hitElem_;
-    QPointF hitDiff_;
+    QPointF hitOffset_;
+    QVector<QPointF> editPoints_;
+    bool editing_;
 };
 
 #endif // GRAPHCONTROL_H

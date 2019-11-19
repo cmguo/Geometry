@@ -97,6 +97,11 @@ void Geometry::finish(const QPointF &c)
     dirty_ = true;
 }
 
+QVector<QPointF> Geometry::movePoints()
+{
+    return points_;
+}
+
 int Geometry::hit(QPointF & pt)
 {
     for (int i = 0; i < points_.size(); ++i) {

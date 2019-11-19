@@ -67,6 +67,23 @@ QPainterPath Polygon::path()
     return ph;
 }
 
+QVector<QPointF> Polygon::movePoints()
+{
+    QVector<QPointF> points(pointCount() * 2);
+    QPointF hint;
+    QPointF first = firstPoint(hint);
+    QPointF pt0 = first;
+    points[0] = pt0;
+    for (int i = 1; i < pointCount(); ++i) {
+        QPointF pt(nextPoint(i, hint));
+        points[i] = pt;
+        points[pointCount() + i] = (pt0 + pt) / 2.0;
+        pt0 = pt;
+    }
+    points[pointCount()] = (pt0 + first) / 2.0;
+    return points;
+}
+
 int Polygon::hit(QPointF & pt)
 {
     QPointF hint;

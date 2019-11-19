@@ -7,11 +7,13 @@
 #include <QPen>
 
 static char const * toolstr =
-        "setColor(QColor)|颜色|:/showboard/icons/icon_delete.png;"
-        "setLineWidth(qreal)|线宽|:/showboard/icons/icon_delete.png;";
+        "edit()|编辑|:/showboard/icons/icon_delete.png;"
+        "setColor(QColor)|颜色|Popup|:/showboard/icons/icon_delete.png;"
+        "setLineWidth(qreal)|线宽|Popup|:/showboard/icons/icon_delete.png;";
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
     : Control(res, flags | PositionAtCenter | KeepAspectRatio, clearFlags)
+    , editing_(false)
 {
 }
 
@@ -25,6 +27,16 @@ void GeometryControl::setLineWidth(qreal width)
 {
     res_->setProperty("width", width);
     updateSettings();
+}
+
+void GeometryControl::edit()
+{
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
+    editing_ = true;
+    Geometry * geometry = qobject_cast<Geometry *>(res_);
+    editPoints_ = geometry->movePoints();
+    item->setEditPoints(editPoints_);
+    item->showEditor(true);
 }
 
 void GeometryControl::attached()
@@ -44,9 +56,16 @@ void GeometryControl::attached()
     }
 }
 
-QString GeometryControl::toolsString() const
+QString GeometryControl::toolsString(QString const & parent) const
 {
-    return toolstr;
+    if (parent.isEmpty()) {
+        return toolstr;
+    } else if (parent == "setColor(QColor)") {
+        return nullptr;
+    } else if (parent == "setLineWidth(qreal)") {
+        return nullptr;
+    }
+    return nullptr;
 }
 
 QGraphicsItem * GeometryControl::create(ResourceView * res)
@@ -78,6 +97,16 @@ Control::SelectMode GeometryControl::selectTest(QPointF const & point)
     return NotSelect;// item_->contains(point) ? Select : PassSelect;
 }
 
+void GeometryControl::select(bool selected)
+{
+    if (!selected && editing_) {
+        //editing_ = false;
+        //GeometryItem * item = static_cast<GeometryItem *>(item_);
+        //item->showEditor(false);
+    }
+    Control::select(selected);
+}
+
 void GeometryControl::setPen(const QPen &pen)
 {
     QGraphicsPathItem * item = static_cast<QGraphicsPathItem *>(item_);
@@ -92,13 +121,17 @@ void GeometryControl::updateTransform()
         Control::updateTransform();
 }
 
-void GeometryControl::updateGraph(Geometry * gh)
+void GeometryControl::updateGraph(Geometry * geometry)
 {
-    QGraphicsPathItem * item = static_cast<QGraphicsPathItem *>(item_);
-    QPainterPath ph(qobject_cast<Geometry *>(gh)->path());
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
+    QPainterPath ph(geometry->path());
     if (flags_ & SelfTransform)
         ph = res_->transform()->map(ph);
     item->setPath(ph);
+    if (editing_) {
+        editPoints_ = geometry->movePoints();
+        item->setEditPoints(editPoints_);
+    }
 }
 
 QRectF GeometryControl::bounds()
@@ -114,10 +147,29 @@ bool GeometryControl::event(QEvent *event)
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (flags_ & DrawFinished) {
             QPointF pt = me->pos();
-            hitElem_ = graph->hit(pt);
-            if (hitElem_ >= 0) {
-                hitDiff_ = pt - me->pos();
-                return true;
+            if (editing_ && (me->flags() & 256)) {
+                qreal min = DBL_MAX;
+                int mdx = -1;
+                for (int i = 0; i < editPoints_.size(); ++i) {
+                    QPointF d = pt - editPoints_[i];
+                    qreal dd = QPointF::dotProduct(d, d);
+                    if (dd < min) {
+                        min = dd;
+                        mdx = i;
+                    }
+                }
+                hitElem_ = mdx;
+                if (hitElem_ >= 0) {
+                    qDebug() << "hit" << hitElem_;
+                    hitOffset_ = editPoints_[mdx] - me->pos();
+                    return true;
+                }
+            } else if (!editing_) {
+                hitElem_ = graph->hit(pt);
+                if (hitElem_ >= 0) {
+                    hitOffset_ = pt - me->pos();
+                    return true;
+                }
             }
         } else {
             graph->addPoint(me->pos());
@@ -129,7 +181,7 @@ bool GeometryControl::event(QEvent *event)
     case QEvent::GraphicsSceneMouseMove: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (flags_ & DrawFinished) {
-            QPointF pt = me->pos() + hitDiff_;
+            QPointF pt = me->pos() + hitOffset_;
             if (graph->move(hitElem_, pt)) {
                 updateGraph(graph);
             }
