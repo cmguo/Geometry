@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>01 icon/立体形状工具/浅色/05 球体</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="17" cy="17.5" rx="17" ry="4.5"></ellipse>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="34" height="9" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <ellipse id="path-3" cx="17" cy="17" rx="17" ry="4.5"></ellipse>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="34" height="9" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="01-icon/立体形状工具/浅色/05-球体" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组" transform="translate(3.000000, 3.000000)" stroke="#50545E" stroke-width="2">
+            <circle id="椭圆形" cx="17" cy="17" r="16"></circle>
+            <use id="椭圆形" mask="url(#mask-2)" stroke-dasharray="0,2" xlink:href="#path-1"></use>
+            <use id="椭圆形" mask="url(#mask-4)" opacity="0.400000006" stroke-dasharray="0,2" transform="translate(17.000000, 17.000000) rotate(90.000000) translate(-17.000000, -17.000000) " xlink:href="#path-3"></use>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>01 icon/立体形状工具/浅色/01 正方体</title>
+    <desc>Created with Sketch.</desc>
+    <g id="01-icon/立体形状工具/浅色/01-正方体" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组" transform="translate(5.000000, 5.000000)">
+            <path d="M8.64206399,1 L1,7.46391245 L1,29 L22.5754728,29 L29,22.3460254 L29,1 L8.64206399,1 Z" id="形状结合" stroke="#50545E" stroke-width="2"></path>
+            <path d="M28.5355339,0.0502525317 L29.9497475,1.46446609 L23,8.41325253 L23,28 L21,28 L21,9 L2,9 L2,7 L21,7 L21,7.58525253 L28.5355339,0.0502525317 Z" id="形状结合" fill="#50545E"></path>
+        </g>
+    </g>
+</svg>

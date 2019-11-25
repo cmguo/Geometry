@@ -76,3 +76,6 @@ else:unix: LIBS += -L$$OUT_PWD/../QtComposition/ -lQtComposition
 
 INCLUDEPATH += $$PWD/../QtComposition
 DEPENDPATH += $$PWD/../QtComposition
+
+RESOURCES += \
+    Geometry.qrc

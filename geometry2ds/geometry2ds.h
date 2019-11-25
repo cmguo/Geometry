@@ -32,7 +32,7 @@ REGISTER_GEOMETRY_2D(Rectangle, "rectangle")
 REGISTER_GEOMETRY_2D(Square, "square")
 REGISTER_GEOMETRY_2D(ArbitraryPolygon, "arbitrarypolygon")
 REGISTER_GEOMETRY_2D(Line,
-                  "line.o-d,line.o-b,dashline.b-ha,dotline.so-ra,dashdotline.so-a");
+                  "line.o-,line.o-b,dashline.b-ha,dotline.so-ra,dashdotline.so-a");
 REGISTER_GEOMETRY_2D(RegularPolygon,
                   "regularpolygon3,"
                   "regularpolygon4,"

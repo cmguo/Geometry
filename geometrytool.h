@@ -8,6 +8,12 @@
 class GEOMETRY_EXPORT GeometryTool : public WidgetControl
 {
     Q_OBJECT
+
+public:
+    static void getToolButtons(QList<ToolButton*> & result, QString const & type);
+
+    static void handleToolButton(ToolButton* button);
+
 public:
     Q_INVOKABLE GeometryTool(ResourceView *res);
 
