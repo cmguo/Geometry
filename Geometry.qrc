@@ -18,5 +18,6 @@
         <file>icons/geometry2d/line.so-.svg</file>
         <file>icons/geometry2d/line.so-so.svg</file>
         <file>icons/geometry2d/dotline.svg</file>
+        <file>strings/number.txt</file>
     </qresource>
 </RCC>

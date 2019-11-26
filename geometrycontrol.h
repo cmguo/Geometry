@@ -29,6 +29,10 @@ protected:
 
     virtual QString toolsString(QString const & parent) const override;
 
+    virtual void getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents = {}) override;
+
+    virtual void updateToolButton(ToolButton * button) override;
+
 protected:
     virtual void updateTransform() override;
 
@@ -37,11 +41,13 @@ protected:
     virtual void select(bool selected) override;
 
 protected:
-    virtual void setPen(QPen const & pen);
+    void setPen(QPen const & pen);
 
-    virtual void updateGraph(Geometry * geometry);
+    void updateGraph();
 
-    virtual QRectF bounds();
+    void finishGraph();
+
+    QRectF bounds();
 
 protected:
     virtual bool event(QEvent *event) override;

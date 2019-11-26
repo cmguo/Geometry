@@ -6,6 +6,11 @@
 class RegularPolygon : public Polygon
 {
     Q_OBJECT
+
+    Q_PROPERTY(int edges READ edges WRITE setEdges)
+
+    Q_PROPERTY(int span READ span WRITE setSpan)
+
 public:
     Q_INVOKABLE RegularPolygon(Resource * res);
 
@@ -25,6 +30,21 @@ public:
     virtual bool setPoint(int index, const QPointF &pt) override;
 
     virtual bool move(int elem, const QPointF &pt) override;
+
+public slots:
+    void setEdges(int n);
+
+    int edges() { return nEdges_; }
+
+    void setSpan(int n);
+
+    int span() { return nSpan_; }
+
+private:
+    virtual void getToolButtons(QList<ToolButton *> & buttons,
+                                ToolButton * parent) override;
+
+    virtual void updateToolButton(ToolButton * button) override;
 
 private:
     int nEdges_;

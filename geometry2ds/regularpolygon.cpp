@@ -1,7 +1,9 @@
 #include "regularpolygon.h"
 
-#include "core/resource.h"
+#include <core/resource.h>
+#include <core/toolbutton.h>
 
+#include <QFile>
 #include <QtMath>
 
 RegularPolygon::RegularPolygon(Resource * res)
@@ -19,6 +21,7 @@ RegularPolygon::RegularPolygon(Resource * res)
     }
     qreal radius = M_PI * 2 * nSpan_ / nEdges_;
     vAngle_ = QPointF(cos(radius), sin(radius));
+    setProperty("toolString", "edges|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 RegularPolygon::RegularPolygon(QPointF const & pt)
@@ -30,6 +33,64 @@ RegularPolygon::RegularPolygon(RegularPolygon const & o)
     : Polygon(o)
     , nEdges_(o.nEdges_)
 {
+}
+
+static QString buttonTitle(int n)
+{
+    static QString numberChar;
+    if (numberChar.isEmpty()) {
+        QFile file(":/geometry/strings/number.txt");
+        file.open(QFile::ReadOnly);
+        numberChar = file.readAll();
+    }
+    return QString("\xe6\xad\xa3%1边形").arg(numberChar[n]);
+}
+
+void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
+                            ToolButton * parent)
+{
+    if (parent == nullptr)
+        return Polygon::getToolButtons(buttons, parent);
+    if (parent->name == "edges") {
+        for (int n : {5, 6}) {
+            ToolButton::Flags flags;
+            if (n == nEdges_)
+                flags |= ToolButton::Selected;
+            buttons.append(new ToolButton{
+                               QVariant(n).toString(),
+                               buttonTitle(n),
+                               flags,
+                               QVariant()
+                           });
+        }
+    }
+}
+
+
+void RegularPolygon::updateToolButton(ToolButton * button)
+{
+    if (button->name == "edges") {
+        button->title = buttonTitle(nEdges_);
+    }
+}
+
+void RegularPolygon::setEdges(int n)
+{
+    if (nEdges_ == n)
+        return;
+    nEdges_ = n;
+    nSpan_ = 0;
+    setSpan(1);
+}
+
+void RegularPolygon::setSpan(int n)
+{
+    if (nSpan_ == n)
+        return;
+    nSpan_ = n;
+    qreal radius = M_PI * 2 * nSpan_ / nEdges_;
+    vAngle_ = QPointF(cos(radius), sin(radius));
+    emit changed();
 }
 
 int RegularPolygon::pointCount()

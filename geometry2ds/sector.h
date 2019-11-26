@@ -6,6 +6,9 @@
 class Sector : public Geometry2D
 {
     Q_OBJECT
+
+    Q_PROPERTY(qreal angle READ angle WRITE setAngle)
+
 public:
     Q_INVOKABLE Sector(Resource * res);
 
@@ -21,6 +24,17 @@ public:
     virtual int hit(QPointF &pt) override;
 
     virtual bool move(int elem, QPointF const & pt) override;
+
+public slots:
+    qreal angle() { return qAbs(angle_); }
+
+    void setAngle(qreal angle);
+
+private:
+    virtual void getToolButtons(QList<ToolButton *> & buttons,
+                                ToolButton * parent) override;
+
+    virtual void updateToolButton(ToolButton * button) override;
 
 private:
     qreal angle_ = 0.0;

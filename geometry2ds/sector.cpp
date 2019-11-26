@@ -1,8 +1,13 @@
 #include "sector.h"
 
+#include <core/toolbutton.h>
+
+#include <QtMath>
+
 Sector::Sector(Resource * res)
     : Geometry2D(res)
 {
+    setProperty("toolString", "angle|角度|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 Sector::Sector(QPointF const & pt)
@@ -13,6 +18,62 @@ Sector::Sector(QPointF const & pt)
 Sector::Sector(Sector const & o)
     : Geometry2D(o)
 {
+}
+
+static QString buttonTitle(qreal a)
+{
+    return QString("%1°").arg(qRound(a));
+}
+
+void Sector::getToolButtons(QList<ToolButton *> & buttons,
+                            ToolButton * parent)
+{
+    if (parent == nullptr)
+        return Geometry2D::getToolButtons(buttons, parent);
+    if (parent->name == "angle") {
+        for (qreal n : {30, 45, 60, 90, 120, 180, 270, 360}) {
+            ToolButton::Flags flags;
+            if (qFuzzyIsNull(n - angle_))
+                flags |= ToolButton::Selected;
+            buttons.append(new ToolButton{
+                               QVariant(n).toString(),
+                               buttonTitle(n),
+                               flags,
+                               QVariant()
+                           });
+        }
+    }
+}
+
+void Sector::updateToolButton(ToolButton * button)
+{
+    if (button->name == "angle") {
+        button->title = buttonTitle(angle());
+    }
+}
+
+void Sector::setAngle(qreal angle)
+{
+    if (qFuzzyIsNull(angle - angle_))
+        return;
+    qreal la = angle;
+    //if (la > 0 && la > angle_ + 180.0)
+    //    la -= 360.0;
+    //else if (la < 0 && la < angle_ - 180.0)
+    //    la += 360.0;
+    angle_ = la;
+    la = la * M_PI / 180.0;
+    QPointF pt3;
+    qreal r = length(points_[1] - points_[0]);
+    if (points_.size() > 2) {
+        pt3 = points_[2];
+    } else {
+        pt3 = points_[0] + QPointF(r, 0);
+    }
+    QPointF d = pt3 - points_[0];
+    rotate(d, QPointF(cos(la), -sin(la)));
+    points_[1] = points_[0] + d;
+    emit changed();
 }
 
 QPainterPath Sector::path()
@@ -33,15 +94,16 @@ QPainterPath Sector::path()
         }
         QRectF rect(-r, -r, r * 2, r * 2);
         rect.moveCenter(points_[0]);
-        qreal a1 = angle(pt2 - pt1);
-        qreal a2 = angle(pt3 - pt1);
+        qreal a1 = Geometry2D::angle(pt2 - pt1);
+        qreal a2 = Geometry2D::angle(pt3 - pt1);
         qreal la = a2 - a1;
         if (la > 0 && la > angle_ + 180.0)
             la -= 360.0;
         else if (la < 0 && la < angle_ - 180.0)
             la += 360.0;
         angle_ = la;
-        qDebug() << a1 << a2;
+        qDebug() << "sector" << a1 << a2;
+        qDebug() << "sector angle" << (a2 - a1) << angle_;
         ph.arcTo(rect, a1, la);
         ph.closeSubpath();
     }

@@ -1,6 +1,7 @@
 #include "geometry.h"
 
 #include <core/resource.h>
+#include <core/toolbutton.h>
 
 using namespace QtPromise;
 
@@ -47,6 +48,35 @@ QPromise<void> Geometry::load()
     });
 }
 
+void Geometry::getToolButtons(QList<ToolButton *> & buttons,
+                            ToolButton * parent)
+{
+    if (parent == nullptr) {
+        QVariant ext = property("toolString");
+        if (ext.isValid()) {
+            static std::map<QMetaObject const *, QList<ToolButton *>> slist;
+            auto iter = slist.find(res_->metaObject());
+            if (iter == slist.end()) {
+                std::map<QString, QList<ToolButton *>> t;
+                iter = slist.insert(
+                            std::make_pair(res_->metaObject(), ToolButton::makeButtons(ext.toString()))).first;
+            }
+            for (ToolButton * button : iter->second) {
+                if (button->flags & ToolButton::NeedUpdate) {
+                    updateToolButton(button);
+                }
+            }
+            buttons.append(iter->second);
+        }
+    }
+}
+
+
+void Geometry::updateToolButton(ToolButton * button)
+{
+    (void) button;
+}
+
 bool Geometry::empty() const
 {
     return points_.isEmpty();
@@ -84,6 +114,7 @@ bool Geometry::commitPoint(const QPointF & pt)
 
 bool Geometry::moveTempPoint(const QPointF &pt)
 {
+    (void) pt;
     return false;
 }
 

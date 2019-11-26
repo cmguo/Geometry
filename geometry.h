@@ -9,6 +9,8 @@
 #include <QPointF>
 #include <QColor>
 
+class ToolButton;
+
 class Geometry : public ResourceView
 {
 
@@ -34,6 +36,9 @@ public:
 
     virtual void finish(const QPointF &c);
 
+signals:
+    void changed();
+
 public:
     /*
      * return element (>=0) under point pt
@@ -54,6 +59,11 @@ public:
 
 public:
     virtual QtPromise::QPromise<void> load();
+
+    virtual void getToolButtons(QList<ToolButton *> & buttons,
+                                ToolButton * parent = nullptr);
+
+    virtual void updateToolButton(ToolButton * button);
 
 public:
     static qreal length(QPointF const & vec);
