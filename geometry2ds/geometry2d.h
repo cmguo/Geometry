@@ -25,6 +25,8 @@ public:
 
     static void rotate(QPointF & pt, QPointF const & angle);
 
+    static void reverseRotate(QPointF & pt, QPointF const & angle);
+
     static qreal crossProduct(QPointF const & p1, QPointF const & p2);
 
     static qreal dist2PointToSegment(QPointF const & p1, QPointF const & p2,
@@ -34,6 +36,31 @@ public:
                                    QPointF const & p);
 
     static void adjustToLength(QPointF const & start, QPointF & end, qreal length);
+
+    static QPointF crossPoint(QPointF const & p1, QPointF const & p2,
+                              QPointF const & q1, QPointF const & q2);
+
+    static qreal angle(QPointF const & p1, QPointF const & p2, QPointF const & p3);
+
+protected:
+    static void moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & pt,
+                    QPointF & npt, QPointF const & nnpt);
+
+    static void attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p);
+
+    static void attachToLines(QPointF const & p1, QPointF & p);
+
+    static void attachToLines(QPointF const & p1, QPointF const & p2, QPointF & p);
+
+    static int attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p);
+
+    static int attachToLines(QPointF const & p1, QPointF const & p2, QVector<QPointF> const & dirs, QPointF & p);
+
+    static void addAngleLabeling(QPainterPath & path, QPointF const & lpt, QPointF const & pt,
+                          QPointF const & npt);
+
+    static void addAngleLabeling(QPainterPath & path, QPointF const & lpt, QPointF const & pt,
+                          QPointF const & npt, qreal angle);
 };
 
 class Geometry2DFactory : ResourceFactory

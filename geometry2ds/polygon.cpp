@@ -1,9 +1,6 @@
 #include "polygon.h"
 #include "arbitrarypolygon.h"
 
-#include <QtMath>
-#include <QFont>
-
 Polygon::Polygon(Resource * res)
     : Geometry2D(res)
 {
@@ -185,76 +182,5 @@ QPointF Polygon::nextPoint(int index, QPointF & hint)
 {
     (void) hint;
     return point(index);
-}
-
-/*
- * Static functions
- */
-
-qreal Polygon::angle(QPointF const & p1, QPointF const & p2, QPointF const & p3)
-{
-    qreal dot = QPointF::dotProduct(p1 - p2, p3 - p2);
-    qreal mod1 = QPointF::dotProduct(p1 - p2, p1 - p2);
-    qreal mod2 = QPointF::dotProduct(p3 - p2, p3 - p2);
-    return acos(dot / sqrt(mod1 * mod2)) * 180 / M_PI;
-}
-
-QPointF Polygon::crossPoint(QPointF const & p1, QPointF const & p2,
-                          QPointF const & q1, QPointF const & q2)
-{
-    QPointF a(p1.y() - p2.y(), q1.y() - q2.y()); // a1, a2
-    QPointF b(p2.x() - p1.x(), q2.x() - q1.x()); // b1, b2
-    QPointF c(crossProduct(p1, p2), crossProduct(q1, q2));
-    qreal d = crossProduct(a, b);
-    return QPointF(crossProduct(b, c), crossProduct(c, a)) / d;
-}
-
-void Polygon::moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & pt,
-                QPointF & npt, QPointF const & nnpt)
-{
-    QPointF lp = crossPoint(llpt, lpt, pt, pt + npt - lpt);
-    QPointF np = crossPoint(npt, nnpt, pt, pt + npt - lpt);
-    lpt = lp;
-    npt = np;
-}
-
-void Polygon::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
-                               QPointF const & pt, QPointF const & npt)
-{
-    addAngleLabeling(path, lpt, pt, npt, angle(lpt, pt, npt));
-}
-
-void Polygon::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
-                               QPointF const & pt, QPointF const & npt, qreal angle)
-{
-    QPointF lp = lpt;
-    QPointF np = npt;
-    adjustToLength(pt, lp, 10.0);
-    adjustToLength(pt, np, 10.0);
-    QPointF rpt = lp + np - pt;
-    QPointF txt = rpt * 2 - pt + QPointF(-8, 6);
-    //qDebug() << pt << angle;
-    if (qFuzzyCompare(angle, 90.0)) {
-        path.moveTo(lp);
-        path.lineTo(rpt);
-        path.lineTo(np);
-        //path.addText(txt, QFont(), QString("90°"));
-    } else if (qFuzzyCompare(angle, 30.0)
-               || qFuzzyCompare(angle, 45.0) || qFuzzyCompare(angle, 60.0)) {
-        QRectF bound(-14.14, -14.14, 28.28, 28.28);
-        bound.moveCenter(pt);
-        qreal r1 = Geometry2D::angle(lpt - pt);
-        qreal r2 = Geometry2D::angle(npt - pt);
-        //qDebug() << point << r1 << r2;
-        qreal start = qMin(r1, r2);
-        qreal end = qMax(r1, r2);
-        qreal length = end - start;
-        if (end - start > 180.0) {
-            length -= 360.0;
-        }
-        path.arcMoveTo(bound, start);
-        path.arcTo(bound, start, length);
-        path.addText(txt, QFont(), QString("%1°").arg(qRound(angle)));
-    }
 }
 

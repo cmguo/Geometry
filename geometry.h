@@ -70,12 +70,6 @@ public:
 
     static qreal length2(QPointF const & vec);
 
-    static void attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p);
-
-    static void attachToLines(QPointF const & p1, QPointF & p);
-
-    static int attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p);
-
     static int attachToPoints(QVector<QPointF> const & pts, QPointF & p);
 
 protected:

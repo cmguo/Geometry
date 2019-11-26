@@ -106,14 +106,14 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
     if (index == 0) {
         return pt;
     } else if (index == 1) {
-        rotate(hint, vAngle_);
+        reverseRotate(hint, vAngle_);
         return center + hint;
     } else if (index == nEdges_ - 1) {
-        rotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+        reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
         return center + hint;
     } else {
         qreal radius = M_PI * 2 * nSpan_ * index / nEdges_;
-        rotate(hint, QPointF(cos(radius), sin(radius)));
+        reverseRotate(hint, QPointF(cos(radius), sin(radius)));
         return center + hint;
     }
 }
@@ -121,14 +121,14 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
 QPointF RegularPolygon::nextPoint(int index, QPointF &hint)
 {
     (void) index;
-    rotate(hint, vAngle_);
+    reverseRotate(hint, vAngle_);
     return points_.front() + hint;
 }
 
 QPointF RegularPolygon::prevPoint(int index, QPointF &hint)
 {
     (void) index;
-    rotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+    reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
     return points_.front() + hint;
 }
 

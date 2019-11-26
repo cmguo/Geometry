@@ -71,9 +71,17 @@ void Sector::setAngle(qreal angle)
         pt3 = points_[0] + QPointF(r, 0);
     }
     QPointF d = pt3 - points_[0];
-    rotate(d, QPointF(cos(la), -sin(la)));
+    reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
     emit changed();
+}
+
+void Sector::movePoint(QPointF const & pt)
+{
+    if (points_.size() == 1) {
+        points_.append(pt);
+    }
+    move(points_.size() - 1, pt); // hande attach
 }
 
 QPainterPath Sector::path()
@@ -101,11 +109,17 @@ QPainterPath Sector::path()
             la -= 360.0;
         else if (la < 0 && la < angle_ - 180.0)
             la += 360.0;
+        if (qFuzzyIsNull(la))
+            la = qAbs(angle_) < 180 ? 0 : 360;
         angle_ = la;
         qDebug() << "sector" << a1 << a2;
         qDebug() << "sector angle" << (a2 - a1) << angle_;
         ph.arcTo(rect, a1, la);
         ph.closeSubpath();
+        if (angle_ < 0)
+            addAngleLabeling(ph, pt3, pt1, pt2, -angle_);
+        else
+            addAngleLabeling(ph, pt2, pt1, pt3, angle_);
     }
     return ph;
 }
@@ -124,10 +138,17 @@ QVector<QPointF> Sector::movePoints()
     }
     points.append((points_[0] + points_[1]) / 2);
     points.append((points_[0] + pt3) / 2);
-    pt3 = (points_[1] + pt3) / 2;
-    adjustToLength(points_[0], pt3, r);
-    if (angle_ > 180)
-        pt3 = points_[0] * 2 - pt3;
+    if (qFuzzyIsNull(angle() - 180)) {
+        pt3 = points_[1] - points_[0];
+        pt3 = points_[0] - QPointF(-pt3.y(), pt3.x());
+        if (angle_ < 0)
+            pt3 = points_[0] * 2 - pt3;
+    } else {
+        pt3 = (points_[1] + pt3) / 2;
+        adjustToLength(points_[0], pt3, r);
+        if (angle_ > 180 || angle_ < -180)
+            pt3 = points_[0] * 2 - pt3;
+    }
     points.append(pt3);
     return points;
 }
@@ -144,11 +165,13 @@ int Sector::hit(QPointF &pt)
     qreal r = sqrt(QPointF::dotProduct(d, d));
     if (points_.size() == 2) {
         pt3 = pt1 + QPointF(r, 0);
-        d = pt3 - pt;
-        if (QPointF::dotProduct(d, d) < HIT_DIFF_DIFF) {
-            pt = pt3;
-            return 2;
-        }
+    } else {
+        pt3 = points_[2];
+    }
+    d = pt3 - pt;
+    if (QPointF::dotProduct(d, d) < HIT_DIFF_DIFF) {
+        pt = pt3;
+        return 2;
     }
     QPointF rp;
     if (dist2PointToSegment(pt1, pt2, pt, rp) < HIT_DIFF_DIFF) {
@@ -175,6 +198,14 @@ bool Sector::move(int elem, const QPointF &pt)
             points_[0] = nearestPointAtVerticalBisector(points_[1], points_[2], pt);
     } else if (elem == 1) {
         points_[1] = pt;
+        QPointF pt3;
+        if (points_.size() > 2) {
+            pt3 = points_[2];
+        } else {
+            qreal r = length(points_[1] - points_[0]);
+            pt3 = points_[0] + QPointF(r, 0);
+        }
+        attachToLines(points_[0], pt3, points_[1]);
         if (points_.size() == 3)
             adjustToLength(points_[0], points_[2], length(points_[0] - points_[1]));
     } else if (elem == 2) {
@@ -182,10 +213,18 @@ bool Sector::move(int elem, const QPointF &pt)
             points_.append(pt);
         else
             points_[2] = pt;
+        attachToLines(points_[0], points_[1], points_[2]);
         adjustToLength(points_[0], points_[1], length(points_[0] - points_[2]));
     } else if (elem == 3) {
         qreal r = length(points_[0] - points_[1]);
         points_[1] = pt;
+        QPointF pt3;
+        if (points_.size() > 2) {
+            pt3 = points_[2];
+        } else {
+            pt3 = points_[0] + QPointF(r, 0);
+        }
+        attachToLines(points_[0], pt3, points_[1]);
         adjustToLength(points_[0], points_[1], r);
     } else if (elem == 4) {
         qreal r = length(points_[0] - points_[1]);
@@ -193,6 +232,7 @@ bool Sector::move(int elem, const QPointF &pt)
             points_.append(pt);
         else
             points_[2] = pt;
+        attachToLines(points_[0], points_[1], points_[2]);
         adjustToLength(points_[0], points_[2], r);
     } else if (elem == 5) {
         qreal r = length(points_[0] - pt);

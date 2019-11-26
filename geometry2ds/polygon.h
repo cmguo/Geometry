@@ -49,20 +49,9 @@ protected:
     void addAngleLabeling(QPainterPath & path, int index, qreal angle);
 
 protected:
-    static qreal angle(QPointF const & p1, QPointF const & p2, QPointF const & p3);
+    using Geometry2D::angle;
 
-    static QPointF crossPoint(QPointF const & p1, QPointF const & p2,
-                              QPointF const & q1, QPointF const & q2);
-
-    static void moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & pt,
-                    QPointF & npt, QPointF const & nnpt);
-
-    static void addAngleLabeling(QPainterPath & path, QPointF const & lpt, QPointF const & pt,
-                          QPointF const & npt);
-
-    static void addAngleLabeling(QPainterPath & path, QPointF const & lpt, QPointF const & pt,
-                          QPointF const & npt, qreal angle);
-
+    using Geometry2D::addAngleLabeling;
 };
 
 #endif // POLYGON_H
