@@ -11,7 +11,7 @@ public:
 
     Cube(QPointF const & pt);
 
-    Cube(Cube const & o);
+    Q_INVOKABLE Cube(Cube const & o);
 
 public:
     virtual void movePoint(const QPointF &pt) override;

@@ -11,7 +11,7 @@ public:
 
     Parallelogram(QPointF const & pt);
 
-    Parallelogram(Parallelogram const & o);
+    Q_INVOKABLE Parallelogram(Parallelogram const & o);
 
 public:
     virtual QPointF point(int index) override;

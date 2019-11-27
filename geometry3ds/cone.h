@@ -11,7 +11,7 @@ public:
 
     Cone(QPointF const & pt);
 
-    Cone(Cone const & o);
+    Q_INVOKABLE Cone(Cone const & o);
 
 protected:
     virtual qreal r2(qreal r) override;

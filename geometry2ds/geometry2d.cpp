@@ -5,8 +5,8 @@
 #include <QtMath>
 #include <QFont>
 
-Geometry2D::Geometry2D(Resource * res)
-    : Geometry(res)
+Geometry2D::Geometry2D(Resource * res, Flags flags, Flags clearFlags)
+    : Geometry(res, flags, clearFlags)
 {
 }
 

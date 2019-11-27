@@ -11,7 +11,7 @@ public:
 
     RightTrapezoid(QPointF const & pt);
 
-    RightTrapezoid(RightTrapezoid const & o);
+    Q_INVOKABLE RightTrapezoid(RightTrapezoid const & o);
 
 public:
     virtual QPointF point(int index) override;

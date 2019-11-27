@@ -5,8 +5,8 @@
 
 using namespace QtPromise;
 
-Geometry::Geometry(Resource * res)
-    : ResourceView(res, CanCopy)
+Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
+    : ResourceView(res, flags | CanCopy, clearFlags)
     , dirty_(false)
     , color_(Qt::white)
     , width_(1.0)
@@ -99,6 +99,8 @@ void Geometry::movePoint(const QPointF &pt)
         points_.append(pt);
     } else {
         points_.back() = pt;
+        if (flags_ & DrawAttach)
+            move(points_.size() - 1, pt);
     }
     dirty_ = true;
 }

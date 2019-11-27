@@ -234,12 +234,18 @@ QPainterPath FrustumCone::path()
         ph.lineTo(pt1 + R2);
         QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
         rect2.moveCenter(pt1);
-        ph.arcTo(rect2, 0, 180.0);
+        if (pt2.y() > pt1.y())
+            ph.arcTo(rect2, 0, 180.0);
+        else
+            ph.arcTo(rect2, 0, -180.0);
     }
     ph.lineTo(center - RX);
     QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
     rect.moveCenter(center);
-    ph.arcTo(rect, 180.0, 180.0);
+    if (pt2.y() > pt1.y())
+        ph.arcTo(rect, 180.0, 180.0);
+    else
+        ph.arcTo(rect, 180.0, -180.0);
     return ph;
 }
 
@@ -310,6 +316,11 @@ void FrustumCone::draw(QPainter *painter)
     painter->setPen(pen1);
     painter->drawLine(px1, center + RX);
     painter->drawLine(px2, center - RX);
+    if (!qFuzzyIsNull(r2)) {
+        if (pt2.y() > pt1.y())
+            painter->drawLine(px1, px2);
+        //painter->drawLine(py1, py2);
+    }
     //painter->drawLine(py1, center + RY);
     // dash lines
     painter->setPen(pen2);

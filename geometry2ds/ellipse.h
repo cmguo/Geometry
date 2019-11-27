@@ -11,7 +11,7 @@ public:
 
     Ellipse(QPointF const & pt);
 
-    Ellipse(Ellipse const & o);
+    Q_INVOKABLE Ellipse(Ellipse const & o);
 
 public:
     virtual QPainterPath path() override;

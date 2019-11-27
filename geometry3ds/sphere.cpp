@@ -81,6 +81,7 @@ void Sphere::draw(QPainter *painter)
     qreal r = Geometry2D::length(center - pt2);
     QRectF circle(0, 0, r * 2, r * 2);
     circle.moveCenter(center);
+    painter->setPen(pen1);
     painter->drawEllipse(circle);
     {
         QRectF rect(-r, -r * CIY, r * 2, r * 2 * CIY);

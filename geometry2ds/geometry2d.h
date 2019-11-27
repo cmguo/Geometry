@@ -11,7 +11,7 @@ class Geometry2D : public Geometry
 {
     Q_OBJECT
 public:
-    Geometry2D(Resource * res);
+    Geometry2D(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
     Geometry2D(QPointF const & pt);
 

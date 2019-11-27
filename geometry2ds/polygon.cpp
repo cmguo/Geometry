@@ -1,8 +1,8 @@
 #include "polygon.h"
 #include "arbitrarypolygon.h"
 
-Polygon::Polygon(Resource * res)
-    : Geometry2D(res)
+Polygon::Polygon(Resource * res, Flags flags)
+    : Geometry2D(res, flags)
 {
 }
 

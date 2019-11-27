@@ -11,7 +11,7 @@ public:
 
     IsopopeTrapezoid(QPointF const & pt);
 
-    IsopopeTrapezoid(IsopopeTrapezoid const & o);
+    Q_INVOKABLE IsopopeTrapezoid(IsopopeTrapezoid const & o);
 
 public:
     virtual QPointF point(int index) override;

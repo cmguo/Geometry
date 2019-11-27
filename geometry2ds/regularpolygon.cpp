@@ -7,20 +7,22 @@
 #include <QtMath>
 
 RegularPolygon::RegularPolygon(Resource * res)
-    : Polygon(res)
-    , nEdges_(3)
-    , nSpan_(1)
+    : Polygon(res, DrawAttach)
+    , nEdges_(0)
+    , nSpan_(0)
 {
+    int edges = 3;
+    int span = 1;
     QString size(res->property(Resource::PROP_SUB_TYPE2).toString());
     int n = size.indexOf('-');
     if (n > 0) {
-        nEdges_ = size.left(n).toInt();
-        nSpan_ = size.mid(n + 1).toInt();
+        edges = size.left(n).toInt();
+        span = size.mid(n + 1).toInt();
     } else if (!size.isEmpty()){
-        nEdges_ = size.toInt();
+        edges = size.toInt();
     }
-    qreal radius = M_PI * 2 * nSpan_ / nEdges_;
-    vAngle_ = QPointF(cos(radius), sin(radius));
+    setEdges(edges);
+    setSpan(span);
     setProperty("toolString", "edges|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
@@ -31,8 +33,11 @@ RegularPolygon::RegularPolygon(QPointF const & pt)
 
 RegularPolygon::RegularPolygon(RegularPolygon const & o)
     : Polygon(o)
-    , nEdges_(o.nEdges_)
+    , nEdges_(0)
+    , nSpan_(0)
 {
+    setEdges(o.nEdges_);
+    setSpan(o.nSpan_);
 }
 
 static QString buttonTitle(int n)
@@ -80,6 +85,8 @@ void RegularPolygon::setEdges(int n)
         return;
     nEdges_ = n;
     nSpan_ = 0;
+    qreal radiusAttach = M_PI / 2 - M_PI / nEdges_;
+    vAngleAttach_ = QPointF(cos(radiusAttach), sin(radiusAttach));
     setSpan(1);
 }
 
@@ -143,6 +150,8 @@ bool RegularPolygon::move(int elem, const QPointF &pt)
 {
     if (elem < nEdges_) {
         points_[1] = pt;
+        QPointF vAngleAttach(-vAngleAttach_.x(), vAngleAttach_.y());
+        attachToLines(points_[0], {vAngleAttach_, vAngleAttach}, points_[1]);
         return true;
     }
     elem -= nEdges_;

@@ -11,7 +11,7 @@ public:
 
     Sphere(QPointF const & pt);
 
-    Sphere(Sphere const & o);
+    Q_INVOKABLE Sphere(Sphere const & o);
 
 public:
     virtual QPainterPath path() override;

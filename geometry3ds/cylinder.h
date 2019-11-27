@@ -11,7 +11,7 @@ public:
 
     Cylinder(QPointF const & pt);
 
-    Cylinder(Cylinder const & o);
+    Q_INVOKABLE Cylinder(Cylinder const & o);
 
 public:
     virtual bool move(int elem, QPointF const & pt) override;

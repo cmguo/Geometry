@@ -11,7 +11,7 @@ public:
 
     IsoscelesTriangle(QPointF const & pt);
 
-    IsoscelesTriangle(IsoscelesTriangle const & o);
+    Q_INVOKABLE IsoscelesTriangle(IsoscelesTriangle const & o);
 
 public:
     virtual QPointF point(int index) override;

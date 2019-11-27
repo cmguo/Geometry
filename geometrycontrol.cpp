@@ -23,6 +23,8 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     : Control(res, flags | PositionAtCenter | KeepAspectRatio, clearFlags)
     , editing_(false)
 {
+    if (res_->flags() & ResourceView::DrawFinised)
+        flags_ |= DrawFinished;
 }
 
 QGraphicsItem * GeometryControl::create(ResourceView * res)
@@ -316,7 +318,14 @@ bool GeometryControl::event(QEvent *event)
         }
         break;
     case QEvent::User:
-        finishGraph();
+        if (graph->canFinish()) {
+            finishGraph();
+        } else {
+            WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
+                        realItem_->parentItem()->parentItem());
+            canvas->removeResource(this);
+        }
+
         break;
     default:
         break;

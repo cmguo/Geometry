@@ -11,7 +11,7 @@ public:
 
     Diamond(QPointF const & pt);
 
-    Diamond(Diamond const & o);
+    Q_INVOKABLE Diamond(Diamond const & o);
 
 public:
     virtual QPointF point(int index) override;

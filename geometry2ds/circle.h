@@ -11,7 +11,7 @@ public:
 
     Circle(QPointF const & pt);
 
-    Circle(Circle const & o);
+    Q_INVOKABLE Circle(Circle const & o);
 
 public:
     virtual QPainterPath path() override;

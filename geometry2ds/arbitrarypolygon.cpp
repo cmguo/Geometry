@@ -15,8 +15,22 @@ ArbitraryPolygon::ArbitraryPolygon(ArbitraryPolygon const & o)
 {
 }
 
+void ArbitraryPolygon::addPoint(QPointF const & pt)
+{
+    Polygon::addPoint(pt);
+    tempValid_ = false;
+}
+
+void ArbitraryPolygon::movePoint(QPointF const & pt)
+{
+    qDebug() << "movePoint";
+    if (!points_.isEmpty())
+        points_.back() = pt;
+}
+
 bool ArbitraryPolygon::commitPoint(const QPointF &pt)
 {
+    tempValid_ = false;
     if (pointCount() < 4)
         return false;
     QPointF d = pt - points_.first();
@@ -28,6 +42,7 @@ bool ArbitraryPolygon::commitPoint(const QPointF &pt)
 
 bool ArbitraryPolygon::moveTempPoint(const QPointF &pt)
 {
+    qDebug() << "moveTempPoint";
     temp_ = pt;
     tempValid_ = true;
     return true;

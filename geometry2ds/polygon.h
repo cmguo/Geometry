@@ -7,7 +7,7 @@ class Polygon : public Geometry2D
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE Polygon(Resource * res);
+    Q_INVOKABLE Polygon(Resource * res, Flags flags = {});
 
     Polygon(QPointF const & pt);
 

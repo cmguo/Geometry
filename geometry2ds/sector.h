@@ -14,12 +14,10 @@ public:
 
     Sector(QPointF const & pt);
 
-    Sector(Sector const & o);
+    Q_INVOKABLE Sector(Sector const & o);
 
 public:
     virtual QPainterPath path() override;
-
-    virtual void movePoint(QPointF const & pt) override;
 
     virtual QVector<QPointF> movePoints() override;
 

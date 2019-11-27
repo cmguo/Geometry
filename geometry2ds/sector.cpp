@@ -5,7 +5,7 @@
 #include <QtMath>
 
 Sector::Sector(Resource * res)
-    : Geometry2D(res)
+    : Geometry2D(res, DrawAttach)
 {
     setProperty("toolString", "angle|角度|Popup,OptionsGroup,NeedUpdate|;");
 }
@@ -74,14 +74,6 @@ void Sector::setAngle(qreal angle)
     reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
     emit changed();
-}
-
-void Sector::movePoint(QPointF const & pt)
-{
-    if (points_.size() == 1) {
-        points_.append(pt);
-    }
-    move(points_.size() - 1, pt); // hande attach
 }
 
 QPainterPath Sector::path()

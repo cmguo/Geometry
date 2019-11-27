@@ -73,7 +73,7 @@ public:
     static int attachToPoints(QVector<QPointF> const & pts, QPointF & p);
 
 protected:
-    Geometry(Resource * res);
+    Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
     Geometry(QString const & type);
 

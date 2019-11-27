@@ -11,7 +11,7 @@ public:
 
     FrustumCone(QPointF const & pt);
 
-    FrustumCone(FrustumCone const & o);
+    Q_INVOKABLE FrustumCone(FrustumCone const & o);
 
 public:
     virtual QPainterPath path() override;

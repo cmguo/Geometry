@@ -11,9 +11,13 @@ public:
 
     ArbitraryPolygon(QPointF const & pt);
 
-    ArbitraryPolygon(ArbitraryPolygon const & o);
+    Q_INVOKABLE ArbitraryPolygon(ArbitraryPolygon const & o);
 
 public:
+    virtual void addPoint(QPointF const & pt) override;
+
+    virtual void movePoint(QPointF const & pt) override;
+
     virtual bool commitPoint(QPointF const & pt) override;
 
     virtual bool moveTempPoint(const QPointF &pt) override;

@@ -11,7 +11,7 @@ public:
 
     Cuboid(QPointF const & pt);
 
-    Cuboid(Cuboid const & o);
+    Q_INVOKABLE Cuboid(Cuboid const & o);
 
 public:
     virtual int pointCount() override;

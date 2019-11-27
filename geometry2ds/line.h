@@ -45,7 +45,7 @@ public:
 
     Line(QPointF const & pt);
 
-    Line(Line const & o);
+    Q_INVOKABLE Line(Line const & o);
 
 public:
     virtual QPainterPath path() override;

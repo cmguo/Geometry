@@ -11,7 +11,7 @@ public:
 
     Trapezoid(QPointF const & pt);
 
-    Trapezoid(Trapezoid const & o);
+    Q_INVOKABLE Trapezoid(Trapezoid const & o);
 
 public:
     virtual int pointCount() override;

@@ -16,7 +16,7 @@ public:
 
     RegularPolygon(QPointF const & pt);
 
-    RegularPolygon(RegularPolygon const & o);
+    Q_INVOKABLE RegularPolygon(RegularPolygon const & o);
 
 public:
     virtual int pointCount() override;
@@ -50,6 +50,7 @@ private:
     int nEdges_;
     int nSpan_;
     QPointF vAngle_;
+    QPointF vAngleAttach_;
     bool commit_ = false;
 };
 

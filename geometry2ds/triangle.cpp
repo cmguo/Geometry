@@ -1,7 +1,7 @@
 #include "triangle.h"
 
 Triangle::Triangle(Resource * res)
-    : Polygon(res)
+    : Polygon(res, DrawAttach)
 {
 }
 
@@ -13,14 +13,6 @@ Triangle::Triangle(QPointF const & pt)
 Triangle::Triangle(Triangle const & o)
     : Polygon(o)
 {
-}
-
-void Triangle::movePoint(QPointF const & pt)
-{
-    if (points_.size() == 1) {
-        points_.append(pt);
-    }
-    move(points_.size() - 1, pt); // hande attach
 }
 
 int Triangle::pointCount()
