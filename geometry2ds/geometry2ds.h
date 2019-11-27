@@ -31,15 +31,7 @@ REGISTER_GEOMETRY_2D(Diamond, "diamond")
 REGISTER_GEOMETRY_2D(Rectangle, "rectangle")
 REGISTER_GEOMETRY_2D(Square, "square")
 REGISTER_GEOMETRY_2D(ArbitraryPolygon, "arbitrarypolygon")
-REGISTER_GEOMETRY_2D(Line,
-                  "line.o-,line.o-b,dashline.b-ha,dotline.so-ra,dashdotline.so-a");
-REGISTER_GEOMETRY_2D(RegularPolygon,
-                  "regularpolygon3,"
-                  "regularpolygon4,"
-                  "regularpolygon5,regularpolygon5.2,"
-                  /*"regularpolygon6,"
-                  "regularpolygon7,regularpolygon7.2,regularpolygon7.3,"
-                  "regularpolygon8,regularpolygon8.3,"
-                  "regularpolygon9,regularpolygon9.2,regularpolygon9.4,"*/)
+REGISTER_GEOMETRY_2D(Line, "line,dashline,dotline,dashdotline");
+REGISTER_GEOMETRY_2D(RegularPolygon, "regularpolygon")
 
 #endif // GEOMETRY2DS_H

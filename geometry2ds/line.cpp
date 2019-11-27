@@ -19,12 +19,7 @@ Line::Line(Resource * res)
     , endType_(None)
 {
     QString type = res->property(Resource::PROP_SUB_TYPE).toString();
-    QString endtype;
-    int n = type.indexOf('.');
-    if (n > 0) {
-        endtype = type.mid(n + 1);
-        type = type.left(n);
-    }
+    QString endtype = res->property(Resource::PROP_SUB_TYPE2).toString();
     if (type == "solidline") {
         lineType_ = Solid;
     } else if (type == "dashline") {

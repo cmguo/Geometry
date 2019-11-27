@@ -54,18 +54,6 @@ QVector3D Cuboid::point(int index)
             x0 = pt1.x() - CO * h;
             w = pt2.x() - x0;
         }
-        /*
-        if (QByteArray("Cube") == metaObject()->className()) {
-            qDebug() << "Cube";
-            if (qAbs(w) < qAbs(h)) {
-                w = w > 0 ? qAbs(h) : -qAbs(h);
-            } else {
-                h = h > 0 ? qAbs(w) : -qAbs(w);
-                x0 = pt1.x() - CO * h;
-                z0 = -(h * (1 + CO) + pt1.y());
-            }
-        }
-        */
 #else
         qreal x0 = 0;
         qreal y0 = 0;

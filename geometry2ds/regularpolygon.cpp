@@ -11,12 +11,12 @@ RegularPolygon::RegularPolygon(Resource * res)
     , nEdges_(3)
     , nSpan_(1)
 {
-    QString size(res->property(Resource::PROP_SUB_TYPE).toString().mid(14));
-    int n = size.indexOf('.');
+    QString size(res->property(Resource::PROP_SUB_TYPE2).toString());
+    int n = size.indexOf('-');
     if (n > 0) {
         nEdges_ = size.left(n).toInt();
         nSpan_ = size.mid(n + 1).toInt();
-    } else {
+    } else if (!size.isEmpty()){
         nEdges_ = size.toInt();
     }
     qreal radius = M_PI * 2 * nSpan_ / nEdges_;
@@ -134,7 +134,6 @@ QPointF RegularPolygon::prevPoint(int index, QPointF &hint)
 
 bool RegularPolygon::setPoint(int index, const QPointF &pt)
 {
-    qDebug() << "setPoint" << index << pt;
     (void) index;
     points_[1] = pt;
     return true;
@@ -142,7 +141,6 @@ bool RegularPolygon::setPoint(int index, const QPointF &pt)
 
 bool RegularPolygon::move(int elem, const QPointF &pt)
 {
-    qDebug() << "move" << elem;
     if (elem < nEdges_) {
         points_[1] = pt;
         return true;
