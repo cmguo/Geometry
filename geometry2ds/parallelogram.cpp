@@ -15,34 +15,38 @@ Parallelogram::Parallelogram(Parallelogram const & o)
 {
 }
 
-QPointF Parallelogram::point(int index)
+QPointF Parallelogram::point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3)
 {
-    if (index < 3)
-        return Trapezoid::point(index);
-    QPointF const & st = points_.first();
-    QPointF const & pt1 = point(1);
-    QPointF const & pt2 = points_[1];
-    return QPointF(st.x() + pt2.x() - pt1.x(), pt2.y());
+    return QPointF(pt1.x() + pt3.x() - pt2.x(), pt3.y());
 }
 
 bool Parallelogram::setPoint(int index, const QPointF &pt)
 {
-    if (index < 3)
+    if (index == 0) {
+        QPointF pt2 = point(2);
+        QPointF pt3 = point(3);
+        Trapezoid::setPoint(0, pt);
+        Trapezoid::setPoint(1, QPointF(pt.x() + pt2.x() - pt3.x(), pt.y()));
+        return true;
+    }
+    if (index < 3) {
         return Trapezoid::setPoint(index, pt);
-    QPointF const & st = points_.first();
-    QPointF const & pt1 = point(1);
-    QPointF const & pt2 = points_[1];
-    return Trapezoid::setPoint(1, QPointF(st.x() + pt2.x() - pt.x(), pt1.y()));
+    }
+    QPointF st = point(0);
+    QPointF pt1 = point(1);
+    return Trapezoid::setPoint(2, QPointF(pt1.x() + pt.x() - st.x(), pt.y()));
 }
 
 bool Parallelogram::move(int elem, const QPointF &pt)
 {
-    if (elem == 0 || elem == 1) {
-        Trapezoid::move(5, pt);
-        return Polygon::move(elem, pt);
-    } else if (elem == 2 || elem == 3) {
-        Trapezoid::move(7, pt);
-        return Polygon::move(elem, pt);
+    if (elem == 0) {
+        QPointF p = pt;
+        attachToLines(point(3), p);
+        return Polygon::move(elem, p);
+    } else if (elem == 3) {
+        QPointF p = pt;
+        attachToLines(point(0), p);
+        return Polygon::move(elem, p);
     } else {
         return Trapezoid::move(elem, pt);
     }

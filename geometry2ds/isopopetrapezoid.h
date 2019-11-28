@@ -13,8 +13,10 @@ public:
 
     Q_INVOKABLE IsopopeTrapezoid(IsopopeTrapezoid const & o);
 
-public:
-    virtual QPointF point(int index) override;
+protected:
+    virtual bool setPoint(int index, const QPointF &pt) override;
+
+    virtual QPointF point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3) override;
 
     virtual bool move(int elem, const QPointF &pt) override;
 };

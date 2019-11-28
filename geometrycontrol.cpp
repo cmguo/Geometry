@@ -15,7 +15,7 @@
 #include <QPen>
 
 static char const * toolstr =
-        "edit()|编辑|HideSelector|:/showboard/icons/icon_delete.png;"
+        "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
         "setColor(QColor)|颜色|Popup,OptionsGroup,NeedUpdate|;"
         "-setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;";
 

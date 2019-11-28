@@ -137,19 +137,21 @@ void Geometry2D::attachToLine(QPointF const & p1, QPointF const & p2, QPointF & 
 
 static const qreal SQRT3W = 173.20508075688772935274463415059;
 
+static QVector<QPointF> ATTACH_DIRS = {
+    QPointF(100, 100), QPointF(100, -100), // 45° 135°
+    QPointF(200, 0), QPointF(0, 200), // 0° 90°
+    QPointF(100, SQRT3W), QPointF(100, -SQRT3W), // 60° 120°
+    QPointF(SQRT3W, 100), QPointF(SQRT3W, -100) // 30° 150°
+};
+
 void Geometry2D::attachToLines(QPointF const & p1, QPointF & p)
 {
-    attachToLines(p1, {QPointF(100, 100), QPointF(100, -100),
-                       QPointF(100, SQRT3W), QPointF(100, -SQRT3W),
-                       QPointF(SQRT3W, 100), QPointF(SQRT3W, -100)}, p);
+    attachToLines(p1, ATTACH_DIRS, p);
 }
 
 void Geometry2D::attachToLines(QPointF const & p1, QPointF const & p2, QPointF & p)
 {
-    attachToLines(p1, p2, {QPointF(100, 100), QPointF(100, -100),
-                           QPointF(200, 0), QPointF(0, 200),
-                           QPointF(100, SQRT3W), QPointF(100, -SQRT3W),
-                       QPointF(SQRT3W, 100), QPointF(SQRT3W, -100)}, p);
+    attachToLines(p1, p2, ATTACH_DIRS, p);
 }
 
 int Geometry2D::attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p)
