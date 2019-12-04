@@ -24,7 +24,7 @@ Cuboid::Cuboid(QPointF const & pt)
 
 Cuboid::Cuboid(Cuboid const & o)
     : Polyhedron(o)
-    , moveElem_(o.moveElem_)
+    , moveElem_(o.moveElem_),inner_(o.inner_)
 {
 }
 
