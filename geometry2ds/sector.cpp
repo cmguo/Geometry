@@ -16,8 +16,9 @@ Sector::Sector(QPointF const & pt)
 }
 
 Sector::Sector(Sector const & o)
-    : Geometry2D(o)
+    : Geometry2D(o),angle_(o.angle_)
 {
+     setProperty("toolString", "angle|角度|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 static QString buttonTitle(qreal a)

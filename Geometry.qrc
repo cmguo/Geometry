@@ -6,7 +6,6 @@
         <file>icons/geometry2d/isoscelestriangle.svg</file>
         <file>icons/geometry2d/line.svg</file>
         <file>icons/geometry2d/parallelogram.svg</file>
-        <file>icons/geometry2d/regularpolygon5.svg</file>
         <file>icons/geometry2d/righttrapezoid.svg</file>
         <file>icons/geometry2d/righttriangle.svg</file>
         <file>icons/geometry2d/square.svg</file>
@@ -19,5 +18,7 @@
         <file>icons/geometry2d/line.so-so.svg</file>
         <file>icons/geometry2d/dotline.svg</file>
         <file>strings/number.txt</file>
+        <file>icons/geometry2d/sector.svg</file>
+        <file>icons/geometry2d/regularpolygon.5.svg</file>
     </qresource>
 </RCC>

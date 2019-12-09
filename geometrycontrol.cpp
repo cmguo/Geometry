@@ -100,7 +100,7 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
                 QString name = QVariant::fromValue(c).toString();
                 ToolButton::Flags flags = nullptr;
                 QGraphicsItem * icon = colorIcon(c);
-                ToolButton * btn = new ToolButton({name, name, flags,
+                ToolButton * btn = new ToolButton({name, "", flags,
                      QVariant::fromValue(icon)});
                 colorButtons.append(btn);
             }

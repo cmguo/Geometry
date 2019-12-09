@@ -14,8 +14,8 @@
 static char const * const geometry2ds[] = {
     "line", "dotline", "line.so-", "line.so-so",
     "circle", "isoscelestriangle",  "righttriangle",
-    "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon5", "parallelogram",
-    "arbitrarypolygon"
+    "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "parallelogram",
+    "arbitrarypolygon","sector"
 };
 
 static char const * const geometry3ds[] = {
@@ -66,7 +66,7 @@ GeometryTool::GeometryTool(ResourceView *res)
 QWidget * GeometryTool::createWidget(ResourceView *res)
 {
     (void) res;
-    ToolbarWidget * widget = new ToolbarWidget(false);
+    ToolbarWidget * widget = new ToolbarWidget();
     widget->setToolButtons(buttons_);
     void (ToolbarWidget::*sig)(QList<ToolButton *> const &) = &ToolbarWidget::buttonClicked;
     QObject::connect(widget, sig, this, &GeometryTool::buttonClicked);

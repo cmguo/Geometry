@@ -65,8 +65,9 @@ void Geometry::getToolButtons(QList<ToolButton *> & buttons,
                 if (button->flags & ToolButton::NeedUpdate) {
                     updateToolButton(button);
                 }
+                buttons.insert(0,button);
             }
-            buttons.append(iter->second);
+
         }
     }
 }
