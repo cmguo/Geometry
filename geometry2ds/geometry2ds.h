@@ -17,10 +17,12 @@
 #include "parallelogram.h"
 #include "diamond.h"
 #include "line.h"
+#include "arc.h"
 
 REGISTER_RESOURCE_VIEW_FACTORY(Geometry2DFactory, Geometry2D, "geometry2d")
 REGISTER_GEOMETRY_2D(Ellipse, "ellipse")
 REGISTER_GEOMETRY_2D(Circle, "circle")
+REGISTER_GEOMETRY_2D(Arc, "arc")
 REGISTER_GEOMETRY_2D(Sector, "sector")
 REGISTER_GEOMETRY_2D(IsoscelesTriangle, "isoscelestriangle")
 REGISTER_GEOMETRY_2D(RightTriangle, "righttriangle")

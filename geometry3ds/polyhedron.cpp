@@ -15,7 +15,8 @@ Polyhedron::Polyhedron(QPointF const & pt)
 }
 
 Polyhedron::Polyhedron(Polyhedron const & o)
-    : Geometry3D(o),lines_(o.lines_)
+    : Geometry3D(o)
+    , lines_(o.lines_)
 {
 }
 

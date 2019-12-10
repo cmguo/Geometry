@@ -49,7 +49,7 @@ static QString buttonTitle(int n)
         file.open(QFile::ReadOnly);
         numberChar = file.readAll();
     }
-    return QString("\xe6\xad\xa3%1边形").arg(numberChar[n]);
+    return QString("正%1边形").arg(numberChar[n]);
 }
 
 void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,

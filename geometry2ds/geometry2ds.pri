@@ -1,5 +1,6 @@
 HEADERS += \
     $$PWD/arbitrarypolygon.h \
+    $$PWD/arc.h \
     $$PWD/geometry2d.h \
     $$PWD/circle.h \
     $$PWD/diamond.h \
@@ -21,6 +22,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/arbitrarypolygon.cpp \
+    $$PWD/arc.cpp \
     $$PWD/circle.cpp \
     $$PWD/diamond.cpp \
     $$PWD/ellipse.cpp \
