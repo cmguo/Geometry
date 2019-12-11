@@ -18,7 +18,9 @@
         <file>icons/geometry2d/line.so-so.svg</file>
         <file>icons/geometry2d/dotline.svg</file>
         <file>strings/number.txt</file>
-        <file>icons/geometry2d/sector.svg</file>
         <file>icons/geometry2d/regularpolygon.5.svg</file>
+        <file>icons/geometry2d/sector.svg</file>
+        <file>icons/geometry2d/diamond.svg</file>
+        <file>icons/geometry2d/rectangle.svg</file>
     </qresource>
 </RCC>
