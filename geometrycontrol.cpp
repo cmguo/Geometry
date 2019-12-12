@@ -49,7 +49,7 @@ void GeometryControl::attached()
     updateSettings();
     Geometry * geometry = static_cast<Geometry *>(res_);
     QObject::connect(geometry, &Geometry::changed,
-                     this, &GeometryControl::finishGraph);
+                     this, &GeometryControl::geometryChanged);
     if (geometry->empty()) {
         loadFinished(true);
     } else {
@@ -57,7 +57,7 @@ void GeometryControl::attached()
         geometry->load().then([this, life]() {
             if (life.isNull())
                 return;
-            updateGraph();
+            updateGeometry();
             loadFinished(true);
         });
     }
@@ -169,6 +169,12 @@ void GeometryControl::updateSettings()
     setPen(QPen(color, width));
 }
 
+void GeometryControl::geometryChanged()
+{
+    updateGeometry();
+    finishGeometry();
+}
+
 Control::SelectMode GeometryControl::selectTest(QPointF const & point)
 {
     (void) point;
@@ -199,18 +205,18 @@ void GeometryControl::setPen(const QPen &pen)
 void GeometryControl::updateTransform()
 {
     if (flags_ & SelfTransform)
-        updateGraph();
+        updateGeometry();
     else
         Control::updateTransform();
 }
 
-void GeometryControl::updateGraph()
+void GeometryControl::updateGeometry()
 {
     Geometry * geometry = qobject_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     QPainterPath ph(geometry->path());
     if (flags_ & SelfTransform)
-        ph = res_->transform()->map(ph);
+        ph = res_->transform().transform().map(ph);
     item->setPath(ph);
     if (editing_) {
         editPoints_ = geometry->movePoints();
@@ -218,14 +224,14 @@ void GeometryControl::updateGraph()
     }
 }
 
-void GeometryControl::finishGraph()
+void GeometryControl::finishGeometry()
 {
     bool hasFinished = flags_ & DrawFinished;
     flags_ |= DrawFinished;
     Geometry * geometry = static_cast<Geometry *>(res_);
     geometry->finish(bounds().center());
     updateTransform();
-    updateGraph();
+    updateGeometry();
     WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
                 realItem_->parentItem()->parentItem());
     if (!hasFinished) {
@@ -276,7 +282,7 @@ bool GeometryControl::event(QEvent *event)
             }
         } else {
             graph->addPoint(me->pos());
-            updateGraph();
+            updateGeometry();
             return true;
         }
         break;
@@ -286,24 +292,24 @@ bool GeometryControl::event(QEvent *event)
         if (flags_ & DrawFinished) {
             QPointF pt = me->pos() + hitOffset_;
             if (graph->move(hitElem_, pt)) {
-                updateGraph();
+                updateGeometry();
             }
         } else {
             graph->movePoint(me->pos());
-            updateGraph();
+            updateGeometry();
         }
         return true;
     }
     case QEvent::GraphicsSceneMouseRelease: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (flags_ & DrawFinished) {
-            finishGraph();
+            finishGeometry();
         } else {
             if (graph->commitPoint(me->pos())) {
-                finishGraph();
+                finishGeometry();
             } else if (graph->canFinish()) {
                 me->setFlags(static_cast<Qt::MouseEventFlags>(256));
-                updateGraph();
+                updateGeometry();
             }
         }
         return true;
@@ -312,14 +318,14 @@ bool GeometryControl::event(QEvent *event)
         if (!(flags_ & DrawFinished)) {
             QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (graph->moveTempPoint(me->pos())) {
-                 updateGraph();
+                 updateGeometry();
                  return true;
             }
         }
         break;
     case QEvent::User:
         if (graph->canFinish()) {
-            finishGraph();
+            finishGeometry();
         } else {
             WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
                         realItem_->parentItem()->parentItem());

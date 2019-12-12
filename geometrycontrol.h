@@ -43,9 +43,13 @@ protected:
 protected:
     void setPen(QPen const & pen);
 
-    void updateGraph();
+    // update new path to item
+    //  also update edit points when editing
+    void updateGeometry();
 
-    void finishGraph();
+    // finish drawing or adjusting geometry
+    //  will adjust center & update
+    void finishGeometry();
 
     QRectF bounds();
 
@@ -54,6 +58,8 @@ protected:
 
 private:
     void updateSettings();
+
+    void geometryChanged();
 
 private:
     int hitElem_;

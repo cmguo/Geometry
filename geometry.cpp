@@ -133,7 +133,7 @@ void Geometry::finish(const QPointF &c)
         QPointF & pt = points_[i];
         pt -= c;
     }
-    transform_.translate(c.x(), c.y());
+    transform_.translate(transform_.scaleRotate().map(c));
     flags_ |= DrawFinised;
     dirty_ = true;
 }

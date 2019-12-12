@@ -34,6 +34,7 @@ HEADERS += \
 
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)
+include(rulers/rulers.pri)
 
 CONFIG(debug, debug|release) {
     win32: TARGET = $$join(TARGET,,,d)

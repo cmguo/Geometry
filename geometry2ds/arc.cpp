@@ -56,7 +56,7 @@ void Arc::arcTo(QPainterPath & path, const QPointF &point, const QSizeF &size, d
     qDebug() << "a1 <-> a2" << (a1 * 180 / M_PI) << (a2 * 180 / M_PI);
     if (isLargeArc != sweepDirection)
         a2 = -a2;
-    if (a2 * t.y() < 0)
+    if (a2 * t.y() <= 0)
         a1 += M_PI;
     qreal t1 = a1 + a2, t2 = a1 - a2;
     qDebug() << "t1 <-> t2" << (t1 * 180 / M_PI) << (t2 * 180 / M_PI);
