@@ -1,4 +1,5 @@
 #include "line.h"
+#include "geometryhelper.h"
 
 #include "core/resource.h"
 
@@ -84,8 +85,8 @@ QPainterPath Line::path()
     fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
     fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
     QPointF dir(pt2 - pt1);
-    QPointF udir = dir / length(dir);
-    udir = QPointF(-udir.y(), udir.x()) * HIT_DIFF / 2;
+    QPointF udir = dir / GeometryHelper::length(dir);
+    udir = QPointF(-udir.y(), udir.x()) * GeometryHelper::HIT_DIFF / 2;
     ph.moveTo(pt1 - udir);
     ph.lineTo(pt2 - udir);
     ph.lineTo(pt2 + udir);
@@ -145,7 +146,7 @@ void Line::draw(QPainter *painter)
 void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
                       QPointF &pt, const QPointF &dir, bool & solid)
 {
-    QPointF udir = dir / length(dir);
+    QPointF udir = dir / GeometryHelper::length(dir);
     QRectF rect(-4, -4, 8, 8);
     rect.adjust(-width, -width, width, width);
     QTransform t(udir.x(), udir.y(), -udir.y(), udir.x(), pt.x(), pt.y());

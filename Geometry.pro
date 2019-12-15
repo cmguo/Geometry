@@ -21,6 +21,7 @@ QMAKE_CXXFLAGS += /utf-8
 SOURCES += \
     geometry.cpp \
     geometrycontrol.cpp \
+    geometryhelper.cpp \
     geometryitem.cpp \
     geometrytool.cpp
 
@@ -29,6 +30,7 @@ HEADERS += \
     exports.h \
     geometry.h \
     geometrycontrol.h \
+    geometryhelper.h \
     geometryitem.h \
     geometrytool.h
 

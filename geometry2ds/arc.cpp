@@ -1,4 +1,5 @@
 #include "arc.h"
+#include "geometryhelper.h"
 
 #include <QtMath>
 
@@ -52,7 +53,7 @@ void Arc::arcTo(QPainterPath & path, const QPointF &point, const QSizeF &size, d
     qDebug() << "t" << t;
     // a1 = (t1 + t2) / 2, a2 = (t1 - t2) / 2; t1 > t2
     qreal a1 = atan(-t.x() / t.y());
-    qreal a2 = asin(sqrt(QPointF::dotProduct(t, t)));
+    qreal a2 = asin(sqrt(GeometryHelper::length2(t)));
     qDebug() << "a1 <-> a2" << (a1 * 180 / M_PI) << (a2 * 180 / M_PI);
     if (isLargeArc != sweepDirection)
         a2 = -a2;

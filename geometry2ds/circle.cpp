@@ -1,4 +1,5 @@
 #include "circle.h"
+#include "geometryhelper.h"
 
 Circle::Circle(Resource * res)
     : Ellipse(res)
@@ -48,12 +49,12 @@ QVector<QPointF> Circle::movePoints()
 int Circle::hit(QPointF &pt)
 {
     QPointF off(points_.back() - points_.front());
-    qreal prod = QPointF::dotProduct(off, off);
+    qreal prod = GeometryHelper::length2(off);
     QPointF off2(pt - points_.front());
-    qreal prod2 = QPointF::dotProduct(off2, off2);
+    qreal prod2 = GeometryHelper::length2(off2);
     off = off2 * sqrt(prod / prod2);
     off2 -= off;
-    if (QPointF::dotProduct(off2, off2) < HIT_DIFF_DIFF) {
+    if (GeometryHelper::length2(off2) < GeometryHelper::HIT_DIFF_DIFF) {
         pt = points_.front() + off;
         return 1;
     }

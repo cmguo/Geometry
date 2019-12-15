@@ -1,5 +1,5 @@
 #include "sphere.h"
-#include "geometry2ds/geometry2d.h"
+#include "geometryhelper.h"
 
 #include <QPen>
 #include <QPainter>
@@ -42,7 +42,7 @@ int Sphere::hit(QPointF &pt)
     qreal prod2 = QPointF::dotProduct(off2, off2);
     off = off2 * sqrt(prod / prod2);
     off2 -= off;
-    if (QPointF::dotProduct(off2, off2) < HIT_DIFF_DIFF) {
+    if (GeometryHelper::length2(off2) < GeometryHelper::HIT_DIFF_DIFF) {
         pt = points_.front() + off;
         return 1;
     }
@@ -63,7 +63,7 @@ QPainterPath Sphere::path()
         return ph;
     QPointF center(points_[0]);
     QPointF pt2(points_[1]);
-    qreal r = Geometry2D::length(center - pt2);
+    qreal r = GeometryHelper::length(center - pt2);
     QRectF circle(0, 0, r * 2, r * 2);
     circle.moveCenter(center);
     ph.addEllipse(circle);
@@ -78,7 +78,7 @@ void Sphere::draw(QPainter *painter)
     QPen pen2(color_, width_, Qt::DotLine);
     QPointF center(points_[0]);
     QPointF pt2(points_[1]);
-    qreal r = Geometry2D::length(center - pt2);
+    qreal r = GeometryHelper::length(center - pt2);
     QRectF circle(0, 0, r * 2, r * 2);
     circle.moveCenter(center);
     painter->setPen(pen1);

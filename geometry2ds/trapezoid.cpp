@@ -1,4 +1,5 @@
 #include "trapezoid.h"
+#include "geometryhelper.h"
 
 Trapezoid::Trapezoid(Resource * res)
     : Polygon(res)
@@ -26,7 +27,7 @@ static QVector<QPointF> dirs = {
 void Trapezoid::movePoint(const QPointF &pt)
 {
     Polygon::movePoint(pt);
-    attachToLines(points_[0], dirs, points_[1]);
+    GeometryHelper::attachToLines(points_[0], dirs, points_[1]);
 }
 
 bool Trapezoid::commitPoint(const QPointF &pt)
@@ -73,13 +74,13 @@ bool Trapezoid::move(int elem, const QPointF &pt)
 {
     if (elem == 1) {
         QPointF p = pt;
-        attachToLines(points_[1], p);
+        GeometryHelper::attachToLines(points_[1], p);
         Polygon::move(5, p);
         points_[2] = p;
         return true;
     } else if (elem == 2) {
         points_[1] = pt;
-        attachToLines(points_[2], points_[1]);
+        GeometryHelper::attachToLines(points_[2], points_[1]);
         return true;
     } else if (elem < 4) {
         return moveKeepAngle(elem, pt);

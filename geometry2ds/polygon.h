@@ -49,8 +49,6 @@ protected:
     void addAngleLabeling(QPainterPath & path, int index, qreal angle);
 
 protected:
-    using Geometry2D::angle;
-
     using Geometry2D::addAngleLabeling;
 };
 

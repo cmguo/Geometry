@@ -1,4 +1,5 @@
 #include "righttriangle.h"
+#include "geometryhelper.h"
 
 RightTriangle::RightTriangle(Resource * res)
     : Triangle(res)
@@ -27,12 +28,12 @@ bool RightTriangle::move(int elem, const QPointF &pt)
 {
     if (elem == 0) {
         QPointF p(pt);
-        attachToLines(points_[1], p);
+        GeometryHelper::attachToLines(points_[1], p);
         Triangle::move(3, p);
         return Triangle::move(0, p);
     } else if (elem == 1) {
         QPointF p(pt);
-        attachToLines(points_[0], p);
+        GeometryHelper::attachToLines(points_[0], p);
         Triangle::move(5, p);
         return Triangle::move(1, p);
     } else if (elem == 2) {

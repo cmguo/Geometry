@@ -1,4 +1,5 @@
 #include "arbitrarypolygon.h"
+#include "geometryhelper.h"
 
 ArbitraryPolygon::ArbitraryPolygon(Resource * res)
     : Polygon(res)
@@ -34,7 +35,7 @@ bool ArbitraryPolygon::commitPoint(const QPointF &pt)
     if (pointCount() < 4)
         return false;
     QPointF d = pt - points_.first();
-    if (QPointF::dotProduct(d, d) >= HIT_DIFF_DIFF)
+    if (GeometryHelper::length2(d) >= GeometryHelper::HIT_DIFF_DIFF)
         return false;
     points_.pop_back();
     return true;

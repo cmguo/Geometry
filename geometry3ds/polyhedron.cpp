@@ -1,4 +1,5 @@
 #include "polyhedron.h"
+#include "geometryhelper.h"
 
 #include <QPainter>
 
@@ -28,7 +29,7 @@ bool Polyhedron::commitPoint(const QPointF &pt)
     if (pointCount() < 4)
         return false;
     QPointF d = pt - points_.first();
-    if (QPointF::dotProduct(d, d) >= HIT_DIFF_DIFF)
+    if (GeometryHelper::length2(d) >= GeometryHelper::HIT_DIFF_DIFF)
         return false;
     points_.pop_back();
     return true;
@@ -118,7 +119,7 @@ int Polyhedron::hit(QPointF &pt)
     QVector<QPointF> points(pointCount());
     QVector<bool> hidden(pointCount());
     collect(points, hidden);
-    return attachToPoints(points, pt);
+    return GeometryHelper::attachToPoints(points, pt);
 }
 
 bool Polyhedron::move(int elem, const QPointF &pt)

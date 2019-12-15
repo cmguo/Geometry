@@ -1,4 +1,5 @@
 #include "parallelogram.h"
+#include "geometryhelper.h"
 
 Parallelogram::Parallelogram(Resource * res)
     : Trapezoid(res)
@@ -41,11 +42,11 @@ bool Parallelogram::move(int elem, const QPointF &pt)
 {
     if (elem == 0) {
         QPointF p = pt;
-        attachToLines(point(3), p);
+        GeometryHelper::attachToLines(point(3), p);
         return Polygon::move(elem, p);
     } else if (elem == 3) {
         QPointF p = pt;
-        attachToLines(point(0), p);
+        GeometryHelper::attachToLines(point(0), p);
         return Polygon::move(elem, p);
     } else {
         return Trapezoid::move(elem, pt);

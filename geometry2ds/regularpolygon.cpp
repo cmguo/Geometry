@@ -1,4 +1,5 @@
 #include "regularpolygon.h"
+#include "geometryhelper.h"
 
 #include <core/resource.h>
 #include <core/toolbutton.h>
@@ -114,14 +115,14 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
     if (index == 0) {
         return pt;
     } else if (index == 1) {
-        reverseRotate(hint, vAngle_);
+        GeometryHelper::reverseRotate(hint, vAngle_);
         return center + hint;
     } else if (index == nEdges_ - 1) {
-        reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+        GeometryHelper::reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
         return center + hint;
     } else {
         qreal radius = M_PI * 2 * nSpan_ * index / nEdges_;
-        reverseRotate(hint, QPointF(cos(radius), sin(radius)));
+        GeometryHelper::reverseRotate(hint, QPointF(cos(radius), sin(radius)));
         return center + hint;
     }
 }
@@ -129,14 +130,14 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
 QPointF RegularPolygon::nextPoint(int index, QPointF &hint)
 {
     (void) index;
-    reverseRotate(hint, vAngle_);
+    GeometryHelper::reverseRotate(hint, vAngle_);
     return points_.front() + hint;
 }
 
 QPointF RegularPolygon::prevPoint(int index, QPointF &hint)
 {
     (void) index;
-    reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+    GeometryHelper::reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
     return points_.front() + hint;
 }
 
@@ -152,7 +153,7 @@ bool RegularPolygon::move(int elem, const QPointF &pt)
     if (elem < nEdges_) {
         points_[1] = pt;
         QPointF vAngleAttach(-vAngleAttach_.x(), vAngleAttach_.y());
-        attachToLines(points_[0], {vAngleAttach_, vAngleAttach}, points_[1]);
+        GeometryHelper::attachToLines(points_[0], {vAngleAttach_, vAngleAttach}, points_[1]);
         return true;
     }
     elem -= nEdges_;
@@ -161,11 +162,11 @@ bool RegularPolygon::move(int elem, const QPointF &pt)
     QPointF pt1 = iterPoint(elem, hint);
     QPointF pt2 = prevPoint(-1, hint);
     QPointF rp;
-    qreal d = sqrt(dist2PointToSegment(pt1, pt2, pt0, rp));
-    qreal dd = sqrt(dist2PointToSegment(pt1, pt2, pt, rp));
+    qreal d = sqrt(GeometryHelper::dist2PointToSegment(pt1, pt2, pt0, rp));
+    qreal dd = sqrt(GeometryHelper::dist2PointToSegment(pt1, pt2, pt, rp));
     pt1 = rp - pt0;
     pt2 = pt - pt0;
-    if (QPointF::dotProduct(pt1, pt1) < QPointF::dotProduct(pt2, pt2))
+    if (GeometryHelper::length2(pt1) < GeometryHelper::length2(pt2))
         dd += d;
     else
         dd = d - dd;

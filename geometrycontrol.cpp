@@ -6,6 +6,7 @@
 #include "geometry2ds/line.h"
 #include "geometry2ds/regularpolygon.h"
 #include "geometry2ds/sector.h"
+#include "geometry2ds/circle.h"
 
 #include <core/toolbutton.h>
 
@@ -23,8 +24,8 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     : Control(res, flags | PositionAtCenter | KeepAspectRatio, clearFlags)
     , editing_(false)
 {
-    if (res_->flags() & ResourceView::DrawFinised)
-        flags_ |= DrawFinished;
+    if (res->metaObject() == &Circle::staticMetaObject)
+        flags_ &= ~CanRotate;
 }
 
 QGraphicsItem * GeometryControl::create(ResourceView * res)
@@ -226,9 +227,8 @@ void GeometryControl::updateGeometry()
 
 void GeometryControl::finishGeometry()
 {
-    bool hasFinished = flags_ & DrawFinished;
-    flags_ |= DrawFinished;
     Geometry * geometry = static_cast<Geometry *>(res_);
+    bool hasFinished = geometry->finished();
     geometry->finish(bounds().center());
     updateTransform();
     updateGeometry();
@@ -250,11 +250,11 @@ QRectF GeometryControl::bounds()
 
 bool GeometryControl::event(QEvent *event)
 {
-    Geometry * graph = static_cast<Geometry *>(resource());
+    Geometry * geometry = static_cast<Geometry *>(resource());
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        if (flags_ & DrawFinished) {
+        if (geometry->finished()) {
             QPointF pt = me->pos();
             if (editing_ && (me->flags() & 256)) {
                 qreal min = DBL_MAX;
@@ -274,14 +274,14 @@ bool GeometryControl::event(QEvent *event)
                     return true;
                 }
             } else if (!editing_) {
-                hitElem_ = graph->hit(pt);
+                hitElem_ = geometry->hit(pt);
                 if (hitElem_ >= 0) {
                     hitOffset_ = pt - me->pos();
                     return true;
                 }
             }
         } else {
-            graph->addPoint(me->pos());
+            geometry->addPoint(me->pos());
             updateGeometry();
             return true;
         }
@@ -289,25 +289,25 @@ bool GeometryControl::event(QEvent *event)
     }
     case QEvent::GraphicsSceneMouseMove: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        if (flags_ & DrawFinished) {
+        if (geometry->finished()) {
             QPointF pt = me->pos() + hitOffset_;
-            if (graph->move(hitElem_, pt)) {
+            if (geometry->move(hitElem_, pt)) {
                 updateGeometry();
             }
         } else {
-            graph->movePoint(me->pos());
+            geometry->movePoint(me->pos());
             updateGeometry();
         }
         return true;
     }
     case QEvent::GraphicsSceneMouseRelease: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        if (flags_ & DrawFinished) {
+        if (geometry->finished()) {
             finishGeometry();
         } else {
-            if (graph->commitPoint(me->pos())) {
+            if (geometry->commitPoint(me->pos())) {
                 finishGeometry();
-            } else if (graph->canFinish()) {
+            } else if (geometry->canFinish()) {
                 me->setFlags(static_cast<Qt::MouseEventFlags>(256));
                 updateGeometry();
             }
@@ -315,16 +315,16 @@ bool GeometryControl::event(QEvent *event)
         return true;
     }
     case QEvent::GraphicsSceneHoverMove:
-        if (!(flags_ & DrawFinished)) {
+        if (!geometry->finished()) {
             QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-            if (graph->moveTempPoint(me->pos())) {
+            if (geometry->moveTempPoint(me->pos())) {
                  updateGeometry();
                  return true;
             }
         }
         break;
     case QEvent::User:
-        if (graph->canFinish()) {
+        if (geometry->canFinish()) {
             finishGeometry();
         } else {
             WhiteCanvas * canvas = static_cast<WhiteCanvas *>(

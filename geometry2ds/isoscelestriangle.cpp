@@ -1,4 +1,5 @@
 #include "isoscelestriangle.h"
+#include "geometryhelper.h"
 
 IsoscelesTriangle::IsoscelesTriangle(Resource * res)
     : Triangle(res)
@@ -40,11 +41,11 @@ bool IsoscelesTriangle::move(int elem, const QPointF &pt)
         c.setY(pt1.y() - d * SQRT3); pts.append(c);
         c.setY(pt1.y() + d / SQRT3); pts.append(c);
         c.setY(pt1.y() - d / SQRT3); pts.append(c);
-        attachToPoints(pts, p);
+        GeometryHelper::attachToPoints(pts, p);
         return Triangle::move(0, p);
     } else if (elem < 3) {
         QPointF p(pt);
-        attachToLines(points_[0], p);
+        GeometryHelper::attachToLines(points_[0], p);
         if (elem == 2) {
             elem = 1;
             p.setX(points_[0].x() * 2 - p.x());

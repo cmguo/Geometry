@@ -1,4 +1,5 @@
 #include "ellipse.h"
+#include "geometryhelper.h"
 
 Ellipse::Ellipse(Resource * res)
     : Geometry2D(res)
@@ -37,12 +38,12 @@ int Ellipse::hit(QPointF &pt)
 {
     QPointF center = (points_.back() + points_.front()) / 2.0;
     QPointF off(points_.back() - center);
-    qreal prod = QPointF::dotProduct(off, off);
+    qreal prod = GeometryHelper::length2(off);
     QPointF off2(pt - center);
-    qreal prod2 = QPointF::dotProduct(off2, off2);
+    qreal prod2 = GeometryHelper::length2(off2);
     off = off2 * sqrt(prod / prod2);
     off2 -= off;
-    if (QPointF::dotProduct(off2, off2) < 25.0) {
+    if (GeometryHelper::length2(off2) < 25.0) {
         pt = center + off;
         return 1;
     }

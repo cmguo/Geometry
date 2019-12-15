@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include "geometryhelper.h"
 
 #include <core/resource.h>
 #include <core/toolbutton.h>
@@ -83,6 +84,11 @@ bool Geometry::empty() const
     return points_.isEmpty();
 }
 
+bool Geometry::finished() const
+{
+    return flags_ & DrawFinised;
+}
+
 void Geometry::clear()
 {
     points_.clear();
@@ -147,7 +153,7 @@ int Geometry::hit(QPointF & pt)
 {
     for (int i = 0; i < points_.size(); ++i) {
         QPointF d = pt - points_[i];
-        if (QPointF::dotProduct(d, d) < HIT_DIFF_DIFF) {
+        if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
             pt = points_[i];
             return i;
         }
@@ -163,32 +169,5 @@ bool Geometry::move(int elem, const QPointF &pt)
         return true;
     }
     return false;
-}
-
-qreal Geometry::length(QPointF const & vec)
-{
-    return sqrt(QPointF::dotProduct(vec, vec));
-}
-
-qreal Geometry::length2(QPointF const & vec)
-{
-    return QPointF::dotProduct(vec, vec);
-}
-
-int Geometry::attachToPoints(QVector<QPointF> const & pts, QPointF & p)
-{
-    qreal min = HIT_DIFF_DIFF;
-    int result = -1;
-    for (int i = 0; i < pts.size(); ++i) {
-        QPointF const & pt = pts[i];
-        qreal r = length2(pt - p);
-        if (r < min) {
-            result = i;
-            min = r;
-        }
-    }
-    if (result >= 0)
-        p = pts[result];
-    return result;
 }
 

@@ -1,5 +1,6 @@
 #include "polygon.h"
 #include "arbitrarypolygon.h"
+#include "geometryhelper.h"
 
 Polygon::Polygon(Resource * res, Flags flags)
     : Geometry2D(res, flags)
@@ -72,11 +73,11 @@ int Polygon::hit(QPointF & pt)
     for (int i = 0; i < pointCount(); ++i) {
         QPointF cpt = nextPoint(i, hint);
         QPointF d = pt - cpt;
-        if (QPointF::dotProduct(d, d) < HIT_DIFF_DIFF) {
+        if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
             pt = cpt;
             return i;
         }
-        if (line == -1 && dist2PointToSegment(lpt, cpt, pt, rp) < HIT_DIFF_DIFF) {
+        if (line == -1 && GeometryHelper::dist2PointToSegment(lpt, cpt, pt, rp) < GeometryHelper::HIT_DIFF_DIFF) {
             pt = rp;
             line = i + pointCount();
         }
@@ -128,7 +129,7 @@ qreal Polygon::angle(int index)
     QPointF lpt = iterPoint((pointCount() + index - 1) % pointCount(), hint);
     QPointF pt = nextPoint(index, hint);
     QPointF npt = nextPoint((index + 1) % pointCount(), hint);
-    return angle(lpt, pt, npt);
+    return GeometryHelper::angle(lpt, pt, npt);
 }
 
 void Polygon::addAngleLabeling(QPainterPath &path, int index)

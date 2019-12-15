@@ -22,6 +22,8 @@ class Geometry : public ResourceView
 public:
     virtual bool empty() const;
 
+    virtual bool finished() const;
+
     virtual void clear();
 
     virtual void addPoint(QPointF const & pt);
@@ -65,24 +67,12 @@ public:
 
     virtual void updateToolButton(ToolButton * button);
 
-public:
-    static qreal length(QPointF const & vec);
-
-    static qreal length2(QPointF const & vec);
-
-    static int attachToPoints(QVector<QPointF> const & pts, QPointF & p);
-
 protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
     Geometry(QString const & type);
 
     Geometry(Geometry const & o);
-
-protected:
-    static constexpr qreal HIT_DIFF = 10.0;
-
-    static constexpr qreal HIT_DIFF_DIFF = 100.0;
 
 protected:
     QVector<QPointF> points_;

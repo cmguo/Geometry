@@ -1,4 +1,5 @@
 #include "sector.h"
+#include "geometryhelper.h"
 
 #include <core/toolbutton.h>
 
@@ -65,14 +66,14 @@ void Sector::setAngle(qreal angle)
     angle_ = la;
     la = la * M_PI / 180.0;
     QPointF pt3;
-    qreal r = length(points_[1] - points_[0]);
+    qreal r = GeometryHelper::length(points_[1] - points_[0]);
     if (points_.size() > 2) {
         pt3 = points_[2];
     } else {
         pt3 = points_[0] + QPointF(r, 0);
     }
     QPointF d = pt3 - points_[0];
-    reverseRotate(d, QPointF(cos(la), -sin(la)));
+    GeometryHelper::reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
     emit changed();
 }
@@ -86,7 +87,7 @@ QPainterPath Sector::path()
         QPointF pt2 = points_[1];
         ph.moveTo(pt1);
         ph.lineTo(pt2);
-        qreal r = length(pt2 - pt1);
+        qreal r = GeometryHelper::length(pt2 - pt1);
         QPointF pt3;
         if (points_.size() > 2) {
             pt3 = points_[2];
@@ -95,8 +96,8 @@ QPainterPath Sector::path()
         }
         QRectF rect(-r, -r, r * 2, r * 2);
         rect.moveCenter(points_[0]);
-        qreal a1 = Geometry2D::angle(pt2 - pt1);
-        qreal a2 = Geometry2D::angle(pt3 - pt1);
+        qreal a1 = GeometryHelper::angle(pt2 - pt1);
+        qreal a2 = GeometryHelper::angle(pt3 - pt1);
         qreal la = a2 - a1;
         if (la > 0 && la > angle_ + 180.0)
             la -= 360.0;
@@ -121,7 +122,7 @@ QVector<QPointF> Sector::movePoints()
 {
     QVector<QPointF> points;
     points.append(points_);
-    qreal r = length(points_[1] - points_[0]);
+    qreal r = GeometryHelper::length(points_[1] - points_[0]);
     QPointF pt3;
     if (points_.size() > 2) {
         pt3 = points_[2];
@@ -138,7 +139,7 @@ QVector<QPointF> Sector::movePoints()
             pt3 = points_[0] * 2 - pt3;
     } else {
         pt3 = (points_[1] + pt3) / 2;
-        adjustToLength(points_[0], pt3, r);
+        GeometryHelper::adjustToLength(points_[0], pt3, r);
         if (angle_ > 180 || angle_ < -180)
             pt3 = points_[0] * 2 - pt3;
     }
@@ -155,29 +156,29 @@ int Sector::hit(QPointF &pt)
     QPointF pt2 = points_[1];
     QPointF pt3;
     QPointF d = pt2 - pt1;
-    qreal r = sqrt(QPointF::dotProduct(d, d));
+    qreal r = sqrt(GeometryHelper::length2(d));
     if (points_.size() == 2) {
         pt3 = pt1 + QPointF(r, 0);
     } else {
         pt3 = points_[2];
     }
     d = pt3 - pt;
-    if (QPointF::dotProduct(d, d) < HIT_DIFF_DIFF) {
+    if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
         pt = pt3;
         return 2;
     }
     QPointF rp;
-    if (dist2PointToSegment(pt1, pt2, pt, rp) < HIT_DIFF_DIFF) {
+    if (GeometryHelper::dist2PointToSegment(pt1, pt2, pt, rp) < GeometryHelper::HIT_DIFF_DIFF) {
         pt = rp;
         return 3;
     }
-    if (dist2PointToSegment(pt1, pt3, pt, rp) < HIT_DIFF_DIFF) {
+    if (GeometryHelper::dist2PointToSegment(pt1, pt3, pt, rp) < GeometryHelper::HIT_DIFF_DIFF) {
         pt = rp;
         return 4;
     }
     QPointF dd = pt - pt1;
-    qreal rr = sqrt(QPointF::dotProduct(dd, dd));
-    if (rr + HIT_DIFF > r && rr - HIT_DIFF < r)
+    qreal rr = sqrt(GeometryHelper::length2(dd));
+    if (rr + GeometryHelper::HIT_DIFF > r && rr - GeometryHelper::HIT_DIFF < r)
         return 5;
     return -1;
 }
@@ -188,28 +189,28 @@ bool Sector::move(int elem, const QPointF &pt)
         if (points_.size() == 2)
             points_[0] = pt;
         else
-            points_[0] = nearestPointAtVerticalBisector(points_[1], points_[2], pt);
+            points_[0] = GeometryHelper::nearestPointAtVerticalBisector(points_[1], points_[2], pt);
     } else if (elem == 1) {
         points_[1] = pt;
         QPointF pt3;
         if (points_.size() > 2) {
             pt3 = points_[2];
         } else {
-            qreal r = length(points_[1] - points_[0]);
+            qreal r = GeometryHelper::length(points_[1] - points_[0]);
             pt3 = points_[0] + QPointF(r, 0);
         }
-        attachToLines(points_[0], pt3, points_[1]);
+        GeometryHelper::attachToLines(points_[0], pt3, points_[1]);
         if (points_.size() == 3)
-            adjustToLength(points_[0], points_[2], length(points_[0] - points_[1]));
+            GeometryHelper::adjustToLength(points_[0], points_[2], GeometryHelper::length(points_[0] - points_[1]));
     } else if (elem == 2) {
         if (points_.size() == 2)
             points_.append(pt);
         else
             points_[2] = pt;
-        attachToLines(points_[0], points_[1], points_[2]);
-        adjustToLength(points_[0], points_[1], length(points_[0] - points_[2]));
+        GeometryHelper::attachToLines(points_[0], points_[1], points_[2]);
+        GeometryHelper::adjustToLength(points_[0], points_[1], GeometryHelper::length(points_[0] - points_[2]));
     } else if (elem == 3) {
-        qreal r = length(points_[0] - points_[1]);
+        qreal r = GeometryHelper::length(points_[0] - points_[1]);
         points_[1] = pt;
         QPointF pt3;
         if (points_.size() > 2) {
@@ -217,21 +218,21 @@ bool Sector::move(int elem, const QPointF &pt)
         } else {
             pt3 = points_[0] + QPointF(r, 0);
         }
-        attachToLines(points_[0], pt3, points_[1]);
-        adjustToLength(points_[0], points_[1], r);
+        GeometryHelper::attachToLines(points_[0], pt3, points_[1]);
+        GeometryHelper::adjustToLength(points_[0], points_[1], r);
     } else if (elem == 4) {
-        qreal r = length(points_[0] - points_[1]);
+        qreal r = GeometryHelper::length(points_[0] - points_[1]);
         if (points_.size() == 2)
             points_.append(pt);
         else
             points_[2] = pt;
-        attachToLines(points_[0], points_[1], points_[2]);
-        adjustToLength(points_[0], points_[2], r);
+        GeometryHelper::attachToLines(points_[0], points_[1], points_[2]);
+        GeometryHelper::adjustToLength(points_[0], points_[2], r);
     } else if (elem == 5) {
-        qreal r = length(points_[0] - pt);
-        adjustToLength(points_[0], points_[1], r);
+        qreal r = GeometryHelper::length(points_[0] - pt);
+        GeometryHelper::adjustToLength(points_[0], points_[1], r);
         if (points_.size() == 3)
-            adjustToLength(points_[0], points_[2], r);
+            GeometryHelper::adjustToLength(points_[0], points_[2], r);
     }
     return true;
 }
