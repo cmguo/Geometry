@@ -1,14 +1,15 @@
 #include "geometrycontrol.h"
 #include "geometryitem.h"
 #include "geometry.h"
-#include "views/whitecanvas.h"
-#include "views/itemselector.h"
 #include "geometry2ds/line.h"
 #include "geometry2ds/regularpolygon.h"
 #include "geometry2ds/sector.h"
 #include "geometry2ds/circle.h"
 
 #include <core/toolbutton.h>
+#include <core/resourcetransform.h>
+#include <views/whitecanvas.h>
+#include <views/itemselector.h>
 
 #include <QFile>
 #include <QGraphicsItem>
