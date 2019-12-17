@@ -1,10 +1,13 @@
 #include "rulergaugebase.h"
+#include "rulergaugecontrol.h"
 
 #include <QEvent>
 #include <QGraphicsSceneEvent>
 #include <QPainter>
 #include <QtMath>
 #include <QDebug>
+
+#include <core/control.h>
 
 RulerGaugeBase::RulerGaugeBase(QGraphicsItem *parent): RulerGaugeBase(500,500,parent)
 {
@@ -16,10 +19,10 @@ RulerGaugeBase::RulerGaugeBase(int width,int height,QGraphicsItem *parent):QGrap
     adjustSizeItem->setPixmap(QPixmap(":/icon/icon/add.svg"));
     adjustSizeItem->setAcceptedMouseButtons(Qt::LeftButton);
     rotationItem= new QGraphicsPixmapItem(this);
+    rotationItem->setScale(2.0);
     rotationItem->setPixmap(QPixmap(":/icon/icon/remove.svg"));
     rotationItem->setAcceptedMouseButtons(Qt::LeftButton);
-    adjustSizeItem->setPos(QPoint(400,100));
-    rotationItem->setPos(QPoint(300,200));
+    adjustSizeItem->setScale(2.0);
 }
 
 RulerGaugeBase::~RulerGaugeBase()
@@ -32,15 +35,37 @@ QRectF RulerGaugeBase::boundingRect() const
     return QRectF(0,0,width_,height_);
 }
 
+QPainterPath RulerGaugeBase::shape() const
+{
+    return shape_;
+}
+
 bool RulerGaugeBase::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
+    if(watched != rotationItem && watched!=adjustSizeItem){
+        return false;
+    }
+    QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress:{
         isPressed = true;
+        movePoint = mouseEvent->scenePos();
         break;
     }
     case QEvent::GraphicsSceneMouseMove:
-    {
+    { QPointF mousePos = mouseEvent->scenePos();
+        RulerGaugeControl *control = qobject_cast<RulerGaugeControl*>(RulerGaugeControl::fromItem(this));
+        if(watched == rotationItem){
+            control->rotate(mapToParent({0,0}), movePoint, mousePos);
+        }else if(watched == adjustSizeItem){
+            QPointF move=adjustSize(movePoint,mousePos);
+            control->move(move);
+            control->sizeChanged();
+            adjustControlButtonPos();
+
+        }
+        movePoint = mousePos;
+
     }
         break;
     case QEvent::GraphicsSceneMouseRelease:
@@ -63,14 +88,16 @@ QVariant RulerGaugeBase::itemChange(QGraphicsItem::GraphicsItemChange change, co
     return value;
 }
 
-void RulerGaugeBase::rotation()
+void RulerGaugeBase::adjustControlButtonPos()
 {
-
+    QVector<QPointF> points = getControlButtonPos();
+    adjustSizeItem->setPos(points[1]);
+    rotationItem->setPos(points[2]);
 }
 
-void RulerGaugeBase::adjustSize()
+QPointF RulerGaugeBase::adjustSize(QPointF from, QPointF to)
 {
-
+    return QPointF(0,0);
 }
 
 int RulerGaugeBase::getWidth() const

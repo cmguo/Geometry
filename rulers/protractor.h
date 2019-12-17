@@ -12,10 +12,11 @@ public:
     Protractor(int width,int height,QGraphicsItem *parent = nullptr);
     ~Protractor();
 
-public:
+protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    virtual void rotation() override;
-    virtual void adjustSize() override;
+    virtual QPointF adjustSize(QPointF from,QPointF to) override;
+    virtual QVector<QPointF> getControlButtonPos() override;
+    virtual void updateShape();
 };
 
 

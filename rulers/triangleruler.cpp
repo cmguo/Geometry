@@ -10,7 +10,8 @@ TriangleRuler::TriangleRuler(bool isosceles,QGraphicsItem *parent):RulerGaugeBas
 
 TriangleRuler::TriangleRuler(bool isosceles,int width, int height, QGraphicsItem *parent):RulerGaugeBase(width,height,parent),isosceles_(isosceles)
 {
-
+    updateShape();
+    adjustControlButtonPos();
 }
 
 TriangleRuler::~TriangleRuler()
@@ -18,18 +19,13 @@ TriangleRuler::~TriangleRuler()
 
 }
 
-void TriangleRuler::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void TriangleRuler::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget *)
 {
     //绘制背景
     QPen p = QPen(Qt::black,2);
     p.setJoinStyle(Qt::PenJoinStyle::MiterJoin);
     painter->setBrush(Qt::white);
-    QPointF points[3] = {
-        QPointF(0, 0),
-        QPointF(0, boundingRect().height()),
-        QPointF(boundingRect().width(), boundingRect().height()),
-    };
-    painter->drawPolygon(points,3);
+    painter->drawPath(shape_);
 
     int angle = isosceles_?45:60;
     double radians = angle * M_PI/180;
@@ -43,7 +39,7 @@ void TriangleRuler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     transform.translate(0,boundingRect().height());
     transform.rotate(180,Qt::XAxis);
     painter->setTransform(transform);
-    paintCalibration(painter,boundingRect().width());
+    paintCalibration(painter,boundingRect().width()-50);
     painter->resetTransform();
     painter->restore();
 
@@ -53,32 +49,63 @@ void TriangleRuler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     transform.rotate(90,Qt::ZAxis);
     transform.rotate(180,Qt::XAxis);
     painter->setTransform(transform);
-    paintCalibration(painter,boundingRect().height());
+    paintCalibration(painter,boundingRect().height()-50);
     painter->resetTransform();
     painter->restore();
 
     // 斜线
     painter->save();
     transform = painter->transform();
+    transform.translate(10,10);
     transform.rotate(90-angle,Qt::ZAxis);
     painter->setTransform(transform);
-    paintCalibration(painter,sqrt(boundingRect().height()*boundingRect().height()+boundingRect().width()*boundingRect().width()));
+    paintCalibration(painter,sqrt(boundingRect().height()*boundingRect().height()+boundingRect().width()*boundingRect().width())-50);
     painter->resetTransform();
     painter->restore();
 
+    double newRadians = (90-angle) * M_PI/180;
     QPointF innerPoints[3] = {
-        QPointF(40, 40*(1.0f/tan(radians)+1.0f/sin(radians))),
+        QPointF(40, 40*(1.0/tan(radians/2))),
         QPointF(40, boundingRect().height()-40),
-        QPointF(boundingRect().width()-40*(1.0f/atan(radians)+1.0f/cos(radians)), boundingRect().height()-40),
+        QPointF(boundingRect().width()-40*(1.0/tan(newRadians/2)), boundingRect().height()-40),
     };
     painter->drawPolygon(innerPoints,3);
 }
 
-void TriangleRuler::rotation()
-{
+
+QPointF TriangleRuler::adjustSize(QPointF from,QPointF to)
+{   int origHeight = height_;
+    int origWidth = width_;
+    int diff = to.y()-from.y();
+    height_ = height_-diff;
+    if(height_<300){
+        height_ = 300;
+    }
+    int angle = isosceles_?45:60;
+    width_ = height_*tan(angle * M_PI/180);
+    updateShape();
+    return QPointF(0,origHeight-height_);
 }
 
-void TriangleRuler::adjustSize()
+QVector<QPointF> TriangleRuler::getControlButtonPos()
 {
+    QVector<QPointF> points;
+    points.insert(0,QPointF(0,0));
+    points.insert(1,QPointF(width_/2,height_/2));
+    points.insert(2,QPointF(width_/4,height_/4));
+    return points;
+}
 
+void TriangleRuler::updateShape()
+{
+    shape_ =QPainterPath();
+    QVector<QPointF> vector;
+    QPointF points[3] = {
+        QPointF(0, 0),
+        QPointF(0, boundingRect().height()),
+        QPointF(boundingRect().width(), boundingRect().height()),
+    };
+    for(QPointF point: points)
+        vector.append(point);
+    shape_.addPolygon(vector);
 }

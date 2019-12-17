@@ -10,10 +10,11 @@ public:
     explicit Lineruler(QGraphicsItem *parent = nullptr);
     Lineruler(int width,int height,QGraphicsItem *parent = nullptr);
     ~Lineruler();
-public:
+protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    virtual void rotation() override;
-    virtual void adjustSize() override;
+    virtual QPointF adjustSize(QPointF from,QPointF to) override;
+    virtual QVector<QPointF> getControlButtonPos() override;
+    virtual void updateShape();
 };
 
 #endif // LINERULER_H

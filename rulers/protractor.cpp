@@ -9,7 +9,8 @@ Protractor::Protractor(QGraphicsItem *parent):RulerGaugeBase(parent)
 
 Protractor::Protractor(int width, int height, QGraphicsItem *parent):RulerGaugeBase(width,height,parent)
 {
-
+    updateShape();
+    adjustControlButtonPos();
 }
 
 Protractor::~Protractor()
@@ -23,9 +24,7 @@ void Protractor::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     QPen p = QPen(Qt::black,2);
     p.setJoinStyle(Qt::PenJoinStyle::MiterJoin);
     painter->setBrush(Qt::white);
-    painter->setPen(Qt::NoPen);
-    QRect rect = QRect(0,0,boundingRect().width(),boundingRect().height()*2);
-    painter->drawPie(rect, 0, 180*16);
+    painter->drawPath(shape_);
 
     p.setColor(Qt::black);
     QFont font = painter->font();
@@ -61,13 +60,25 @@ void Protractor::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 }
 
-void Protractor::rotation()
+QPointF Protractor::adjustSize(QPointF from,QPointF to)
 {
-
+    return QPointF(0,0);
 }
 
-void Protractor::adjustSize()
+QVector<QPointF> Protractor::getControlButtonPos()
 {
+    QVector<QPointF> points;
+    points.insert(0,QPointF(0,0));
+    points.insert(1,QPointF(100,100));
+    points.insert(2,QPointF(200,200));
+    return points;
+}
 
+void Protractor::updateShape()
+{
+    shape_ =QPainterPath();
+    QRect rect = QRect(0,0,boundingRect().width(),boundingRect().height()*2);
+    shape_.moveTo(boundingRect().width()/2, boundingRect().height());
+    shape_.arcTo(rect, 0.0, 180.0);
 }
 
