@@ -145,6 +145,16 @@ void Geometry::finish(const QPointF &c)
     dirty_ = true;
 }
 
+void Geometry::scale(qreal scale)
+{
+    for (int i = 0; i < points_.size(); ++i)
+    {
+        QPointF & pt = points_[i];
+        pt *= scale;
+    }
+    dirty_ = true;
+}
+
 QVector<QPointF> Geometry::movePoints()
 {
     return points_;

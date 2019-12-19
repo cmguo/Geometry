@@ -27,6 +27,8 @@ protected:
 
     virtual void attached() override;
 
+    virtual void resize(QSizeF const & size) override;
+
     virtual QString toolsString(QString const & parent) const override;
 
     virtual void getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents = {}) override;
@@ -34,8 +36,6 @@ protected:
     virtual void updateToolButton(ToolButton * button) override;
 
 protected:
-    virtual void updateTransform() override;
-
     virtual SelectMode selectTest(QPointF const & point) override;
 
     virtual void select(bool selected) override;

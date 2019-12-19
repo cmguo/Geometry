@@ -22,7 +22,7 @@ static char const * toolstr =
         "-setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;";
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
-    : Control(res, flags | PositionAtCenter | KeepAspectRatio, clearFlags)
+    : Control(res, flags | PositionAtCenter | KeepAspectRatio | LayoutScale, clearFlags)
     , editing_(false)
 {
     if (res->metaObject() == &Circle::staticMetaObject)
@@ -31,18 +31,10 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
 
 QGraphicsItem * GeometryControl::create(ResourceView * res)
 {
-    Geometry * geometry = qobject_cast<Geometry *>(res);
+    (void) res;
     GeometryItem * item = new GeometryItem();
     //item->setBrush(QColor(0, 0, 255, 20));
     item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
-    QWeakPointer<int> life(this->life());
-    if (!geometry->empty()) {
-        geometry->load().then([item, geometry, life]() {
-            if (life.isNull())
-                return;
-            item->setPath(geometry->path());
-        });
-    }
     return item;
 }
 
@@ -63,6 +55,19 @@ void GeometryControl::attached()
             loadFinished(true);
         });
     }
+}
+
+void GeometryControl::resize(const QSizeF &size)
+{
+    if (!(flags_ & LoadFinished))
+        return;
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
+    qreal scale = size.width() / item->boundingRect().width();
+    if (qFuzzyIsNull(scale - 1.0))
+        return;
+    Geometry * geometry = static_cast<Geometry *>(res_);
+    geometry->scale(scale);
+    updateGeometry();
 }
 
 QString GeometryControl::toolsString(QString const & parent) const
@@ -204,21 +209,11 @@ void GeometryControl::setPen(const QPen &pen)
     item->setPen(pen);
 }
 
-void GeometryControl::updateTransform()
-{
-    if (flags_ & SelfTransform)
-        updateGeometry();
-    else
-        Control::updateTransform();
-}
-
 void GeometryControl::updateGeometry()
 {
     Geometry * geometry = qobject_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     QPainterPath ph(geometry->path());
-    if (flags_ & SelfTransform)
-        ph = res_->transform().transform().map(ph);
     item->setPath(ph);
     if (editing_) {
         editPoints_ = geometry->movePoints();
@@ -231,7 +226,6 @@ void GeometryControl::finishGeometry()
     Geometry * geometry = static_cast<Geometry *>(res_);
     bool hasFinished = geometry->finished();
     geometry->finish(bounds().center());
-    updateTransform();
     updateGeometry();
     WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
                 realItem_->parentItem()->parentItem());

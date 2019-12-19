@@ -51,7 +51,7 @@ void GeometryTool::handleToolButton(ToolButton* button)
 }
 
 GeometryTool::GeometryTool(ResourceView *res)
-    : WidgetControl(res, FullLayout, CanSelect)
+    : WidgetControl(res, FullLayout, {CanSelect, CanRotate, CanScale})
 {
     QString type = res_->resource()->type();
     type.remove("tool");
@@ -66,7 +66,7 @@ GeometryTool::GeometryTool(ResourceView *res)
 QWidget * GeometryTool::createWidget(ResourceView *res)
 {
     (void) res;
-    ToolbarWidget * widget = new ToolbarWidget();
+    ToolbarWidget * widget = new ToolbarWidget(false);
     widget->setToolButtons(buttons_);
     void (ToolbarWidget::*sig)(QList<ToolButton *> const &) = &ToolbarWidget::buttonClicked;
     QObject::connect(widget, sig, this, &GeometryTool::buttonClicked);

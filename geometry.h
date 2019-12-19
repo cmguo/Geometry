@@ -38,6 +38,8 @@ public:
 
     virtual void finish(const QPointF &c);
 
+    void scale(qreal scale);
+
 signals:
     void changed();
 
