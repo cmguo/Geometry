@@ -20,6 +20,8 @@ public:
 private:
     virtual QWidget * createWidget(ResourceView *res) override;
 
+    virtual void attached() override;
+
 private:
     void buttonClicked(QList<ToolButton *> const & buttons);
 

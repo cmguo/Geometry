@@ -51,26 +51,27 @@ void GeometryTool::handleToolButton(ToolButton* button)
 }
 
 GeometryTool::GeometryTool(ResourceView *res)
-    : WidgetControl(res, FullLayout, {CanSelect, CanRotate, CanScale})
+    : WidgetControl(res, {PositionAtCenter}, {CanSelect, CanRotate, CanScale})
 {
     QString type = res_->resource()->type();
     type.remove("tool");
-    ResourceFactory * factory = ResourceManager::instance()->getFactory(type);
-    for (QString const & f : factory->resourceTypes()) {
-        ToolButton * btn = new ToolButton(
-            {factory->newUrl(f).toString(), f, nullptr, ":geometry/icons/" + type + "/" + f + ".svg"});
-        buttons_.append(btn);
-    }
+    getToolButtons(buttons_, type);
 }
 
 QWidget * GeometryTool::createWidget(ResourceView *res)
 {
     (void) res;
     ToolbarWidget * widget = new ToolbarWidget(false);
+    return widget;
+}
+
+void GeometryTool::attached()
+{
+    ToolbarWidget * widget = static_cast<ToolbarWidget*>(widget_);
     widget->setToolButtons(buttons_);
     void (ToolbarWidget::*sig)(QList<ToolButton *> const &) = &ToolbarWidget::buttonClicked;
     QObject::connect(widget, sig, this, &GeometryTool::buttonClicked);
-    return widget;
+    loadFinished(true);
 }
 
 void GeometryTool::buttonClicked(QList<ToolButton *> const & buttons)
