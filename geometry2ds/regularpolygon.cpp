@@ -24,7 +24,7 @@ RegularPolygon::RegularPolygon(Resource * res)
     }
     setEdges(edges);
     setSpan(span);
-    setProperty("toolString", "edges|边数|Popup,OptionsGroup,NeedUpdate|;");
+    setToolsString("edges|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 RegularPolygon::RegularPolygon(QPointF const & pt)
@@ -39,7 +39,6 @@ RegularPolygon::RegularPolygon(RegularPolygon const & o)
 {
     setEdges(o.nEdges_);
     setSpan(o.nSpan_);
-    setProperty("toolString", "edges|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 static QString buttonTitle(int n)

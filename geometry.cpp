@@ -35,10 +35,10 @@ QPromise<void> Geometry::load()
     if (!Geometry::empty())
         return QPromise<void>::resolve();
     QWeakPointer<int> life(this->life());
-    return res_->getStream().then([this, life](QIODevice * s) {
+    return res_->getStream().then([this, life](QSharedPointer<QIODevice> s) {
         if (life.isNull())
             return;
-        QDataStream ds(s);
+        QDataStream ds(s.get());
         int n = 0;
         qreal x, y;
         ds >> n;
@@ -48,36 +48,6 @@ QPromise<void> Geometry::load()
             ++n;
         }
     });
-}
-
-void Geometry::getToolButtons(QList<ToolButton *> & buttons,
-                            ToolButton * parent)
-{
-    if (parent == nullptr) {
-        QVariant ext = property("toolString");
-        if (ext.isValid()) {
-            static std::map<QMetaObject const *, QList<ToolButton *>> slist;
-            auto iter = slist.find(res_->metaObject());
-            if (iter == slist.end()) {
-                std::map<QString, QList<ToolButton *>> t;
-                iter = slist.insert(
-                            std::make_pair(res_->metaObject(), ToolButton::makeButtons(ext.toString()))).first;
-            }
-            for (ToolButton * button : iter->second) {
-                if (button->flags & ToolButton::NeedUpdate) {
-                    updateToolButton(button);
-                }
-                buttons.insert(0,button);
-            }
-
-        }
-    }
-}
-
-
-void Geometry::updateToolButton(ToolButton * button)
-{
-    (void) button;
 }
 
 bool Geometry::empty() const

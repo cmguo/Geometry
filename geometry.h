@@ -64,11 +64,6 @@ public:
 public:
     virtual QtPromise::QPromise<void> load();
 
-    virtual void getToolButtons(QList<ToolButton *> & buttons,
-                                ToolButton * parent = nullptr);
-
-    virtual void updateToolButton(ToolButton * button);
-
 protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 

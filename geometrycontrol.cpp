@@ -94,8 +94,8 @@ static QGraphicsItem* colorIcon(QColor color)
 void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents)
 {
     if (parents.isEmpty()) {
+        static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
         Control::getToolButtons(buttons, parents);
-        static_cast<Geometry *>(res_)->getToolButtons(buttons, nullptr);
         return;
     }
     ToolButton * button = parents.last();
@@ -133,7 +133,7 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
         }
         buttons.append(lineWidthButtons);
     } else {
-        static_cast<Geometry *>(res_)->getToolButtons(buttons, button);
+        static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
     }
 }
 
