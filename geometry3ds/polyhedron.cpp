@@ -49,6 +49,7 @@ QPainterPath Polyhedron::path()
     QVector<QPointF> points(pointCount());
     QVector<bool> hidden(pointCount());
     collect(points, hidden);
+    /*
     int last = -1;
     for (int l :lines_) {
         int s = l & 0xff;
@@ -59,6 +60,8 @@ QPainterPath Polyhedron::path()
         ph.lineTo(points[e]);
         last = e;
     }
+    */
+    ph.addPolygon(GeometryHelper::smallestEnclosingPolygon(points));
 #ifdef POLYHEDRON_DEBUG
     for (int i = 0; i < pointCount(); ++i) {
         ph.addText(points[i] + QPointF(10, -5), QFont(), QString("%1").arg(i));

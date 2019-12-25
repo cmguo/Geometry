@@ -64,6 +64,8 @@ private:
 private:
     int hitElem_;
     QPointF hitOffset_;
+    QPointF hitStart_;
+    bool hitMoved_;
     QVector<QPointF> editPoints_;
     bool editing_;
 };

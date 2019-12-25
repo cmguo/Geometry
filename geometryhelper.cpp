@@ -101,6 +101,48 @@ QPointF GeometryHelper::crossPoint(QPointF const & p1, QPointF const & p2,
     return QPointF(determinant(b, c), determinant(c, a)) / d;
 }
 
+static constexpr double exps = 1e-9;
+
+static bool cmp(QPointF const &a, QPointF const & b) { // 极角排序，极角相等按原点距排
+    return GeometryHelper::determinant(a, b) > exps
+            || (qAbs(GeometryHelper::determinant(a, b)) < exps
+                && GeometryHelper::length(a) < GeometryHelper::length(b));
+}
+
+QPolygonF GeometryHelper::smallestEnclosingPolygon(const QVector<QPointF> &pts)
+{
+    QPointF min = pts[0];
+    for (QPointF const & pt : pts) {
+        if (pt.y() < min.y() || (qFuzzyIsNull(pt.y() - min.y()) && pt.x() > min.x()))
+            min = pt; // 最下右点，满足左拐检验法
+    }
+    QVector<QPointF> pts2(pts);
+    for (QPointF & pt : pts2)
+        pt -= min;
+    std::sort(pts2.begin(), pts2.end(), cmp);
+    QVector<QPointF> stack;
+    stack.append(QPointF(0, 0)); // 原点
+    for (QPointF & pt : pts2) { // 筛选栈
+        while (stack.size() > 1) { //保证满足左拐
+            QPointF now = stack.back();
+            stack.pop_back();
+            QPointF pre = stack.back();
+            stack.push_back(now);
+            if (determinant(now - pre, pt - now) >= 0.0) {
+                stack.push_back(pt);
+                break;
+            }
+            stack.pop_back();
+        }
+        if (stack.size() == 1)
+            stack.push_back(pt); //只剩原点，没有边，直接进栈
+    }
+    stack.push_back(QPointF(0, 0));
+    for (QPointF & pt : stack)
+        pt += min;
+    return QPolygonF(stack);
+}
+
 void GeometryHelper::attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p)
 {
     QPointF d = p2 - p1;

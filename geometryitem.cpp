@@ -97,7 +97,7 @@ bool GeometryItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     case QEvent::GraphicsSceneMouseMove:
     case QEvent::GraphicsSceneMouseRelease:
         static_cast<QGraphicsSceneMouseEvent*>(event)
-                ->setFlags(static_cast<Qt::MouseEventFlags>(256));
+                ->setFlags(static_cast<Qt::MouseEventFlags>(512));
         Control::fromItem(this)->event(event);
         return event->isAccepted();
     default:

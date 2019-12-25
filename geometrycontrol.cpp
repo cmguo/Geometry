@@ -23,6 +23,8 @@ static char const * toolstr =
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
     : Control(res, flags | PositionAtCenter | KeepAspectRatio | LayoutScale, clearFlags)
+    , hitElem_(-1)
+    , hitMoved_(false)
     , editing_(false)
 {
     if (res->metaObject() == &Circle::staticMetaObject)
@@ -250,8 +252,9 @@ bool GeometryControl::event(QEvent *event)
     case QEvent::GraphicsSceneMousePress: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (geometry->finished()) {
-            QPointF pt = me->pos();
-            if (editing_ && (me->flags() & 256)) {
+            QPointF pt = hitStart_ = me->pos();
+            hitMoved_ = false;
+            if (editing_ && (me->flags() & 512)) { // from GeometryItem
                 qreal min = DBL_MAX;
                 int mdx = -1;
                 for (int i = 0; i < editPoints_.size(); ++i) {
@@ -263,6 +266,7 @@ bool GeometryControl::event(QEvent *event)
                     }
                 }
                 hitElem_ = mdx;
+                hitMoved_ = true;
                 if (hitElem_ >= 0) {
                     qDebug() << "hit" << hitElem_;
                     hitOffset_ = editPoints_[mdx] - me->pos();
@@ -285,6 +289,12 @@ bool GeometryControl::event(QEvent *event)
     case QEvent::GraphicsSceneMouseMove: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (geometry->finished()) {
+            if (!hitMoved_) {
+                QPointF d = me->pos() - hitStart_;
+                if (qAbs(d.x()) + qAbs(d.y()) < 5)
+                    return true;
+                hitMoved_ = true;
+            }
             QPointF pt = me->pos() + hitOffset_;
             if (geometry->move(hitElem_, pt)) {
                 updateGeometry();
@@ -298,7 +308,13 @@ bool GeometryControl::event(QEvent *event)
     case QEvent::GraphicsSceneMouseRelease: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (geometry->finished()) {
-            finishGeometry();
+            if (hitMoved_) {
+                finishGeometry();
+            } else {
+                WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
+                            realItem_->parentItem()->parentItem());
+                canvas->selector()->select(item());
+            }
         } else {
             if (geometry->commitPoint(me->pos())) {
                 finishGeometry();

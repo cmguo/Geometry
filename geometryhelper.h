@@ -3,6 +3,7 @@
 
 #include <QPointF>
 #include <QVector>
+#include <QPolygonF>
 
 class GeometryHelper
 {
@@ -56,6 +57,8 @@ public:
     static QPointF crossPoint(QPointF const & p1, QPointF const & p2,
                               QPointF const & q1, QPointF const & q2);
 
+public:
+    static QPolygonF smallestEnclosingPolygon(QVector<QPointF> const & pts);
 };
 
 #endif // GEOMETRYHELPER_H
