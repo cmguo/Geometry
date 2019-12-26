@@ -51,30 +51,20 @@ void GeometryTool::handleToolButton(ToolButton* button)
 }
 
 GeometryTool::GeometryTool(ResourceView *res)
-    : WidgetControl(res, {PositionAtCenter}, {CanSelect, CanRotate, CanScale})
+    : MenuTool(res)
 {
+}
+
+void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *parent)
+{
+    if (parent)
+        return;
     QString type = res_->resource()->type();
     type.remove("tool");
-    getToolButtons(buttons_, type);
+    getToolButtons(buttons, type);
 }
 
-QWidget * GeometryTool::createWidget(ResourceView *res)
-{
-    (void) res;
-    ToolbarWidget * widget = new ToolbarWidget(false);
-    return widget;
-}
-
-void GeometryTool::attached()
-{
-    ToolbarWidget * widget = static_cast<ToolbarWidget*>(widget_);
-    widget->setToolButtons(buttons_);
-    void (ToolbarWidget::*sig)(QList<ToolButton *> const &) = &ToolbarWidget::buttonClicked;
-    QObject::connect(widget, sig, this, &GeometryTool::buttonClicked);
-    loadFinished(true);
-}
-
-void GeometryTool::buttonClicked(QList<ToolButton *> const & buttons)
+void GeometryTool::handleToolButton(const QList<ToolButton *> &buttons)
 {
     WhiteCanvas * canvas = static_cast<WhiteCanvas*>(item_->parentItem()->parentItem());
     canvas->getToolControl("drawing")->setProperty("newUrl", buttons.back()->name);

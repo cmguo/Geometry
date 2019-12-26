@@ -46,7 +46,7 @@ void GeometryControl::attached()
     Geometry * geometry = static_cast<Geometry *>(res_);
     QObject::connect(geometry, &Geometry::changed,
                      this, &GeometryControl::geometryChanged);
-    if (geometry->empty()) {
+    if (geometry->empty() || (flags_ & RestoreSession)) {
         loadFinished(true);
     } else {
         QWeakPointer<int> life(this->life());
@@ -112,6 +112,8 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
                 ToolButton * btn = new ToolButton({name, "", flags,
                      QVariant::fromValue(icon)});
                 colorButtons.append(btn);
+                if (colorButtons.size() % 4 == 3)
+                    colorButtons.append(&ToolButton::LINE_BREAK);
             }
         }
         buttons.append(colorButtons);
@@ -229,14 +231,13 @@ void GeometryControl::finishGeometry()
     bool hasFinished = geometry->finished();
     geometry->finish(bounds().center());
     updateGeometry();
-    WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
-                realItem_->parentItem()->parentItem());
+    ItemSelector * selector = static_cast<WhiteCanvas *>(
+                realItem_->parentItem()->parentItem())->selector();
     if (!hasFinished) {
-        canvas->selector()->selectImplied(realItem_);
+        selector->selectImplied(realItem_);
         edit();
     } else {
-        if (canvas->selector()->selected() == realItem_)
-            canvas->selector()->updateSelect();
+        selector->updateSelect(realItem_);
     }
 }
 

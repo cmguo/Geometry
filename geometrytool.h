@@ -3,9 +3,9 @@
 
 #include "Geometry_global.h"
 
-#include <core/widgetcontrol.h>
+#include <tools/menutool.h>
 
-class GEOMETRY_EXPORT GeometryTool : public WidgetControl
+class GEOMETRY_EXPORT GeometryTool : public MenuTool
 {
     Q_OBJECT
 
@@ -18,12 +18,10 @@ public:
     Q_INVOKABLE GeometryTool(ResourceView *res);
 
 private:
-    virtual QWidget * createWidget(ResourceView *res) override;
+    virtual void getToolButtons(QList<ToolButton *> & buttons,
+                                ToolButton * parent) override;
 
-    virtual void attached() override;
-
-private:
-    void buttonClicked(QList<ToolButton *> const & buttons);
+    virtual void handleToolButton(QList<ToolButton *> const & buttons) override;
 
 private:
     QList<ToolButton *> buttons_;
