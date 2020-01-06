@@ -22,7 +22,7 @@ static char const * toolstr =
         "-setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;";
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
-    : Control(res, flags | PositionAtCenter | KeepAspectRatio | LayoutScale, clearFlags)
+    : Control(res, flags | KeepAspectRatio | LayoutScale, clearFlags)
     , hitElem_(-1)
     , hitMoved_(false)
     , editing_(false)
