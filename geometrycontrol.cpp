@@ -47,6 +47,8 @@ void GeometryControl::attached()
     QObject::connect(geometry, &Geometry::changed,
                      this, &GeometryControl::geometryChanged);
     if (geometry->empty() || (flags_ & RestoreSession)) {
+        if (flags_ & RestoreSession)
+            updateGeometry();
         loadFinished(true);
     } else {
         QWeakPointer<int> life(this->life());

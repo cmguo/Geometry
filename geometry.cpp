@@ -17,6 +17,7 @@ Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
 
 Geometry::Geometry(QString const & type)
     : ResourceView(new Resource(type), CanCopy)
+    , dirty_(false)
     , color_(Qt::white)
     , width_(1.0)
 {
@@ -24,10 +25,11 @@ Geometry::Geometry(QString const & type)
 
 Geometry::Geometry(Geometry const & o)
     : ResourceView(o)
+    , points_(o.points_)
+    , dirty_(o.dirty_)
     , color_(o.color_)
     , width_(o.width_)
 {
-    points_ = o.points_;
 }
 
 QPromise<void> Geometry::load()
