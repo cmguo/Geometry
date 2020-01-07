@@ -199,9 +199,7 @@ void GeometryControl::select(bool selected)
         GeometryItem * item = static_cast<GeometryItem *>(item_);
         item->showEditor(false);
     } else if (selected && res_->metaObject() == &Line::staticMetaObject) {
-        WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
-                    realItem_->parentItem()->parentItem());
-        canvas->selector()->selectImplied(realItem_);
+        whiteCanvas()->selector()->selectImplied(realItem_);
         edit();
     }
     Control::select(selected);
@@ -231,8 +229,7 @@ void GeometryControl::finishGeometry()
     bool hasFinished = geometry->finished();
     geometry->finish(bounds().center());
     updateGeometry();
-    ItemSelector * selector = static_cast<WhiteCanvas *>(
-                realItem_->parentItem()->parentItem())->selector();
+    ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
         selector->selectImplied(realItem_);
         edit();
@@ -312,9 +309,7 @@ bool GeometryControl::event(QEvent *event)
             if (hitMoved_) {
                 finishGeometry();
             } else {
-                WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
-                            realItem_->parentItem()->parentItem());
-                canvas->selector()->select(item());
+                whiteCanvas()->selector()->select(item());
             }
         } else {
             if (geometry->commitPoint(me->pos())) {
@@ -339,9 +334,7 @@ bool GeometryControl::event(QEvent *event)
         if (geometry->canFinish()) {
             finishGeometry();
         } else {
-            WhiteCanvas * canvas = static_cast<WhiteCanvas *>(
-                        realItem_->parentItem()->parentItem());
-            canvas->removeResource(this);
+            whiteCanvas()->removeResource(this);
         }
 
         break;
