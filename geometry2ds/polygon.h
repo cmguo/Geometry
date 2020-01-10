@@ -22,6 +22,9 @@ public:
 
     virtual bool move(int elem, const QPointF &pt) override;
 
+public slots:
+    void draw(QPainter *painter);
+
 protected:
     virtual int pointCount();
 
@@ -50,6 +53,10 @@ protected:
 
 protected:
     using Geometry2D::addAngleLabeling;
+
+private:
+    QPainterPath path_;
+    QPainterPath textPath_;
 };
 
 #endif // POLYGON_H

@@ -2,6 +2,8 @@
 #include "arbitrarypolygon.h"
 #include "geometryhelper.h"
 
+#include <QPainter>
+
 Polygon::Polygon(Resource * res, Flags flags)
     : Geometry2D(res, flags)
 {
@@ -14,12 +16,18 @@ Polygon::Polygon(QPointF const & pt)
 
 Polygon::Polygon(Polygon const & o)
     : Geometry2D(o)
+    , path_(o.path_)
+    , textPath_(o.textPath_)
 {
 }
 
 QPainterPath Polygon::path()
 {
+    if (!dirty_)
+        return path_ | textPath_;
+    dirty_ = false;
     QPainterPath ph;
+    QPainterPath tph;
     if (pointCount() < 2)
         return ph;
     QPolygonF polygon;
@@ -38,13 +46,15 @@ QPainterPath Polygon::path()
         QPointF cpt = nextPoint(0, hint);
         for (int i = 0; i < pointCount() - 1; ++i) {
             QPointF npt = nextPoint(i + 1, hint);
-            addAngleLabeling(ph, lpt, cpt, npt);
+            addAngleLabeling(tph, lpt, cpt, npt);
             lpt = cpt;
             cpt = npt;
         }
-        addAngleLabeling(ph, lpt, cpt, first);
+        addAngleLabeling(tph, lpt, cpt, first);
     }
-    return ph;
+    path_ = ph;
+    textPath_ = tph;
+    return path_ | textPath_;
 }
 
 QVector<QPointF> Polygon::movePoints()
@@ -105,6 +115,16 @@ bool Polygon::move(int elem, const QPointF &pt)
     return true;
 }
 
+void Polygon::draw(QPainter *painter)
+{
+    painter->setPen(QPen(color_, width_));
+    painter->drawPath(path_);
+    painter->save();
+    painter->setPen(QPen(color_));
+    painter->drawPath(textPath_);
+    painter->restore();
+}
+
 bool Polygon::moveKeepAngle(int elem, const QPointF &pt)
 {
     if (elem >= pointCount())
@@ -154,6 +174,7 @@ QPointF Polygon::point(int index)
 bool Polygon::setPoint(int index, const QPointF &pt)
 {
     points_[index] = pt;
+    dirty_ = true;
     return true;
 }
 

@@ -17,6 +17,8 @@ public:
         return editItem_;
     }
 
+    void setPen(const QPen &pen);
+
 private:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                        QWidget *widget = nullptr) override;

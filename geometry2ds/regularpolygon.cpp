@@ -143,14 +143,14 @@ QPointF RegularPolygon::prevPoint(int index, QPointF &hint)
 bool RegularPolygon::setPoint(int index, const QPointF &pt)
 {
     (void) index;
-    points_[1] = pt;
+    Polygon::setPoint(1, pt);
     return true;
 }
 
 bool RegularPolygon::move(int elem, const QPointF &pt)
 {
     if (elem < nEdges_) {
-        points_[1] = pt;
+        Polygon::setPoint(1, pt);
         QPointF vAngleAttach(-vAngleAttach_.x(), vAngleAttach_.y());
         GeometryHelper::attachToLines(points_[0], {vAngleAttach_, vAngleAttach}, points_[1]);
         return true;
@@ -169,6 +169,6 @@ bool RegularPolygon::move(int elem, const QPointF &pt)
         dd += d;
     else
         dd = d - dd;
-    points_[1] = pt0 + (points_[1] - pt0) * dd / d;
+    Polygon::setPoint(1, pt0 + (points_[1] - pt0) * dd / d);
     return true;
 }

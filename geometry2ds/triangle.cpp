@@ -23,7 +23,7 @@ int Triangle::pointCount()
 bool Triangle::setPoint(int index, const QPointF &pt)
 {
     if (index < 2) {
-        points_[index] = pt;
+        Polygon::setPoint(index, pt);
     }
     return true;
 }

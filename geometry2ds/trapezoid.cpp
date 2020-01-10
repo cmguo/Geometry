@@ -52,6 +52,7 @@ bool Trapezoid::setPoint(int index, const QPointF &pt)
         else
             points_.append(pt);
     }
+    dirty_ = true;
     return true;
 }
 
@@ -76,10 +77,10 @@ bool Trapezoid::move(int elem, const QPointF &pt)
         QPointF p = pt;
         GeometryHelper::attachToLines(points_[1], p);
         Polygon::move(5, p);
-        points_[2] = p;
+        Polygon::setPoint(2, p);
         return true;
     } else if (elem == 2) {
-        points_[1] = pt;
+        Polygon::setPoint(1, pt);
         GeometryHelper::attachToLines(points_[2], points_[1]);
         return true;
     } else if (elem < 4) {

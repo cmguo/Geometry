@@ -23,7 +23,7 @@ int Rectangle::pointCount()
 bool Rectangle::setPoint(int index, const QPointF &pt)
 {
     if ((index & 1) == 0) {
-        points_[index >> 1] = pt;
+        Polygon::setPoint(index >> 1, pt);
     }
     return true;
 }

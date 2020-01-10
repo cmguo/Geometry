@@ -30,6 +30,8 @@ public slots:
 
     void setAngle(qreal angle);
 
+    void draw(QPainter *painter);
+
 private:
     virtual void getToolButtons(QList<ToolButton *> & buttons,
                                 ToolButton * parent) override;
@@ -38,6 +40,8 @@ private:
 
 private:
     qreal angle_ = 0.0;
+    QPainterPath path_;
+    QPainterPath textPath_;
 };
 
 #endif // SECTOR_H

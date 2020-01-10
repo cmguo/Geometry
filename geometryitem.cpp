@@ -14,8 +14,8 @@ public:
     GeometryEditItem(QGraphicsItem * parent)
         : QGraphicsPathItem(parent)
     {
-        setPen(Qt::NoPen);
-        setBrush(QColor("#007AFF"));
+        setPen(QPen(Qt::black));
+        setBrush(QBrush(Qt::white));
     }
 
     void setEditPoints(QVector<QPointF> const & points)
@@ -57,6 +57,13 @@ void GeometryItem::setEditPoints(const QVector<QPointF> &points)
 void GeometryItem::showEditor(bool show)
 {
     editItem_->setVisible(show);
+}
+
+void GeometryItem::setPen(const QPen &pen)
+{
+    QGraphicsPathItem::setPen(pen);
+    editItem_->setPen(QPen(Qt::black, pen.width()));
+    editItem_->setBrush(QBrush(pen.color()));
 }
 
 void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

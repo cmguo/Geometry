@@ -4,6 +4,7 @@
 #include <core/toolbutton.h>
 
 #include <QtMath>
+#include <QPainter>
 
 Sector::Sector(Resource * res)
     : Geometry2D(res, DrawAttach)
@@ -18,7 +19,10 @@ Sector::Sector(QPointF const & pt)
 
 Sector::Sector(Sector const & o)
     : Geometry2D(o),angle_(o.angle_)
+    , path_(o.path_)
+    , textPath_(o.textPath_)
 {
+    angle_ = o.angle_;
 }
 
 static QString buttonTitle(qreal a)
@@ -74,12 +78,27 @@ void Sector::setAngle(qreal angle)
     QPointF d = pt3 - points_[0];
     GeometryHelper::reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
+    dirty_ = true;
     emit changed();
+}
+
+void Sector::draw(QPainter *painter)
+{
+    painter->setPen(QPen(color_, width_));
+    painter->drawPath(path_);
+    painter->save();
+    painter->setPen(QPen(color_));
+    painter->drawPath(textPath_);
+    painter->restore();
 }
 
 QPainterPath Sector::path()
 {
+    if (!dirty_)
+        return path_ | textPath_;
+    dirty_ = false;
     QPainterPath ph;
+    QPainterPath tph;
     if (points_.size() > 1)
     {
         QPointF pt1 = points_[0];
@@ -110,11 +129,13 @@ QPainterPath Sector::path()
         ph.arcTo(rect, a1, la);
         ph.closeSubpath();
         if (angle_ < 0)
-            addAngleLabeling(ph, pt3, pt1, pt2, -angle_);
+            addAngleLabeling(tph, pt3, pt1, pt2, -angle_);
         else
-            addAngleLabeling(ph, pt2, pt1, pt3, angle_);
+            addAngleLabeling(tph, pt2, pt1, pt3, angle_);
     }
-    return ph;
+    path_ = ph;
+    textPath_ = tph;
+    return path_ | textPath_;
 }
 
 QVector<QPointF> Sector::movePoints()
@@ -233,5 +254,6 @@ bool Sector::move(int elem, const QPointF &pt)
         if (points_.size() == 3)
             GeometryHelper::adjustToLength(points_[0], points_[2], r);
     }
+    dirty_ = true;
     return true;
 }

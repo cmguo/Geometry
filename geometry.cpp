@@ -11,7 +11,7 @@ Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
     : ResourceView(res, flags | CanCopy, clearFlags)
     , dirty_(false)
     , color_(Qt::white)
-    , width_(1.0)
+    , width_(2.0)
 {
 }
 
@@ -19,7 +19,7 @@ Geometry::Geometry(QString const & type)
     : ResourceView(new Resource(type), CanCopy)
     , dirty_(false)
     , color_(Qt::white)
-    , width_(1.0)
+    , width_(2.0)
 {
 }
 

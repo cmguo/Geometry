@@ -209,7 +209,7 @@ void GeometryControl::select(bool selected)
 
 void GeometryControl::setPen(const QPen &pen)
 {
-    QGraphicsPathItem * item = static_cast<QGraphicsPathItem *>(item_);
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
     item->setPen(pen);
 }
 
