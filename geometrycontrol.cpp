@@ -184,7 +184,6 @@ void GeometryControl::updateSettings()
 
 void GeometryControl::geometryChanged()
 {
-    updateGeometry();
     finishGeometry();
 }
 
@@ -225,11 +224,17 @@ void GeometryControl::updateGeometry()
     }
 }
 
-void GeometryControl::finishGeometry()
+void GeometryControl::finishGeometry(bool valid)
 {
     Geometry * geometry = static_cast<Geometry *>(res_);
+    if (!valid) {
+        static_cast<GeometryItem *>(item_)->setPath(geometry->path());
+    }
     bool hasFinished = geometry->finished();
-    geometry->finish(bounds().center());
+    if (geometry->flags() & ResourceView::DrawFinised)
+        geometry->finish(bounds().center());
+    else
+        geometry->finish(bounds().center());
     updateGeometry();
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
@@ -310,7 +315,7 @@ bool GeometryControl::event(QEvent *event)
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
         if (geometry->finished()) {
             if (hitMoved_) {
-                finishGeometry();
+                finishGeometry(true);
             } else {
                 whiteCanvas()->selector()->select(item());
             }

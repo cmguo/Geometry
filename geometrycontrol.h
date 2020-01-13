@@ -49,7 +49,7 @@ protected:
 
     // finish drawing or adjusting geometry
     //  will adjust center & update
-    void finishGeometry();
+    void finishGeometry(bool valid = false);
 
     QRectF bounds();
 
