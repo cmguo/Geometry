@@ -251,9 +251,10 @@ bool GeometryControl::event(QEvent *event)
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
+        hitStart_ = me->pos();
+        hitMoved_ = false;
         if (geometry->finished()) {
-            QPointF pt = hitStart_ = me->pos();
-            hitMoved_ = false;
+            QPointF pt = hitStart_;
             if (editing_ && (me->flags() & 512)) { // from GeometryItem
                 qreal min = DBL_MAX;
                 int mdx = -1;
@@ -288,13 +289,13 @@ bool GeometryControl::event(QEvent *event)
     }
     case QEvent::GraphicsSceneMouseMove: {
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
+        if (!hitMoved_) {
+            QPointF d = me->pos() - hitStart_;
+            if (qAbs(d.x()) + qAbs(d.y()) < 5)
+                return true;
+            hitMoved_ = true;
+        }
         if (geometry->finished()) {
-            if (!hitMoved_) {
-                QPointF d = me->pos() - hitStart_;
-                if (qAbs(d.x()) + qAbs(d.y()) < 5)
-                    return true;
-                hitMoved_ = true;
-            }
             QPointF pt = me->pos() + hitOffset_;
             if (geometry->move(hitElem_, pt)) {
                 updateGeometry();
