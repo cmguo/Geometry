@@ -46,6 +46,7 @@ bool ArbitraryPolygon::moveTempPoint(const QPointF &pt)
     qDebug() << "moveTempPoint";
     temp_ = pt;
     tempValid_ = true;
+    dirty_ = true;
     return true;
 }
 
