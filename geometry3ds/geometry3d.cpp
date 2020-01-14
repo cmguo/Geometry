@@ -29,6 +29,8 @@ Geometry3D::Geometry3D(QPointF const & pt)
 
 Geometry3D::Geometry3D(Geometry3D const & o)
     : Geometry(o)
+    , origin_(o.origin_)
+    , size_(o.size_)
 {
 }
 
