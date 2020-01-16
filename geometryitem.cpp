@@ -7,6 +7,7 @@
 #include <QMetaMethod>
 #include <QEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QTouchEvent>
 
 class GeometryEditItem : public QGraphicsPathItem
 {
@@ -16,6 +17,7 @@ public:
     {
         setPen(QPen(Qt::black));
         setBrush(QBrush(Qt::white));
+        setAcceptTouchEvents(true);
     }
 
     void setEditPoints(QVector<QPointF> const & points)
@@ -38,6 +40,19 @@ public:
         return shape_;
     }
 
+    virtual bool sceneEvent(QEvent *event) override
+    {
+        switch (event->type()) {
+        case QEvent::TouchBegin:
+        case QEvent::TouchUpdate:
+        case QEvent::TouchEnd:
+            break;
+        default:
+            return QGraphicsPathItem::sceneEvent(event);
+        }
+        return event->isAccepted();
+    }
+
 private:
     QPainterPath shape_;
 };
@@ -47,6 +62,7 @@ GeometryItem::GeometryItem(QGraphicsItem * parent)
 {
     editItem_ = new GeometryEditItem(this);
     setFiltersChildEvents(true);
+    setAcceptTouchEvents(true);
 }
 
 void GeometryItem::setEditPoints(const QVector<QPointF> &points)
@@ -86,6 +102,9 @@ bool GeometryItem::sceneEvent(QEvent * event)
     case QEvent::GraphicsSceneMousePress:
     case QEvent::GraphicsSceneMouseMove:
     case QEvent::GraphicsSceneMouseRelease:
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
         Control::fromItem(this)->event(event);
         return event->isAccepted();
     default:
@@ -107,6 +126,13 @@ bool GeometryItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
                 ->setFlags(static_cast<Qt::MouseEventFlags>(512));
         Control::fromItem(this)->event(event);
         return event->isAccepted();
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+        static_cast<QTouchEvent*>(event)
+                ->setTouchPointStates(static_cast<Qt::TouchPointState>(512));
+        Control::fromItem(this)->event(event);
+        return false;
     default:
         return QGraphicsPathItem::sceneEventFilter(watched, event);
     }

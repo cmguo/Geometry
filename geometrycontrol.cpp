@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QGraphicsItem>
 #include <QGraphicsSceneEvent>
+#include <QTouchEvent>
 #include <QPen>
 
 static char const * toolstr =
@@ -22,10 +23,11 @@ static char const * toolstr =
         "-setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;";
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
-    : Control(res, flags | KeepAspectRatio | LayoutScale, clearFlags)
+    : Control(res, flags | KeepAspectRatio | LayoutScale | Touchable, clearFlags)
     , hitElem_(-1)
     , hitMoved_(false)
     , editing_(false)
+    , touchId_(0)
 {
     if (res->metaObject() == &Circle::staticMetaObject)
         flags_ &= ~CanRotate;
@@ -250,83 +252,143 @@ QRectF GeometryControl::bounds()
     return item_->boundingRect();
 }
 
+bool GeometryControl::beginPoint(const QPointF &point, bool fromHandle)
+{
+    Geometry * geometry = static_cast<Geometry *>(resource());
+    hitStart_ = point;
+    hitMoved_ = false;
+    if (geometry->finished()) {
+        QPointF pt = hitStart_;
+        if (editing_ && fromHandle) {
+            qreal min = DBL_MAX;
+            int mdx = -1;
+            for (int i = 0; i < editPoints_.size(); ++i) {
+                QPointF d = pt - editPoints_[i];
+                qreal dd = QPointF::dotProduct(d, d);
+                if (dd < min) {
+                    min = dd;
+                    mdx = i;
+                }
+            }
+            hitElem_ = mdx;
+            hitMoved_ = true;
+            if (hitElem_ >= 0) {
+                qDebug() << "hit handle" << hitElem_;
+                hitOffset_ = editPoints_[mdx] - point;
+                return true;
+            }
+        } else if (!editing_ && (flags_ & ImpliedEditable)) {
+            hitElem_ = geometry->hit(pt);
+            if (hitElem_ >= 0) {
+                qDebug() << "hit" << hitElem_;
+                hitOffset_ = pt - point;
+                return true;
+            }
+        }
+    } else {
+        geometry->addPoint(point);
+        updateGeometry();
+        return true;
+    }
+    return false;
+}
+
+void GeometryControl::movePoint(const QPointF &point)
+{
+    Geometry * geometry = static_cast<Geometry *>(resource());
+    if (!hitMoved_) {
+        QPointF d = point - hitStart_;
+        if (qAbs(d.x()) + qAbs(d.y()) < 5)
+            return;
+        hitMoved_ = true;
+    }
+    if (geometry->finished()) {
+        QPointF pt = point + hitOffset_;
+        if (geometry->move(hitElem_, pt)) {
+            updateGeometry();
+        }
+    } else {
+        geometry->movePoint(point);
+        updateGeometry();
+    }
+}
+
+bool GeometryControl::endPoint(const QPointF &point)
+{
+    Geometry * geometry = static_cast<Geometry *>(resource());
+    bool canFinish = false;
+    if (geometry->finished()) {
+        if (hitMoved_) {
+            finishGeometry(true);
+        } else {
+            whiteCanvas()->selector()->select(item());
+        }
+    } else {
+        if (geometry->commitPoint(point)) {
+            finishGeometry();
+        } else if (geometry->canFinish()) {
+            canFinish = true;
+            updateGeometry();
+        }
+    }
+    return canFinish;
+}
+
 bool GeometryControl::event(QEvent *event)
 {
     Geometry * geometry = static_cast<Geometry *>(resource());
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
+        if (touchId_)
+            return true;
         QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        hitStart_ = me->pos();
-        hitMoved_ = false;
-        if (geometry->finished()) {
-            QPointF pt = hitStart_;
-            if (editing_ && (me->flags() & 512)) { // from GeometryItem
-                qreal min = DBL_MAX;
-                int mdx = -1;
-                for (int i = 0; i < editPoints_.size(); ++i) {
-                    QPointF d = pt - editPoints_[i];
-                    qreal dd = QPointF::dotProduct(d, d);
-                    if (dd < min) {
-                        min = dd;
-                        mdx = i;
-                    }
-                }
-                hitElem_ = mdx;
-                hitMoved_ = true;
-                if (hitElem_ >= 0) {
-                    qDebug() << "hit" << hitElem_;
-                    hitOffset_ = editPoints_[mdx] - me->pos();
-                    return true;
-                }
-            } else if (!editing_) {
-                hitElem_ = geometry->hit(pt);
-                if (hitElem_ >= 0) {
-                    hitOffset_ = pt - me->pos();
-                    return true;
-                }
-            }
-        } else {
-            geometry->addPoint(me->pos());
-            updateGeometry();
+        if (beginPoint(me->pos(), me->flags() & 512)) // from GeometryItem
+            return true;
+        break;
+    }
+    case QEvent::GraphicsSceneMouseMove: {
+        if (touchId_)
+            return true;
+        QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
+        movePoint(me->pos());
+        return true;
+    }
+    case QEvent::GraphicsSceneMouseRelease: {
+        if (touchId_)
+            return true;
+        QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
+        if (endPoint(me->pos()))
+            me->setFlags(static_cast<Qt::MouseEventFlags>(256));
+        return true;
+    }
+    case QEvent::TouchBegin: {
+        QTouchEvent * te = static_cast<QTouchEvent *>(event);
+        touchId_ = te->touchPoints().first().id();
+        touchPos_ = te->touchPoints().first().pos();
+        if (beginPoint(touchPos_, te->touchPointStates() & 512)) { // from GeometryItem
             return true;
         }
         break;
     }
-    case QEvent::GraphicsSceneMouseMove: {
-        QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        if (!hitMoved_) {
-            QPointF d = me->pos() - hitStart_;
-            if (qAbs(d.x()) + qAbs(d.y()) < 5)
-                return true;
-            hitMoved_ = true;
-        }
-        if (geometry->finished()) {
-            QPointF pt = me->pos() + hitOffset_;
-            if (geometry->move(hitElem_, pt)) {
-                updateGeometry();
+    case QEvent::TouchUpdate: {
+        QTouchEvent * te = static_cast<QTouchEvent *>(event);
+        for (QTouchEvent::TouchPoint const & p : te->touchPoints()) {
+            if (p.id() == touchId_) {
+                movePoint(p.pos());
             }
-        } else {
-            geometry->movePoint(me->pos());
-            updateGeometry();
         }
         return true;
     }
-    case QEvent::GraphicsSceneMouseRelease: {
-        QGraphicsSceneMouseEvent * me = static_cast<QGraphicsSceneMouseEvent *>(event);
-        if (geometry->finished()) {
-            if (hitMoved_) {
-                finishGeometry(true);
-            } else {
-                whiteCanvas()->selector()->select(item());
-            }
-        } else {
-            if (geometry->commitPoint(me->pos())) {
-                finishGeometry();
-            } else if (geometry->canFinish()) {
-                me->setFlags(static_cast<Qt::MouseEventFlags>(256));
-                updateGeometry();
+    case QEvent::TouchEnd: {
+        QTouchEvent * te = static_cast<QTouchEvent *>(event);
+        for (QTouchEvent::TouchPoint const & p : te->touchPoints()) {
+            if (p.id() == touchId_) {
+                touchPos_ = p.pos();
             }
         }
+        touchId_ = 0;
+        if (endPoint(touchPos_))
+            te->setTouchPointStates(static_cast<Qt::TouchPointState>(256));
         return true;
     }
     case QEvent::GraphicsSceneHoverMove:

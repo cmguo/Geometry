@@ -61,6 +61,12 @@ private:
 
     void geometryChanged();
 
+    bool beginPoint(QPointF const & point, bool fromHandle);
+
+    void movePoint(QPointF const & point);
+
+    bool endPoint(QPointF const & point);
+
 private:
     int hitElem_;
     QPointF hitOffset_;
@@ -68,6 +74,8 @@ private:
     bool hitMoved_;
     QVector<QPointF> editPoints_;
     bool editing_;
+    int touchId_;
+    QPointF touchPos_;
 };
 
 #endif // GRAPHCONTROL_H
