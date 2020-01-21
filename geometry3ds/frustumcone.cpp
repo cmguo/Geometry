@@ -204,7 +204,7 @@ void FrustumCone::draw(QPainter *painter)
 }
 
 #else
-
+/*
 QPainterPath FrustumCone::path()
 {
     QPainterPath ph;
@@ -246,6 +246,40 @@ QPainterPath FrustumCone::path()
         ph.arcTo(rect, 180.0, 180.0);
     else
         ph.arcTo(rect, 180.0, -180.0);
+    return ph;
+}
+*/
+
+QPainterPath FrustumCone::path()
+{
+    QPainterPath ph;
+    if (points_.size() < 2)
+        return ph;
+    ph.setFillRule(Qt::WindingFill);
+    QPointF pt1(points_[0]);
+    QPointF pt2(points_[1]);
+    qreal r = qAbs(pt2.x() - pt1.x());
+    qreal r2 = this->r2(r);
+    QPointF center(pt1.x(), pt2.y());
+    QPointF RX(r, 0);
+    ph.moveTo(center + RX);
+    if (qFuzzyIsNull(r2)) {
+        ph.lineTo(pt1);
+        ph.lineTo(center - RX);
+        ph.lineTo(center + RX);
+    } else {
+        QPointF RX2(r2, 0);
+        ph.lineTo(pt1 + RX2);
+        ph.lineTo(pt1 - RX2);
+        ph.lineTo(center - RX);
+        ph.lineTo(center + RX);
+        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
+        rect2.moveCenter(pt1);
+        ph.addEllipse(rect2);
+    }
+    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
+    rect.moveCenter(center);
+    ph.addEllipse(rect);
     return ph;
 }
 
