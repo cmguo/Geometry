@@ -29,6 +29,8 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     , editing_(false)
     , touchId_(0)
 {
+    if (res_->metaObject() == &Line::staticMetaObject)
+        flags_ &= ~(CanScale | CanRotate);
     if (res->metaObject() == &Circle::staticMetaObject)
         flags_ &= ~CanRotate;
 }
