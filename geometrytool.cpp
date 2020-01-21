@@ -15,11 +15,14 @@ static char const * const geometry2ds[] = {
     "line", "dotline", "line.so-", "line.so-so",
     "circle", "isoscelestriangle",  "righttriangle",
     "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "parallelogram",
-    "arbitrarypolygon","sector","diamond","rectangle"
+    "arbitrarypolygon", "sector", "diamond", "rectangle"
 };
 
 static char const * const geometry3ds[] = {
-    "cube", "cuboid", "cylinder", "cone", "sphere"
+    "cube", "cuboid", "cylinder", "cone", "sphere",
+    #if _DEBUG
+    "frustumcone"
+    #endif
 };
 
 void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & type)

@@ -49,7 +49,9 @@ static QString buttonTitle(int n)
         file.open(QFile::ReadOnly);
         numberChar = file.readAll();
     }
-    return QString("正%1边形").arg(numberChar[n]);
+    int e = n >> 8;
+    int s = n & 0xff;
+    return QString("正%1边形").arg(numberChar[e]) + (s == 1 ? "" : QString("%1").arg(s));
 }
 
 void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
@@ -58,9 +60,13 @@ void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
     if (parent == nullptr)
         return Polygon::getToolButtons(buttons, parent);
     if (parent->name == "edges") {
-        for (int n : {5, 6}) {
+#ifdef _DEBUG
+        for (int n : {0x501, 0x502, 0x601, 0x701, 0x702, 0x703, 0x801, 0x803, 0x901, 0x902, 0x904}) {
+#else
+        for (int n : {0x501, 0x601}) {
+#endif
             ToolButton::Flags flags;
-            if (n == nEdges_)
+            if (n == (nEdges_ << 8 | nSpan_))
                 flags |= ToolButton::Selected;
             buttons.append(new ToolButton{
                                QVariant(n).toString(),
@@ -76,19 +82,26 @@ void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
 void RegularPolygon::updateToolButton(ToolButton * button)
 {
     if (button->name == "edges") {
-        button->title = buttonTitle(nEdges_);
+        button->title = buttonTitle(nEdges_ << 8 | nSpan_);
     }
 }
 
 void RegularPolygon::setEdges(int n)
 {
-    if (nEdges_ == n)
+    int s = nSpan_;
+    if (n > 256) {
+        s = n & 0xff;
+        n >>= 8;
+    } else {
+        s = 1;
+    }
+    if (nEdges_ == n && nSpan_ == s)
         return;
     nEdges_ = n;
     nSpan_ = 0;
     qreal radiusAttach = M_PI / 2 - M_PI / nEdges_;
     vAngleAttach_ = QPointF(cos(radiusAttach), sin(radiusAttach));
-    setSpan(1);
+    setSpan(s);
 }
 
 void RegularPolygon::setSpan(int n)
