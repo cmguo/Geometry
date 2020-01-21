@@ -10,7 +10,7 @@ using namespace QtPromise;
 Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
     : ResourceView(res, flags | CanCopy, clearFlags)
     , dirty_(false)
-    , color_(Qt::white)
+    , color_("#FFF0F0F0")
     , width_(2.0)
 {
 }
