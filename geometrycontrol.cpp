@@ -31,6 +31,9 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     , editing_(false)
     , touchId_(0)
 {
+#ifdef QT_DEBUG
+    flags_ |= ImpliedEditable;
+#endif
     if (res_->metaObject() == &Line::staticMetaObject)
         flags_ &= ~(CanScale | CanRotate);
     if (res->metaObject() == &Circle::staticMetaObject)
@@ -237,10 +240,7 @@ void GeometryControl::finishGeometry(bool valid)
         static_cast<GeometryItem *>(item_)->setPath(geometry->path());
     }
     bool hasFinished = geometry->finished();
-    if (geometry->flags() & ResourceView::DrawFinised)
-        geometry->finish(bounds().center());
-    else
-        geometry->finish(bounds().center());
+    geometry->finish(bounds().center());
     updateGeometry();
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
@@ -253,7 +253,7 @@ void GeometryControl::finishGeometry(bool valid)
 
 QRectF GeometryControl::bounds()
 {
-    return item_->boundingRect();
+    return static_cast<GeometryItem *>(item_)->path().boundingRect();
 }
 
 bool GeometryControl::beginPoint(const QPointF &point, bool fromHandle)

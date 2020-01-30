@@ -111,6 +111,7 @@ void RegularPolygon::setSpan(int n)
     nSpan_ = n;
     qreal radius = M_PI * 2 * nSpan_ / nEdges_;
     vAngle_ = QPointF(cos(radius), sin(radius));
+    dirty_ = true;
     emit changed();
 }
 
