@@ -60,7 +60,7 @@ void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
     if (parent == nullptr)
         return Polygon::getToolButtons(buttons, parent);
     if (parent->name == "edges") {
-#ifdef _DEBUG
+#ifdef QT_DEBUG
         for (int n : {0x501, 0x502, 0x601, 0x701, 0x702, 0x703, 0x801, 0x803, 0x901, 0x902, 0x904}) {
 #else
         for (int n : {0x501, 0x601}) {

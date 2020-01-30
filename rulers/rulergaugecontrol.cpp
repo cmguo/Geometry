@@ -6,6 +6,8 @@
 #include <core/resourceview.h>
 #include <QUrl>
 
+#include <cmath>
+
 RulerGaugeControl::RulerGaugeControl(ResourceView * res)
     : Control(res, {KeepAspectRatio})
 {

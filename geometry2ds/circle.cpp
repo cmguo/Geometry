@@ -1,6 +1,8 @@
 #include "circle.h"
 #include "geometryhelper.h"
 
+#include <cmath>
+
 Circle::Circle(Resource * res)
     : Ellipse(res)
 {

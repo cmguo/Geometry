@@ -4,6 +4,8 @@
 #include <QPen>
 #include <QPainter>
 
+#include <cmath>
+
 Sphere::Sphere(Resource * res)
     : Geometry3D(res)
 {

@@ -1,6 +1,8 @@
 #include "ellipse.h"
 #include "geometryhelper.h"
 
+#include <cmath>
+
 Ellipse::Ellipse(Resource * res)
     : Geometry2D(res)
 {

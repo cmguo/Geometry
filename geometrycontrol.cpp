@@ -17,6 +17,8 @@
 #include <QTouchEvent>
 #include <QPen>
 
+#include <float.h>
+
 static char const * toolstr =
         "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
         "setColor(QColor)|颜色|Popup,OptionsGroup,NeedUpdate|;"

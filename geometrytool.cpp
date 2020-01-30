@@ -20,7 +20,7 @@ static char const * const geometry2ds[] = {
 
 static char const * const geometry3ds[] = {
     "cube", "cuboid", "cylinder", "cone", "sphere",
-    #if _DEBUG
+    #ifdef QT_DEBUG
     "frustumcone"
     #endif
 };
