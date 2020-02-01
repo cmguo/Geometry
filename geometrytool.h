@@ -12,7 +12,7 @@ class GEOMETRY_EXPORT GeometryTool : public MenuTool
 public:
     static void getToolButtons(QList<ToolButton*> & result, QString const & type);
 
-    static void handleToolButton(ToolButton* button);
+    static void handleToolButton(ToolButton* button, QString const & type);
 
 public:
     Q_INVOKABLE GeometryTool(ResourceView *res);
@@ -21,7 +21,7 @@ private:
     virtual void getToolButtons(QList<ToolButton *> & buttons,
                                 ToolButton * parent) override;
 
-    virtual void handleToolButton(QList<ToolButton *> const & buttons) override;
+    virtual void handleToolButton(ToolButton * button) override;
 
 private:
     QList<ToolButton *> buttons_;
