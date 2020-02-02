@@ -26,7 +26,7 @@ QVector<QPointF> Sphere::movePoints()
     QVector<QPointF> points;
     QPointF c(points_.front());
     QPointF off(points_.back() - c);
-    points.append(points_[1]);
+    points.append(points_.back());
     off = QPointF(-off.y(), off.x());
     points.append(c + off);
     off = QPointF(-off.y(), off.x());
@@ -63,8 +63,8 @@ QPainterPath Sphere::path()
     QPainterPath ph;
     if (points_.size() < 2)
         return ph;
-    QPointF center(points_[0]);
-    QPointF pt2(points_[1]);
+    QPointF center(points_.front());
+    QPointF pt2(points_.back());
     qreal r = GeometryHelper::length(center - pt2);
     QRectF circle(0, 0, r * 2, r * 2);
     circle.moveCenter(center);
@@ -78,8 +78,8 @@ void Sphere::draw(QPainter *painter)
         return;
     QPen pen1(color_, width_);
     QPen pen2(color_, width_, Qt::DotLine);
-    QPointF center(points_[0]);
-    QPointF pt2(points_[1]);
+    QPointF center(points_.front());
+    QPointF pt2(points_.back());
     qreal r = GeometryHelper::length(center - pt2);
     QRectF circle(0, 0, r * 2, r * 2);
     circle.moveCenter(center);

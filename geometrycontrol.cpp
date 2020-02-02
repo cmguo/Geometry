@@ -340,6 +340,7 @@ bool GeometryControl::endPoint(const QPointF &point)
 
 bool GeometryControl::event(QEvent *event)
 {
+    //qDebug() << "GeometryControl::event" << event->type();
     Geometry * geometry = static_cast<Geometry *>(resource());
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
@@ -379,6 +380,7 @@ bool GeometryControl::event(QEvent *event)
         for (QTouchEvent::TouchPoint const & p : te->touchPoints()) {
             if (p.id() == touchId_) {
                 movePoint(p.pos());
+                break;
             }
         }
         return true;
@@ -388,6 +390,7 @@ bool GeometryControl::event(QEvent *event)
         for (QTouchEvent::TouchPoint const & p : te->touchPoints()) {
             if (p.id() == touchId_) {
                 touchPos_ = p.pos();
+                break;
             }
         }
         touchId_ = 0;
