@@ -1,4 +1,5 @@
 #include "geometryitem.h"
+#include "geometryhelper.h"
 
 #include <core/resourceview.h>
 #include <core/control.h>
@@ -15,7 +16,7 @@ public:
     GeometryEditItem(QGraphicsItem * parent)
         : QGraphicsPathItem(parent)
     {
-        setPen(QPen(Qt::black));
+        setPen(QPen(Qt::black, 2.0));
         setBrush(QBrush(Qt::white));
         setAcceptTouchEvents(true);
     }
@@ -24,8 +25,8 @@ public:
     {
         shape_ = QPainterPath();
         QPainterPath drawShape;
-        QRectF circle(0, 0, 40, 40);
-        QRectF box(0, 0, 14, 14);
+        QRectF circle(0, 0, GeometryHelper::HIT_DIFF * 4, GeometryHelper::HIT_DIFF * 4);
+        QRectF box(0, 0, GeometryHelper::HIT_DIFF * 1.4, GeometryHelper::HIT_DIFF * 1.4);
         for (QPointF const & pt : points) {
             circle.moveCenter(pt);
             shape_.addEllipse(circle);
@@ -78,8 +79,8 @@ void GeometryItem::showEditor(bool show)
 void GeometryItem::setPen(const QPen &pen)
 {
     QGraphicsPathItem::setPen(pen);
-    editItem_->setPen(QPen(Qt::black, pen.width()));
-    editItem_->setBrush(QBrush(pen.color()));
+    //editItem_->setPen(QPen(Qt::black, pen.width()));
+    //editItem_->setBrush(QBrush(pen.color()));
 }
 
 void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
