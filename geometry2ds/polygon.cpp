@@ -46,11 +46,11 @@ QPainterPath Polygon::path()
         QPointF cpt = nextPoint(0, hint);
         for (int i = 0; i < pointCount() - 1; ++i) {
             QPointF npt = nextPoint(i + 1, hint);
-            addAngleLabeling(tph, lpt, cpt, npt);
+            addAngleLabeling(ph, tph, lpt, cpt, npt);
             lpt = cpt;
             cpt = npt;
         }
-        addAngleLabeling(tph, lpt, cpt, first);
+        addAngleLabeling(ph, tph, lpt, cpt, first);
     }
     path_ = ph;
     textPath_ = tph;
@@ -121,6 +121,7 @@ void Polygon::draw(QPainter *painter)
     painter->drawPath(path_);
     painter->save();
     painter->setPen(QPen(color_));
+    painter->setBrush(color_);
     painter->drawPath(textPath_);
     painter->restore();
 }
@@ -152,13 +153,13 @@ qreal Polygon::angle(int index)
     return GeometryHelper::angle(lpt, pt, npt);
 }
 
-void Polygon::addAngleLabeling(QPainterPath &path, int index)
+void Polygon::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, int index)
 {
     QPointF hint;
     QPointF lpt = iterPoint((pointCount() + index - 1) % pointCount(), hint);
     QPointF pt = nextPoint(index, hint);
     QPointF npt = nextPoint((index + 1) % pointCount(), hint);
-    addAngleLabeling(path, lpt, pt, npt);
+    addAngleLabeling(path, textPath, lpt, pt, npt);
 }
 
 int Polygon::pointCount()

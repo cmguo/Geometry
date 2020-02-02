@@ -41,19 +41,19 @@ void Geometry2D::moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & p
     npt = np;
 }
 
-void Geometry2D::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
+void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QPointF const & lpt,
                                QPointF const & pt, QPointF const & npt)
 {
-    addAngleLabeling(path, lpt, pt, npt, GeometryHelper::angle(lpt, pt, npt));
+    addAngleLabeling(path, textPath, lpt, pt, npt, GeometryHelper::angle(lpt, pt, npt));
 }
 
-void Geometry2D::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
+void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QPointF const & lpt,
                                QPointF const & pt, QPointF const & npt, qreal angle)
 {
     QPointF lp = lpt;
     QPointF np = npt;
-    GeometryHelper::adjustToLength(pt, lp, 10.0);
-    GeometryHelper::adjustToLength(pt, np, 10.0);
+    GeometryHelper::adjustToLength(pt, lp, GeometryHelper::HIT_DIFF);
+    GeometryHelper::adjustToLength(pt, np, GeometryHelper::HIT_DIFF);
     QPointF rpt = lp + np - pt;
     //qDebug() << pt << angle;
     if (qFuzzyCompare(angle, 90.0)) {
@@ -67,9 +67,11 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
                   || qFuzzyCompare(angle, 135.0) || qFuzzyCompare(angle, 150.0))
                   : (qFuzzyCompare(angle, 180.0)
                      || qFuzzyCompare(angle, 270.0) || qFuzzyCompare(angle, 360.0)))) {
-        GeometryHelper::adjustToLength(pt, rpt, 30.0);
-        QPointF txt = rpt + QPointF(-8, 6);
-        QRectF bound(-14.14, -14.14, 28.28, 28.28);
+        GeometryHelper::adjustToLength(pt, rpt, GeometryHelper::HIT_DIFF * 3);
+        QString text = QString("%1°").arg(qRound(angle));
+        QPointF txtOff = GeometryHelper::textOffset(text, Qt::AlignCenter);
+        QPointF txtPos = rpt + txtOff;
+        QRectF bound = QRectF(QPointF(), QSizeF(2, 2) * (GeometryHelper::HIT_DIFF * 1.414));
         bound.moveCenter(pt);
         qreal a1 = GeometryHelper::angle(lpt - pt);
         qreal a2 = GeometryHelper::angle(npt - pt);
@@ -79,11 +81,11 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
         qreal length = end - start;
         if (qFuzzyIsNull(angle - 180)) {
             start = a1;
-            txt = lpt - pt;
-            GeometryHelper::adjustToLength(QPointF(0, 0), txt, 30.0);
-            txt = pt - QPointF(-txt.y(), txt.x()) + QPointF(-8, 6);
+            txtPos = lpt - pt;
+            GeometryHelper::adjustToLength(QPointF(0, 0), txtPos, GeometryHelper::HIT_DIFF * 3);
+            txtPos = pt - QPointF(-txtPos.y(), txtPos.x()) + txtOff;
             if (length < 0)
-                txt = pt * 2 - txt + QPointF(-8, 6);
+                txtPos = pt * 2 - txtPos + txtOff;
         } else if (angle < 180) {
             if (length > 180.0) {
                 length -= 360.0;
@@ -92,11 +94,11 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPointF const & lpt,
             if (length < 180.0) {
                 length -= 360.0;
             }
-            txt = pt * 2 - txt + QPointF(-8, 6);
+            txtPos = pt * 2 - txtPos + txtOff;
         }
         path.arcMoveTo(bound, start);
         path.arcTo(bound, start, length);
-        path.addText(txt, QFont(), QString("%1°").arg(qRound(angle)));
+        textPath.addText(txtPos, GeometryHelper::TEXT_FONT, text);
     }
 }
 

@@ -4,13 +4,23 @@
 #include <QPointF>
 #include <QVector>
 #include <QPolygonF>
+#include <QFont>
 
 class GeometryHelper
 {
 public:
-    static constexpr qreal HIT_DIFF = 10.0;
+    static qreal HIT_DIFF;
 
-    static constexpr qreal HIT_DIFF_DIFF = 100.0;
+    static qreal HIT_DIFF_DIFF;
+
+    static qreal DEFAULT_LINE_WIDTH;
+
+    static QFont TEXT_FONT;
+
+public:
+    static void init();
+
+    static QPointF textOffset(QString const & text, Qt::Alignment alignment);
 
 public:
     static qreal angle(QPointF const & vec);

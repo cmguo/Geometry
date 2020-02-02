@@ -22,7 +22,10 @@
 static char const * toolstr =
         "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
         "setColor(QColor)|颜色|Popup,OptionsGroup,NeedUpdate|;"
-        "-setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;";
+        #ifdef QT_DEBUG
+        "setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;"
+        #endif
+        ;
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
     : Control(res, flags | KeepAspectRatio | LayoutScale | Touchable, clearFlags)

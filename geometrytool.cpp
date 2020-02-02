@@ -1,5 +1,6 @@
 #include "geometrytool.h"
 #include "exports.h"
+#include "geometryhelper.h"
 
 #include <core/resourcefactory.h>
 #include <core/resourcemanager.h>
@@ -27,6 +28,7 @@ static char const * const geometry3ds[] = {
 
 void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & type)
 {
+    GeometryHelper::init();
     char const * const * geometries = nullptr;
     int count = 0;
     if (type == "geometry2d") {

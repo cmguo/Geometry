@@ -129,9 +129,9 @@ QPainterPath Sector::path()
         ph.arcTo(rect, a1, la);
         ph.closeSubpath();
         if (angle_ < 0)
-            addAngleLabeling(tph, pt3, pt1, pt2, -angle_);
+            addAngleLabeling(ph, tph, pt3, pt1, pt2, -angle_);
         else
-            addAngleLabeling(tph, pt2, pt1, pt3, angle_);
+            addAngleLabeling(ph, tph, pt2, pt1, pt3, angle_);
     }
     path_ = ph;
     textPath_ = tph;

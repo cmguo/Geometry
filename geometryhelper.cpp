@@ -1,6 +1,48 @@
 #include "geometryhelper.h"
 
 #include <QtMath>
+#include <QApplication>
+#include <QScreen>
+#include <QFontMetrics>
+
+qreal GeometryHelper::HIT_DIFF = 10.0;
+qreal GeometryHelper::HIT_DIFF_DIFF = 100.0;
+qreal GeometryHelper::DEFAULT_LINE_WIDTH = 2.0;
+QFont GeometryHelper::TEXT_FONT;
+
+static QFontMetrics textMetrics(GeometryHelper::TEXT_FONT);
+
+void GeometryHelper::init()
+{
+    TEXT_FONT = QFont();
+    QSize sz  = QApplication::primaryScreen()->size();
+    if (sz.width() > 1920) {
+        HIT_DIFF = 20.0;
+        HIT_DIFF_DIFF = 400.0;
+        DEFAULT_LINE_WIDTH = 4.0;
+        TEXT_FONT.setPixelSize(24);
+    }
+    textMetrics = QFontMetrics(TEXT_FONT);
+}
+
+QPointF GeometryHelper::textOffset(const QString &text, Qt::Alignment alignment)
+{
+    QRectF rect = textMetrics.boundingRect(text);
+    QPointF off;
+    if (alignment & Qt::AlignLeft)
+        off.setX(rect.left());
+    else if (alignment & Qt::AlignHCenter)
+        off.setX(rect.left() + rect.width() / 2);
+    else
+        off.setX(rect.right());
+    if (alignment & Qt::AlignTop)
+        off.setY(rect.top());
+    else if (alignment & Qt::AlignHCenter)
+        off.setY(rect.top() + rect.height() / 2);
+    else
+        off.setY(rect.bottom());
+    return -off;
+}
 
 qreal GeometryHelper::angle(QPointF const & vec) // axis angle
 {

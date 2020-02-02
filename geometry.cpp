@@ -11,15 +11,15 @@ Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
     : ResourceView(res, flags | CanCopy, clearFlags)
     , dirty_(false)
     , color_("#FFF0F0F0")
-    , width_(2.0)
+    , width_(GeometryHelper::DEFAULT_LINE_WIDTH)
 {
 }
 
 Geometry::Geometry(QString const & type)
     : ResourceView(new Resource(type), CanCopy)
     , dirty_(false)
-    , color_(Qt::white)
-    , width_(2.0)
+    , color_("#FFF0F0F0")
+    , width_(GeometryHelper::DEFAULT_LINE_WIDTH)
 {
 }
 
