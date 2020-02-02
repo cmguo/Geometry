@@ -52,6 +52,12 @@ QPromise<void> Geometry::load()
     });
 }
 
+void Geometry::setOption(const QByteArray &key, QVariant value)
+{
+    ResourceView::setOption(key, value);
+    emit changed();
+}
+
 bool Geometry::empty() const
 {
     return points_.isEmpty();

@@ -11,7 +11,7 @@ class GEOMETRY_EXPORT RulerGaugeControl: public Control
 public:
     Q_INVOKABLE RulerGaugeControl(ResourceView *res);
 
-    virtual QString toolsString(QString const & parent = QString()) const override;
+    virtual QString toolsString(QByteArray const & parent) const override;
 
     using :: Control::sizeChanged;
 

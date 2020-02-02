@@ -40,7 +40,7 @@ void RulerGaugeControl::attached()
     loadFinished(true);
 }
 
-QString RulerGaugeControl::toolsString(QString const &) const
+QString RulerGaugeControl::toolsString(QByteArray const &) const
 {
     return nullptr;
 }

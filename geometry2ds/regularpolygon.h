@@ -8,8 +8,8 @@ class RegularPolygon : public Polygon
     Q_OBJECT
 
     Q_PROPERTY(int edges READ edges WRITE setEdges)
-
     Q_PROPERTY(int span READ span WRITE setSpan)
+    Q_PROPERTY(int edgeSpan READ edgeSpan WRITE setEdges)
 
 public:
     Q_INVOKABLE RegularPolygon(Resource * res);
@@ -40,11 +40,7 @@ public slots:
 
     int span() { return nSpan_; }
 
-private:
-    virtual void getToolButtons(QList<ToolButton *> & buttons,
-                                ToolButton * parent) override;
-
-    virtual void updateToolButton(ToolButton * button) override;
+    int edgeSpan();
 
 private:
     int nEdges_;

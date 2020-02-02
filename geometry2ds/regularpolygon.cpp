@@ -1,6 +1,7 @@
 #include "regularpolygon.h"
 #include "geometryhelper.h"
 
+#include <core/optiontoolbuttons.h>
 #include <core/resource.h>
 #include <core/toolbutton.h>
 
@@ -24,7 +25,7 @@ RegularPolygon::RegularPolygon(Resource * res)
     }
     setEdges(edges);
     setSpan(span);
-    setToolsString("edges|边数|Popup,OptionsGroup,NeedUpdate|;");
+    setToolsString("edgeSpan|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 RegularPolygon::RegularPolygon(QPointF const & pt)
@@ -41,50 +42,38 @@ RegularPolygon::RegularPolygon(RegularPolygon const & o)
     setSpan(o.nSpan_);
 }
 
-static QString buttonTitle(int n)
+class EdgeToolButtons : public OptionToolButtons
 {
-    static QString numberChar;
-    if (numberChar.isEmpty()) {
-        QFile file(":/geometry/strings/number.txt");
-        file.open(QFile::ReadOnly);
-        numberChar = file.readAll();
-    }
-    int e = n >> 8;
-    int s = n & 0xff;
-    return QString("正%1边形").arg(numberChar[e]) + (s == 1 ? "" : QString("%1").arg(s));
-}
-
-void RegularPolygon::getToolButtons(QList<ToolButton *> & buttons,
-                            ToolButton * parent)
-{
-    if (parent == nullptr)
-        return Polygon::getToolButtons(buttons, parent);
-    if (parent->name == "edges") {
+public:
+    EdgeToolButtons()
 #ifdef QT_DEBUG
-        for (int n : {0x501, 0x502, 0x601, 0x701, 0x702, 0x703, 0x801, 0x803, 0x901, 0x902, 0x904}) {
+        : OptionToolButtons({0x501, 0x502, 0x601, 0x701, 0x702, 0x703, 0x801, 0x803, 0x901, 0x902, 0x904}, 3)
 #else
-        for (int n : {0x501, 0x601}) {
+        : OptionToolButtons({0x501, 0x601}, 2)
 #endif
-            ToolButton::Flags flags;
-            if (n == (nEdges_ << 8 | nSpan_))
-                flags |= ToolButton::Selected;
-            buttons.append(new ToolButton{
-                               QVariant(n).toString(),
-                               buttonTitle(n),
-                               flags,
-                               QVariant()
-                           });
+    {
+    }
+protected:
+    virtual QString buttonTitle(const QVariant &value) override
+    {
+        return buttonTitle(value.toInt());
+    }
+private:
+    static QString buttonTitle(int n)
+    {
+        static QString numberChar;
+        if (numberChar.isEmpty()) {
+            QFile file(":/geometry/strings/number.txt");
+            file.open(QFile::ReadOnly);
+            numberChar = file.readAll();
         }
+        int e = n >> 8;
+        int s = n & 0xff;
+        return QString("正%1边形").arg(numberChar[e]) + (s == 1 ? "" : QString("%1").arg(s));
     }
-}
-
-
-void RegularPolygon::updateToolButton(ToolButton * button)
-{
-    if (button->name == "edges") {
-        button->title = buttonTitle(nEdges_ << 8 | nSpan_);
-    }
-}
+};
+static EdgeToolButtons edgeSpanButtons;
+REGISTER_OPTION_BUTTONS(RegularPolygon, edgeSpan, edgeSpanButtons)
 
 void RegularPolygon::setEdges(int n)
 {
@@ -113,6 +102,11 @@ void RegularPolygon::setSpan(int n)
     vAngle_ = QPointF(cos(radius), sin(radius));
     dirty_ = true;
     emit changed();
+}
+
+int RegularPolygon::edgeSpan()
+{
+    return nEdges_ << 8 | nSpan_;
 }
 
 int RegularPolygon::pointCount()

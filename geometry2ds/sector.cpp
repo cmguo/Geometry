@@ -1,6 +1,7 @@
 #include "sector.h"
 #include "geometryhelper.h"
 
+#include <core/optiontoolbuttons.h>
 #include <core/toolbutton.h>
 
 #include <QtMath>
@@ -9,7 +10,7 @@
 Sector::Sector(Resource * res)
     : Geometry2D(res, DrawAttach)
 {
-    setToolsString("angle|角度|Popup,OptionsGroup,NeedUpdate|;");
+    //setToolsString("angle|角度|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 Sector::Sector(QPointF const & pt)
@@ -25,36 +26,26 @@ Sector::Sector(Sector const & o)
     angle_ = o.angle_;
 }
 
-static QString buttonTitle(qreal a)
+class AngleToolButtons : public OptionToolButtons
 {
-    return QString("%1°").arg(qRound(a));
-}
-
-void Sector::getToolButtons(QList<ToolButton *> & buttons,
-                            ToolButton * parent)
-{
-    if (parent == nullptr)
-        return Geometry2D::getToolButtons(buttons, parent);
-    if (parent->name == "angle") {
-        for (qreal n : {30, 45, 60, 90, 120, 180, 270, 360}) {
-            ToolButton::Flags flags;
-            if (qFuzzyIsNull(n - angle_))
-                flags |= ToolButton::Selected;
-            buttons.append(new ToolButton{
-                               QVariant(n).toString(),
-                               buttonTitle(n),
-                               flags,
-                               QVariant()
-                           });
-        }
+public:
+    AngleToolButtons()
+        : OptionToolButtons({30, 45, 60, 90, 120, 180, 270, 360}, 4)
+    {
     }
-}
-
-void Sector::updateToolButton(ToolButton * button)
-{
-    if (button->name == "angle") {
-        button->title = buttonTitle(angle());
+protected:
+    virtual QString buttonTitle(const QVariant &value) override
+    {
+        return QString("%1°").arg(qRound(value.toReal()));
     }
+};
+
+static AngleToolButtons angleButtons;
+REGISTER_OPTION_BUTTONS(Sector, angle, angleButtons)
+
+qreal Sector::angle()
+{
+    return qAbs(qRound(angle_));
 }
 
 void Sector::setAngle(qreal angle)
@@ -79,7 +70,6 @@ void Sector::setAngle(qreal angle)
     GeometryHelper::reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
     dirty_ = true;
-    emit changed();
 }
 
 void Sector::draw(QPainter *painter)

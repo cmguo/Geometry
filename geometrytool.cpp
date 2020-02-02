@@ -43,7 +43,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & t
     for (int i = 0; i < count; ++i) {
         char const * f = geometries[i];
         ToolButton * btn = new ToolButton(
-            {factory->newUrl(f).toString(), f, flags, ":geometry/icons/" + type + "/" + f + ".svg"});
+            {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icons/" + type + "/" + f + ".svg"});
         result.append(btn);
     }
 }
@@ -51,7 +51,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & t
 void GeometryTool::handleToolButton(ToolButton* button, QString const &)
 {
      WhiteCanvas * canvas = WhiteCanvasWidget::mainInstance()->canvas();
-     canvas->getToolControl("drawing")->setProperty("newUrl", button->name);
+     canvas->getToolControl("drawing")->setOption("newUrl", button->name);
      canvas->showToolControl("drawing");
 }
 
@@ -72,6 +72,6 @@ void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *pare
 void GeometryTool::handleToolButton(ToolButton * button)
 {
     WhiteCanvas * canvas = static_cast<WhiteCanvas*>(item_->parentItem()->parentItem());
-    canvas->getToolControl("drawing")->setProperty("newUrl", button->name);
+    canvas->getToolControl("drawing")->setOption("newUrl", button->name);
     canvas->showToolControl("drawing");
 }

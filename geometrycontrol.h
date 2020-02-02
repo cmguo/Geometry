@@ -12,14 +12,11 @@ class Geometry;
 class GeometryControl : public Control
 {
     Q_OBJECT
+
 public:
     Q_INVOKABLE GeometryControl(ResourceView * res, Flags flags = None, Flags clearFlags = None);
 
 public slots:
-    void setColor(QColor color);
-
-    void setLineWidth(qreal width);
-
     void edit();
 
 protected:
@@ -29,11 +26,14 @@ protected:
 
     virtual void resize(QSizeF const & size) override;
 
-    virtual QString toolsString(QString const & parent) const override;
+public:
+    virtual QString toolsString(QByteArray const & parent) const override;
 
     virtual void getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents = {}) override;
 
     virtual void updateToolButton(ToolButton * button) override;
+
+    virtual void setOption(const QByteArray &key, QVariant value) override;
 
 protected:
     virtual SelectMode selectTest(QPointF const & point) override;

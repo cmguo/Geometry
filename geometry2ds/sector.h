@@ -7,6 +7,8 @@ class Sector : public Geometry2D
 {
     Q_OBJECT
 
+    Q_CLASSINFO("toolsString", "angle|角度|Popup,OptionsGroup,NeedUpdate|;");
+
     Q_PROPERTY(qreal angle READ angle WRITE setAngle)
 
 public:
@@ -26,17 +28,11 @@ public:
     virtual bool move(int elem, QPointF const & pt) override;
 
 public slots:
-    qreal angle() { return qAbs(angle_); }
+    qreal angle();
 
     void setAngle(qreal angle);
 
     void draw(QPainter *painter);
-
-private:
-    virtual void getToolButtons(QList<ToolButton *> & buttons,
-                                ToolButton * parent) override;
-
-    virtual void updateToolButton(ToolButton * button) override;
 
 private:
     qreal angle_ = 0.0;

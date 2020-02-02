@@ -8,6 +8,7 @@
 
 #include <core/toolbutton.h>
 #include <core/resourcetransform.h>
+#include <core/optiontoolbuttons.h>
 #include <views/whitecanvas.h>
 #include <views/itemselector.h>
 
@@ -21,9 +22,9 @@
 
 static char const * toolstr =
         "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
-        "setColor(QColor)|颜色|Popup,OptionsGroup,NeedUpdate|;"
+        "color|颜色|Popup,OptionsGroup,NeedUpdate|;"
         #ifdef QT_DEBUG
-        "setLineWidth(qreal)|线宽|Popup,OptionsGroup,NeedUpdate|;"
+        "width|线宽|Popup,OptionsGroup,NeedUpdate|;"
         #endif
         ;
 
@@ -86,7 +87,7 @@ void GeometryControl::resize(const QSizeF &size)
     updateGeometry();
 }
 
-QString GeometryControl::toolsString(QString const & parent) const
+QString GeometryControl::toolsString(QByteArray const & parent) const
 {
     if (parent.isEmpty()) {
         return toolstr;
@@ -94,18 +95,12 @@ QString GeometryControl::toolsString(QString const & parent) const
     return nullptr;
 }
 
-static QList<ToolButton *> colorButtons;
-static QList<ToolButton *> lineWidthButtons;
+static ColorToolButtons colorButtons({Qt::white, Qt::black, Qt::red,
+                                      Qt::green, Qt::blue, Qt::yellow});
+REGISTER_OPTION_BUTTONS(GeometryControl, color, colorButtons)
 
-static QGraphicsItem* colorIcon(QColor color)
-{
-    QGraphicsRectItem * item = new QGraphicsRectItem;
-    item->setRect({1, 1, 30, 30});
-    item->setPen(QPen(QColor(color.red() / 2 + 128, // mix with white
-                        color.green() / 2 + 128, color.blue() / 2 + 128), 2.0));
-    item->setBrush(color);
-    return item;
-}
+static WidthToolButtons widthButtons({1.0, 2.0, 3.0, 4.0, 5.0});
+REGISTER_OPTION_BUTTONS(GeometryControl, width, widthButtons)
 
 void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents)
 {
@@ -114,66 +109,19 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
         Control::getToolButtons(buttons, parents);
         return;
     }
-    ToolButton * button = parents.last();
-    if (button->name == "setColor(QColor)") {
-        if (colorButtons.isEmpty()) {
-            for (Qt::GlobalColor c : {
-                 Qt::white, Qt::black, Qt::red, Qt::green, Qt::blue, Qt::yellow,
-             }) {
-                QString name = QVariant::fromValue(c).toString();
-                ToolButton::Flags flags = nullptr;
-                QGraphicsItem * icon = colorIcon(c);
-                ToolButton * btn = new ToolButton({name, "", flags,
-                     QVariant::fromValue(icon)});
-                colorButtons.append(btn);
-                if (colorButtons.size() % 4 == 3)
-                    colorButtons.append(&ToolButton::LINE_BREAK);
-            }
-        }
-        buttons.append(colorButtons);
-    } else if (button->name == "setLineWidth(qreal)") {
-        if (lineWidthButtons.isEmpty()) {
-            QPainterPath ph;
-            ph.moveTo(0, 0);
-            ph.lineTo(32, 0);
-            for (qreal w : {
-                 1.0, 2.0, 3.0, 4.0, 5.0,
-             }) {
-                QString name = QVariant::fromValue(w).toString();
-                ToolButton::Flags flags = nullptr;
-                QGraphicsPathItem * item = new QGraphicsPathItem(ph);
-                item->setPen(QPen(Qt::black, w * 3));
-                QGraphicsItem * icon = item;
-                ToolButton * btn = new ToolButton({name, name, flags,
-                     QVariant::fromValue(icon)});
-                lineWidthButtons.append(btn);
-            }
-        }
-        buttons.append(lineWidthButtons);
-    } else {
-        static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
-    }
+    Control::getToolButtons(buttons, parents);
+    static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
 }
 
 void GeometryControl::updateToolButton(ToolButton *button)
 {
-    if (button->name == "setColor(QColor)") {
-        QGraphicsItem * icon = colorIcon(res_->property("color").value<QColor>());
-        button->icon = QVariant::fromValue(icon);
-    } else {
-        static_cast<Geometry *>(res_)->updateToolButton(button);
-    }
+    Control::updateToolButton(button);
+    static_cast<Geometry *>(res_)->updateToolButton(button);
 }
 
-void GeometryControl::setColor(QColor color)
+void GeometryControl::setOption(const QByteArray &key, QVariant value)
 {
-    res_->setProperty("color", color);
-    updateSettings();
-}
-
-void GeometryControl::setLineWidth(qreal width)
-{
-    res_->setProperty("width", width);
+    Control::setOption(key, value);
     updateSettings();
 }
 
