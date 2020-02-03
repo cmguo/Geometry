@@ -40,6 +40,9 @@ public:
 
     Q_ENUM(EndianType)
 
+    class LineTypeToolButtons;
+    class EndianTypeToolButtons;
+
 public:
     Q_INVOKABLE Line(Resource * res);
 
@@ -54,6 +57,8 @@ public slots:
     void draw(QPainter *painter);
 
 private:
+    static QPen linePen(LineType type, QColor color, qreal width);
+
     static void fillEndian(QPainterPath & ph, EndianType type, qreal width,
                            QPointF & pt, QPointF const & dir, bool & solid);
 

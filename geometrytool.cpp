@@ -13,7 +13,10 @@
 #include <QVBoxLayout>
 
 static char const * const geometry2ds[] = {
-    "line", "dotline", "line.so-", "line.so-so",
+    "line",
+    #ifndef QT_DEBUG
+    "dotline", "line.so-", "line.so-so",
+    #endif
     "circle", "isoscelestriangle",  "righttriangle",
     "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "parallelogram",
     "arbitrarypolygon", "sector", "diamond", "rectangle"

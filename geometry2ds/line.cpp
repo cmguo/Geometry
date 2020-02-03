@@ -1,10 +1,14 @@
 #include "line.h"
 #include "geometryhelper.h"
 
-#include "core/resource.h"
+#include <core/optiontoolbuttons.h>
+#include <core/resource.h>
+#include <core/toolbutton.h>
 
 #include <QVector>
 #include <QPainter>
+#include <QMetaEnum>
+#include <QGraphicsItem>
 
 static char const * endtypes[] = {
     "", "o", "so",
@@ -56,6 +60,11 @@ Line::Line(Resource * res)
             }
         }
     }
+#ifdef QT_DEBUG
+    setToolsString("lineType|线形|Popup,OptionsGroup,NeedUpdate|;"
+                   "beginType|起点|Popup,OptionsGroup,NeedUpdate|;"
+                   "endType|终点|Popup,OptionsGroup,NeedUpdate|");
+#endif
 }
 
 Line::Line(QPointF const & pt)
@@ -122,8 +131,15 @@ void Line::draw(QPainter *painter)
             painter->setBrush(QBrush());
         painter->drawPath(ph);
     }
-    QPen pen(color_, width_);
-    switch (lineType_) {
+    painter->setPen(linePen(lineType_, color_, width_));
+    painter->drawLine(pt1, pt2);
+}
+
+QPen Line::linePen(Line::LineType type, QColor color, qreal width)
+{
+    QPen pen(color, width);
+    pen.setCapStyle(Qt::FlatCap);
+    switch (type) {
     case Solid:
         break;
     case Dash:
@@ -139,8 +155,7 @@ void Line::draw(QPainter *painter)
         pen.setStyle(Qt::DashDotDotLine);
         break;
     }
-    painter->setPen(pen);
-    painter->drawLine(pt1, pt2);
+    return pen;
 }
 
 void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
@@ -207,3 +222,69 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         break;
     }
 }
+
+class Line::LineTypeToolButtons : public OptionToolButtons
+{
+public:
+    LineTypeToolButtons()
+        : OptionToolButtons(QList<LineType>{Solid, Dash, Dot, DashDot, DashDotDot}, 3)
+    {
+    }
+protected:
+    virtual QVariant buttonIcon(const QVariant &value) override
+    {
+        return QVariant::fromValue(lineIcon(value.value<LineType>()));
+    }
+
+private:
+    static QGraphicsItem* lineIcon(LineType t)
+    {
+        QGraphicsLineItem* item = new QGraphicsLineItem;
+        item->setLine(QLine(1, 16, 31, 16));
+        item->setPen(linePen(t, Qt::white, 2));
+        return item;
+    }
+};
+
+class Line::EndianTypeToolButtons : public OptionToolButtons
+{
+public:
+    EndianTypeToolButtons()
+        : OptionToolButtons(QList<EndianType>{None, Ball, SolidBall, Arrow,
+                            SolidArrow, HollowArrow, SharpArrow, Diamond,
+                            SolidDiamod, Box, SolidBox}, 4)
+    {
+    }
+protected:
+    virtual QVariant buttonIcon(const QVariant &value) override
+    {
+        return QVariant::fromValue(endianIcon(value.value<EndianType>()));
+    }
+
+private:
+    static QGraphicsItem* endianIcon(EndianType t)
+    {
+        QPainterPath ph;
+        bool solid = false;
+        QPointF pt(16, 16);
+        if (t == None)
+            ph.addRect(0, 0, 30, 30);
+        else
+            fillEndian(ph, t, 2, pt, {16, 0}, solid);
+        QGraphicsPathItem* item = new QGraphicsPathItem;
+        item->setPath(ph);
+        item->setPen(QPen(Qt::white, 2));
+        if (solid)
+            item->setBrush(Qt::white);
+        else
+            item->setBrush(QBrush());
+        return item;
+    }
+};
+
+static Line::LineTypeToolButtons lineButtons;
+static Line::EndianTypeToolButtons endianButtons;
+
+REGISTER_OPTION_BUTTONS(Line, lineType, lineButtons)
+REGISTER_OPTION_BUTTONS(Line, beginType, endianButtons)
+REGISTER_OPTION_BUTTONS(Line, endType, endianButtons)
