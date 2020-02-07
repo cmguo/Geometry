@@ -15,7 +15,7 @@ Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
 {
 }
 
-Geometry::Geometry(QString const & type)
+Geometry::Geometry(QByteArray const & type)
     : ResourceView(new Resource(type), CanCopy)
     , dirty_(false)
     , color_("#FFF0F0F0")

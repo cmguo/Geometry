@@ -10,9 +10,9 @@ class GEOMETRY_EXPORT GeometryTool : public MenuTool
     Q_OBJECT
 
 public:
-    static void getToolButtons(QList<ToolButton*> & result, QString const & type);
+    static void getToolButtons(QList<ToolButton*> & result, QByteArray const & type);
 
-    static void handleToolButton(ToolButton* button, QString const & type);
+    static void handleToolButton(ToolButton* button, QByteArray const & type);
 
 public:
     Q_INVOKABLE GeometryTool(ResourceView *res);

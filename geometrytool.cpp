@@ -29,7 +29,7 @@ static char const * const geometry3ds[] = {
     #endif
 };
 
-void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & type)
+void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const & type)
 {
     GeometryHelper::init();
     char const * const * geometries = nullptr;
@@ -51,7 +51,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QString const & t
     }
 }
 
-void GeometryTool::handleToolButton(ToolButton* button, QString const &)
+void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
 {
      WhiteCanvas * canvas = WhiteCanvasWidget::mainInstance()->canvas();
      canvas->getToolControl("drawing")->setOption("newUrl", button->name);
@@ -67,8 +67,8 @@ void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *pare
 {
     if (parent)
         return;
-    QString type = res_->resource()->type();
-    type.remove("tool");
+    QByteArray type = res_->resource()->type();
+    type.remove(type.length() - 4, 4); // "tool"
     getToolButtons(buttons, type);
 }
 

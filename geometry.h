@@ -69,7 +69,7 @@ public:
 protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
-    Geometry(QString const & type);
+    Geometry(QByteArray const & type);
 
     Geometry(Geometry const & o);
 
