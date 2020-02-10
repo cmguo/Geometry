@@ -23,6 +23,8 @@ public:
     virtual bool move(int elem, QPointF const & pt) override;
 
 public slots:
+    bool contains(QPointF const & pt);
+
     void draw(QPainter *painter);
 
 protected:

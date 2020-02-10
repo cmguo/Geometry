@@ -83,6 +83,16 @@ void GeometryItem::setPen(const QPen &pen)
     //editItem_->setBrush(QBrush(pen.color()));
 }
 
+bool GeometryItem::contains(const QPointF &point) const
+{
+    ResourceView * res = Control::fromItem(this)->resource();
+    int index = res->metaObject()->indexOfMethod("contains(QPointF)");
+    if (index >= 0) {
+        return res->metaObject()->method(index).invoke(res, Q_ARG(QPointF, point));
+    }
+    return QGraphicsPathItem::contains(point);
+}
+
 void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget)
 {
@@ -138,3 +148,4 @@ bool GeometryItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         return QGraphicsPathItem::sceneEventFilter(watched, event);
     }
 }
+

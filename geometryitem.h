@@ -20,6 +20,8 @@ public:
     void setPen(const QPen &pen);
 
 private:
+    virtual bool contains(const QPointF &point) const override;
+
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                        QWidget *widget = nullptr) override;
 
