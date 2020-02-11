@@ -239,10 +239,15 @@ protected:
 private:
     static QGraphicsItem* lineIcon(LineType t)
     {
-        QGraphicsLineItem* item = new QGraphicsLineItem;
-        item->setLine(QLine(1, 16, 31, 16));
+        QPainterPath ph;
+        ph.addRect(QRectF(0, 0, 32, 32));
+        QGraphicsPathItem * border = new QGraphicsPathItem(ph);
+        border->setPen(Qt::NoPen);
+        border->setBrush(QColor("#343434"));
+        QGraphicsLineItem* item = new QGraphicsLineItem(border);
+        item->setLine(QLine(2, 16, 30, 16));
         item->setPen(linePen(t, Qt::white, 2));
-        return item;
+        return border;
     }
 };
 
@@ -265,20 +270,34 @@ private:
     static QGraphicsItem* endianIcon(EndianType t)
     {
         QPainterPath ph;
+        ph.addRect(QRectF(0, 0, 32, 32));
+        QGraphicsPathItem * border = new QGraphicsPathItem(ph);
+        border->setPen(Qt::NoPen);
+        border->setBrush(QColor("#343434"));
+        QPainterPath ph2;
         bool solid = false;
-        QPointF pt(16, 16);
-        if (t == None)
-            ph.addRect(0, 0, 30, 30);
-        else
-            fillEndian(ph, t, 2, pt, {16, 0}, solid);
-        QGraphicsPathItem* item = new QGraphicsPathItem;
-        item->setPath(ph);
+        QPointF pt1(16, 0);
+        QPointF pt2(16, 16);
+        switch (t) {
+        case Arrow:
+        case SolidArrow:
+        case HollowArrow:
+        case SharpArrow:
+            pt1 += QPointF(6, 0);
+            pt2 += QPointF(6, 0);
+            break;
+        default:
+            break;
+        }
+        fillEndian(ph2, t, 2, pt2, pt1, solid);
+        QGraphicsPathItem* item = new QGraphicsPathItem(border);
+        item->setPath(ph2);
         item->setPen(QPen(Qt::white, 2));
         if (solid)
             item->setBrush(Qt::white);
         else
             item->setBrush(QBrush());
-        return item;
+        return border;
     }
 };
 
