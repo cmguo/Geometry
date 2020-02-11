@@ -37,6 +37,8 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
 {
 #ifdef QT_DEBUG
     flags_ |= ImpliedEditable;
+#else
+    flags_ |= HalfSelect;
 #endif
     if (res_->metaObject() == &Line::staticMetaObject)
         flags_ &= ~(CanScale | CanRotate);
@@ -149,8 +151,9 @@ void GeometryControl::geometryChanged()
 
 Control::SelectMode GeometryControl::selectTest(QPointF const & point)
 {
-    (void) point;
-    return NotSelect;// item_->contains(point) ? Select : PassSelect;
+    QPointF pt = point;
+    Geometry * geometry = qobject_cast<Geometry *>(res_);
+    return geometry->hit(pt) >= 0 ? NotSelect : Select;
 }
 
 void GeometryControl::select(bool selected)
