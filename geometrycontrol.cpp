@@ -22,6 +22,7 @@
 
 static char const * toolstr =
         "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
+        "|;"
         "color|颜色|Popup,OptionsGroup,NeedUpdate|;"
         #ifdef QT_DEBUG
         "width|线宽|Popup,OptionsGroup,NeedUpdate|;"
@@ -107,8 +108,15 @@ REGISTER_OPTION_BUTTONS(GeometryControl, width, widthButtons)
 void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents)
 {
     if (parents.isEmpty()) {
-        static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
+        QList<ToolButton *> buttons2;
+        static_cast<Geometry *>(res_)->getToolButtons(buttons2, parents);
         Control::getToolButtons(buttons, parents);
+        if (!buttons2.empty()) {
+            int i = 1;
+            buttons.insert(i++, &ToolButton::SPLITTER);
+            for (ToolButton * b : buttons2)
+                buttons.insert(i++, b);
+        }
         return;
     }
     Control::getToolButtons(buttons, parents);
