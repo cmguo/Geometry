@@ -58,12 +58,20 @@ private:
     QPainterPath shape_;
 };
 
-GeometryItem::GeometryItem(QGraphicsItem * parent)
+GeometryItem::GeometryItem(QObject * res, QGraphicsItem * parent)
     : QGraphicsPathItem(parent)
+    , res_(res)
 {
     editItem_ = new GeometryEditItem(this);
     setFiltersChildEvents(true);
     setAcceptTouchEvents(true);
+    QMetaObject const * meta = res->metaObject();
+    int index = meta->indexOfMethod("contains(QPointF)");
+    if (index >= 0)
+        methodContains_ = meta->method(index);
+    index = meta->indexOfMethod("draw(QPainter*)");
+    if (index >= 0)
+        methodDraw_ = meta->method(index);
 }
 
 void GeometryItem::setEditPoints(const QVector<QPointF> &points)
@@ -85,10 +93,10 @@ void GeometryItem::setPen(const QPen &pen)
 
 bool GeometryItem::contains(const QPointF &point) const
 {
-    ResourceView * res = Control::fromItem(this)->resource();
-    int index = res->metaObject()->indexOfMethod("contains(QPointF)");
-    if (index >= 0) {
-        return res->metaObject()->method(index).invoke(res, Q_ARG(QPointF, point));
+    if (methodContains_.isValid()) {
+        bool result;
+        methodContains_.invoke(res_, Q_RETURN_ARG(bool, result), Q_ARG(QPointF, point));
+        return result;
     }
     return QGraphicsPathItem::contains(point);
 }
@@ -96,11 +104,9 @@ bool GeometryItem::contains(const QPointF &point) const
 void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget)
 {
-    ResourceView * res = Control::fromItem(this)->resource();
-    int index = res->metaObject()->indexOfMethod("draw(QPainter*)");
-    if (index >= 0) {
+    if (methodDraw_.isValid()) {
         painter->save();
-        res->metaObject()->method(index).invoke(res, Q_ARG(QPainter*, painter));
+        methodDraw_.invoke(res_, Q_ARG(QPainter*, painter));
         painter->restore();
         return;
     }

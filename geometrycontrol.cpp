@@ -45,12 +45,13 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
         flags_ &= ~(CanScale | CanRotate);
     if (res->metaObject() == &Circle::staticMetaObject)
         flags_ &= ~CanRotate;
+    setMinSize({0.02, 0.02});
 }
 
 QGraphicsItem * GeometryControl::create(ResourceView * res)
 {
     (void) res;
-    GeometryItem * item = new GeometryItem();
+    GeometryItem * item = new GeometryItem(res);
     //item->setBrush(QColor(0, 0, 255, 20));
     item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
     return item;
@@ -198,11 +199,12 @@ void GeometryControl::updateGeometry()
 void GeometryControl::finishGeometry(bool valid)
 {
     Geometry * geometry = static_cast<Geometry *>(res_);
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
     if (!valid) {
-        static_cast<GeometryItem *>(item_)->setPath(geometry->path());
+        item->setPath(geometry->path());
     }
     bool hasFinished = geometry->finished();
-    geometry->finish(bounds().center());
+    geometry->finish(item->boundingRect().center());
     updateGeometry();
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
@@ -211,11 +213,6 @@ void GeometryControl::finishGeometry(bool valid)
     } else {
         selector->updateSelect(realItem_);
     }
-}
-
-QRectF GeometryControl::bounds()
-{
-    return static_cast<GeometryItem *>(item_)->path().boundingRect();
 }
 
 bool GeometryControl::beginPoint(const QPointF &point, bool fromHandle)

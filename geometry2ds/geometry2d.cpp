@@ -98,7 +98,10 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QP
         }
         path.arcMoveTo(bound, start);
         path.arcTo(bound, start, length);
-        textPath.addText(txtPos, GeometryHelper::TEXT_FONT, text);
+        QPolygonF polygon({lpt, pt, npt, lpt});
+        if (polygon.containsPoint(txtPos, Qt::OddEvenFill)
+                && polygon.containsPoint(rpt - txtOff, Qt::OddEvenFill))
+            textPath.addText(txtPos, GeometryHelper::TEXT_FONT, text);
     }
 }
 

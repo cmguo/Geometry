@@ -2,11 +2,12 @@
 #define GEOMETRY_ITEM_H
 
 #include <QGraphicsPathItem>
+#include <QMetaMethod>
 
 class GeometryItem : public QGraphicsPathItem
 {
 public:
-    GeometryItem(QGraphicsItem * parent = nullptr);
+    GeometryItem(QObject * res, QGraphicsItem * parent = nullptr);
 
     void setEditPoints(QVector<QPointF> const & points);
 
@@ -31,6 +32,9 @@ private:
 
 private:
     QGraphicsPathItem * editItem_;
+    QObject * res_;
+    QMetaMethod methodContains_;
+    QMetaMethod methodDraw_;
 };
 
 #endif // GEOMETRY_ITEM_H

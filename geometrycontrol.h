@@ -51,8 +51,6 @@ protected:
     //  will adjust center & update
     void finishGeometry(bool valid = false);
 
-    QRectF bounds();
-
 protected:
     virtual bool event(QEvent *event) override;
 
