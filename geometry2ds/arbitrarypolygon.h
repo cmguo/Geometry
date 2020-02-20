@@ -24,6 +24,8 @@ public:
 
     virtual bool canFinish() override;
 
+    virtual void finish(const QPointF &c) override;
+
     virtual int pointCount() override;
 
     virtual QPointF point(int index) override;

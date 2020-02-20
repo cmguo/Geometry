@@ -55,6 +55,18 @@ bool ArbitraryPolygon::canFinish()
     return points_.size() > 2;
 }
 
+void ArbitraryPolygon::finish(const QPointF &c)
+{
+    if (tempValid_) {
+        tempValid_ = false;
+        dirty_ = true;
+        QPointF c1 = path().boundingRect().center();
+        Polygon::finish(c1);
+    } else {
+        Polygon::finish(c);
+    }
+}
+
 int ArbitraryPolygon::pointCount()
 {
     return points_.size() + ((!tempValid_ || (flags_ & DrawFinised)) ? 0 : 1);
