@@ -21,7 +21,7 @@ private:
     virtual void getToolButtons(QList<ToolButton *> & buttons,
                                 ToolButton * parent) override;
 
-    virtual void handleToolButton(ToolButton * button) override;
+    virtual void handleToolButton(ToolButton * button, QStringList const & args) override;
 
 private:
     QList<ToolButton *> buttons_;
