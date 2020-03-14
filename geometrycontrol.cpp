@@ -59,8 +59,8 @@ QGraphicsItem * GeometryControl::create(ResourceView * res)
 
 void GeometryControl::attached()
 {
-    updateSettings();
     Geometry * geometry = static_cast<Geometry *>(res_);
+    updateSettings();
     QObject::connect(geometry, &Geometry::changed,
                      this, &GeometryControl::geometryChanged);
     if (geometry->empty() || (flags_ & RestoreSession)) {
@@ -108,32 +108,26 @@ REGISTER_OPTION_BUTTONS(GeometryControl, width, widthButtons)
 
 void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents)
 {
-    if (parents.isEmpty()) {
-        QList<ToolButton *> buttons2;
-        static_cast<Geometry *>(res_)->getToolButtons(buttons2, parents);
-        Control::getToolButtons(buttons, parents);
-        if (!buttons2.empty()) {
-            int i = 1;
-            buttons.insert(i++, &ToolButton::SPLITTER);
-            for (ToolButton * b : buttons2)
-                buttons.insert(i++, b);
-        }
-        return;
-    }
     Control::getToolButtons(buttons, parents);
-    static_cast<Geometry *>(res_)->getToolButtons(buttons, parents);
-}
-
-void GeometryControl::updateToolButton(ToolButton *button)
-{
-    Control::updateToolButton(button);
-    static_cast<Geometry *>(res_)->updateToolButton(button);
+    if (parents.isEmpty()) {
+        int i = buttons.indexOf(&ToolButton::SPLITTER);
+        if (i > 0 && buttons[i - 1]->name() != "edit()") {
+            buttons.prepend(buttons.takeAt(i++));
+            buttons.prepend(buttons.takeAt(i++));
+        }
+    }
 }
 
 void GeometryControl::setOption(const QByteArray &key, QVariant value)
 {
-    Control::setOption(key, value);
+    // set to geometry
+    res_->setProperty(key, value);
     updateSettings();
+}
+
+QVariant GeometryControl::getOption(const QByteArray &key)
+{
+    return res_->property(key);
 }
 
 void GeometryControl::edit()
@@ -148,9 +142,8 @@ void GeometryControl::edit()
 
 void GeometryControl::updateSettings()
 {
-    QColor color = res_->property("color").value<QColor>();
-    qreal width = res_->property("width").toReal();
-    setPen(QPen(color, width));
+    Geometry * geometry = qobject_cast<Geometry *>(res_);
+    setPen(QPen(geometry->color(), geometry->width()));
 }
 
 void GeometryControl::geometryChanged()

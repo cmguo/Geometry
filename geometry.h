@@ -40,6 +40,17 @@ public:
 
     void scale(qreal scale);
 
+public:
+    QColor color() const
+    {
+        return color_;
+    }
+
+    qreal width() const
+    {
+        return width_;
+    }
+
 signals:
     void changed();
 

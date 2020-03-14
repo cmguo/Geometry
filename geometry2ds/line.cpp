@@ -63,7 +63,7 @@ Line::Line(Resource * res)
 #ifdef QT_DEBUG
     setToolsString("lineType|线形|Popup,OptionsGroup,NeedUpdate|;"
                    "beginType|起点|Popup,OptionsGroup,NeedUpdate|;"
-                   "endType|终点|Popup,OptionsGroup,NeedUpdate|");
+                   "endType|终点|Popup,OptionsGroup,NeedUpdate|;");
 #endif
 }
 
