@@ -46,7 +46,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
     for (int i = 0; i < count; ++i) {
         char const * f = geometries[i];
         ToolButton * btn = new ToolButton(
-            {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icons/" + type + "/" + f + ".svg"});
+            {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icon/" + type + "/" + f + ".svg"});
         result.append(btn);
     }
 }

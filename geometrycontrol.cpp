@@ -21,7 +21,7 @@
 #include <float.h>
 
 static char const * toolstr =
-        "edit()|调节|HideSelector|:/showboard/icons/edit.svg;"
+        "edit()|调节|HideSelector|:/showboard/icon/edit.svg;"
         "|;"
         "color|颜色|Popup,OptionsGroup,NeedUpdate|;"
         #ifdef QT_DEBUG

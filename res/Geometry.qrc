@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/geometry">
+        <file>icon/geometry2d/arbitrarypolygon.svg</file>
+        <file>icon/geometry2d/circle.svg</file>
+        <file>icon/geometry2d/isopopetrapezoid.svg</file>
+        <file>icon/geometry2d/isoscelestriangle.svg</file>
+        <file>icon/geometry2d/line.svg</file>
+        <file>icon/geometry2d/parallelogram.svg</file>
+        <file>icon/geometry2d/righttrapezoid.svg</file>
+        <file>icon/geometry2d/righttriangle.svg</file>
+        <file>icon/geometry2d/square.svg</file>
+        <file>icon/geometry3d/cone.svg</file>
+        <file>icon/geometry3d/cube.svg</file>
+        <file>icon/geometry3d/cuboid.svg</file>
+        <file>icon/geometry3d/cylinder.svg</file>
+        <file>icon/geometry3d/sphere.svg</file>
+        <file>icon/geometry2d/line.so-.svg</file>
+        <file>icon/geometry2d/line.so-so.svg</file>
+        <file>icon/geometry2d/dotline.svg</file>
+        <file>string/number.txt</file>
+        <file>icon/geometry2d/regularpolygon.5.svg</file>
+        <file>icon/geometry2d/sector.svg</file>
+        <file>icon/geometry2d/diamond.svg</file>
+        <file>icon/geometry2d/rectangle.svg</file>
+    </qresource>
+</RCC>

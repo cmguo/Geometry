@@ -34,6 +34,9 @@ HEADERS += \
     geometryitem.h \
     geometrytool.h
 
+RESOURCES += \
+    res/Geometry.qrc
+
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)
 include(rulers/rulers.pri)
@@ -81,6 +84,3 @@ else:unix: LIBS += -L$$OUT_PWD/../QtComposition/ -lQtComposition
 
 INCLUDEPATH += $$PWD/../QtComposition
 DEPENDPATH += $$PWD/../QtComposition
-
-RESOURCES += \
-    Geometry.qrc
