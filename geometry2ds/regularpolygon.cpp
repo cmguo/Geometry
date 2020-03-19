@@ -64,7 +64,7 @@ private:
     {
         static QString numberChar;
         if (numberChar.isEmpty()) {
-            QFile file(":/geometry/strings/number.txt");
+            QFile file(":/geometry/string/number.txt");
             file.open(QFile::ReadOnly);
             numberChar = file.readAll();
         }
