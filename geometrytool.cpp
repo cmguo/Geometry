@@ -54,8 +54,10 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
 void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
 {
      WhiteCanvas * canvas = WhiteCanvasWidget::mainInstance()->canvas();
-     canvas->getToolControl("drawing")->setOption("newUrl", button->name());
-     canvas->showToolControl("drawing");
+     Control * drawControl = canvas->getToolControl("drawing");
+     QObject::connect(drawControl, SIGNAL(controlCreated(Control*)), button, SIGNAL(delayActive()));
+     drawControl->setOption("newUrl", button->name());
+     canvas->showToolControl(drawControl);
 }
 
 GeometryTool::GeometryTool(ResourceView *res)
