@@ -67,22 +67,26 @@ qreal GeometryHelper::angle(QPointF const & p1, QPointF const & p2, QPointF cons
     return acos(dot / sqrt(mod1 * mod2)) * 180 / M_PI;
 }
 
+// 矢量长度
 qreal GeometryHelper::length(QPointF const & vec)
 {
     return sqrt(dotProduct(vec, vec));
 }
 
+// 矢量长度的平方
 qreal GeometryHelper::length2(QPointF const & vec)
 {
     return dotProduct(vec, vec);
 }
 
+// 旋转点pt（相对于(0,0)点）angle的度数，angle是单位矢量，y轴向下
 void GeometryHelper::rotate(QPointF & pt, QPointF const & angle)
 {
     pt = QPointF(pt.x() * angle.x() - pt.y() * angle.y(),
                  pt.x() * angle.y() + pt.y() * angle.x());
 }
 
+// 旋转点pt（相对于(0,0)点）angle的度数，angle是单位矢量，y轴向上
 void GeometryHelper::reverseRotate(QPointF & pt, QPointF const & angle)
 {
     pt = QPointF(pt.x() * angle.x() + pt.y() * angle.y(),
@@ -94,11 +98,13 @@ qreal GeometryHelper::determinant(QPointF const & p1, QPointF const & p2)
     return p1.x() * p2.y() - p2.x() * p1.y();
 }
 
+// 两个矢量的点乘
 qreal GeometryHelper::dotProduct(const QPointF &p1, const QPointF &p2)
 {
     return QPointF::dotProduct(p1, p2);
 }
 
+// 求点p到线段(p1~p2)的最近点，可能是端点，在rp中返回
 qreal GeometryHelper::dist2PointToSegment(QPointF const & p1, QPointF const & p2,
                                 QPointF const & p, QPointF & rp)
 {
@@ -114,6 +120,7 @@ qreal GeometryHelper::dist2PointToSegment(QPointF const & p1, QPointF const & p2
     return length2(p - rp);
 }
 
+// 求点p直线(pt1~pt2)的垂直平分线的最近点
 QPointF GeometryHelper::nearestPointAtVerticalBisector(QPointF const & pt1, QPointF const & pt2,
                                    QPointF const & p)
 {
@@ -122,17 +129,24 @@ QPointF GeometryHelper::nearestPointAtVerticalBisector(QPointF const & pt1, QPoi
     d = QPointF(-d.y(), d.x());
     qreal dot1 = dotProduct(d, p - c);
     qreal dot2 = length2(d);
+    if (qFuzzyIsNull(dot2))
+        return p;
     qreal r = dot1 / dot2;
     return c + d * r;
 }
 
+// 沿方向(start->end)调整点end，使点start和end之间的距离为length
 void GeometryHelper::adjustToLength(QPointF const & start, QPointF & end, qreal length)
 {
     QPointF d = end - start;
-    d *= length / sqrt(length2(d));
-    end = start + d;
+    qreal l = sqrt(length2(d));
+    if (qFuzzyIsNull(l))
+        end = start + QPointF(length, 0);
+    else
+        end = start + d * (length / l);
 }
 
+// 求直线(p1~p2)和直线(q1~q2)的交点
 QPointF GeometryHelper::crossPoint(QPointF const & p1, QPointF const & p2,
                           QPointF const & q1, QPointF const & q2)
 {
@@ -140,6 +154,13 @@ QPointF GeometryHelper::crossPoint(QPointF const & p1, QPointF const & p2,
     QPointF b(p2.x() - p1.x(), q2.x() - q1.x()); // b1, b2
     QPointF c(determinant(p1, p2), determinant(q1, q2));
     qreal d = determinant(a, b);
+    if (qFuzzyIsNull(d)) {
+        if (qFuzzyIsNull(a.x()) && qFuzzyIsNull(b.x()))
+            return p1;
+        if (qFuzzyIsNull(a.y()) && qFuzzyIsNull(b.y()))
+            return q1;
+        return (p1 + p2 + q1 + q2) / 4;
+    }
     return QPointF(determinant(b, c), determinant(c, a)) / d;
 }
 
@@ -151,6 +172,7 @@ static bool cmp(QPointF const &a, QPointF const & b) { // 极角排序，极角�
                 && GeometryHelper::length(a) < GeometryHelper::length(b));
 }
 
+// 求点集合pts的最小包围凸多边形
 QPolygonF GeometryHelper::smallestEnclosingPolygon(const QVector<QPointF> &pts)
 {
     QPointF min = pts[0];
@@ -185,6 +207,7 @@ QPolygonF GeometryHelper::smallestEnclosingPolygon(const QVector<QPointF> &pts)
     return QPolygonF(stack);
 }
 
+// 调整点p到其在直线(p1~p2)上的投影，如果距离大于于HIT_DIFF_DIFF，则不调整
 void GeometryHelper::attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p)
 {
     QPointF d = p2 - p1;
@@ -196,6 +219,7 @@ void GeometryHelper::attachToLine(QPointF const & p1, QPointF const & p2, QPoint
         p = rp;
 }
 
+// 调整点p到点集合pts中与其最近的点，如果最近距离大于于HIT_DIFF_DIFF，则不调整
 int GeometryHelper::attachToPoints(QVector<QPointF> const & pts, QPointF & p)
 {
     qreal min = HIT_DIFF_DIFF;
@@ -232,6 +256,7 @@ void GeometryHelper::attachToLines(QPointF const & p1, QPointF const & p2, QPoin
     attachToLines(p1, p2, ATTACH_DIRS, p);
 }
 
+// 调整点p到通过点p1的在所有方向dirs的直线的最近投影，如果最小距离大于于HIT_DIFF_DIFF，则不调整
 int GeometryHelper::attachToLines(QPointF const & p1, QVector<QPointF> const & dirs, QPointF & p)
 {
     qreal min = HIT_DIFF_DIFF;
