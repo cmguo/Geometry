@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QtMath>
+#include <geometryhelper.h>
 
 //#define CIRCLE_OBLIQUE_PROJECTION
 
@@ -28,12 +29,18 @@ qreal FrustumCone::r2(qreal r)
     return r / 2;
 }
 
+//      4-0-5
+//     /     \
+//    /       \
+//   2----3----1
+
 QVector<QPointF> FrustumCone::movePoints()
 {
-    QVector<QPointF> points(points_);
+    QVector<QPointF> points(points_.mid(0, 2));
     QPointF pt1(points_[0]);
     QPointF pt2(points_[1]);
     points.append(QPointF(pt1.x() * 2 - pt2.x(), pt2.y()));
+    points.append(QPointF(pt1.x(), pt2.y()));
     qreal r = pt2.x() - pt1.x();
     qreal r2 = this->r2(r);
     if (!qFuzzyIsNull(r2)) {
@@ -46,10 +53,15 @@ QVector<QPointF> FrustumCone::movePoints()
 
 int FrustumCone::hit(QPointF & pt)
 {
-    int elem = Geometry3D::hit(pt);
-    if (elem == 2)
-        elem = 3;
-    return elem;
+    QVector<QPointF> pts = movePoints();
+    for (int i = 0; i < pts.size(); ++i) {
+        QPointF d = pt - pts[i];
+        if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
+            pt = pts[i];
+            return i;
+        }
+    }
+    return -1;
 }
 
 bool FrustumCone::move(int elem, QPointF const & pt)
@@ -59,11 +71,12 @@ bool FrustumCone::move(int elem, QPointF const & pt)
         p.setX(points_[0].x());
     else if (elem == 2)
         elem = 1;
+    else if (elem == 3)
+        p.setX(points_[elem = 1].x());
     if (elem < 2)
         return Geometry3D::move(elem, p);
-    if (elem == 3 || elem == 4) {
-        p.setY(points_[0].y());
-        elem = 3;
+    if (elem == 4 || elem == 5) {
+        points_[0].setY(p.y());
         if (points_.size() == 2)
             points_.append(p);
         else

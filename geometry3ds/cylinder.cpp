@@ -22,7 +22,8 @@ qreal Cylinder::r2(qreal r)
 
 bool Cylinder::move(int elem, QPointF const & pt)
 {
-    if (elem == 3 || elem == 4) {
+    if (elem == 4 || elem == 5) {
+        points_[0].setY(pt.y());
         QPointF p(pt.x(), points_[1].y());
         return FrustumCone::move(1, p);
     }
