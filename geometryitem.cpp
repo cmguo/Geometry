@@ -24,6 +24,7 @@ public:
     void setEditPoints(QVector<QPointF> const & points)
     {
         shape_ = QPainterPath();
+        shape_.setFillRule(Qt::FillRule::WindingFill);
         QPainterPath drawShape;
         QRectF circle(0, 0, GeometryHelper::HIT_DIFF * 4, GeometryHelper::HIT_DIFF * 4);
         QRectF box(0, 0, GeometryHelper::HIT_DIFF * 1.4, GeometryHelper::HIT_DIFF * 1.4);
