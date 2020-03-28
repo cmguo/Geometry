@@ -9,6 +9,7 @@
 #include <QEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
+#include <QCursor>
 
 class GeometryEditItem : public QGraphicsPathItem
 {
@@ -19,6 +20,7 @@ public:
         setPen(QPen(Qt::black, 2.0));
         setBrush(QBrush(Qt::white));
         setAcceptTouchEvents(true);
+        setCursor(Qt::CrossCursor);
     }
 
     void setEditPoints(QVector<QPointF> const & points)
