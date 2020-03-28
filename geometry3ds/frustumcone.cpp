@@ -308,11 +308,16 @@ bool FrustumCone::contains(const QPointF &pt)
     QPointF center(pt1.x(), pt2.y());
     QPointF RX(r, 0);
     ph.moveTo(center + RX);
+    QPainterPathStroker ps;
+    ps.setCapStyle(Qt::SquareCap);
+    ps.setWidth(width_);
     if (qFuzzyIsNull(r2)) {
         ph.lineTo(pt1);
         ph.lineTo(center - RX);
         ph.lineTo(center + RX);
         if (ph.contains(pt))
+            return true;
+        if (ps.createStroke(ph).contains(pt))
             return true;
     } else {
         QPointF RX2(r2, 0);
@@ -325,11 +330,14 @@ bool FrustumCone::contains(const QPointF &pt)
         QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
         rect2.moveCenter(pt1);
         ph.addEllipse(rect2);
+        if (ps.createStroke(ph).contains(pt))
+            return true;
     }
     QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
     rect.moveCenter(center);
     ph.addEllipse(rect);
-    return ph.contains(pt);
+    return ph.contains(pt)
+            || ps.createStroke(ph).contains(pt);
 }
 
 void FrustumCone::draw(QPainter *painter)
