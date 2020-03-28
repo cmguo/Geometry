@@ -156,8 +156,10 @@ void GeometryControl::geometryChanged()
 Control::SelectMode GeometryControl::selectTest(QPointF const & point)
 {
     QPointF pt = point;
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
     Geometry * geometry = qobject_cast<Geometry *>(res_);
-    return geometry->hit(pt) >= 0 ? NotSelect : Select;
+    return (editing_ && item->editItem()->contains(point))
+            || geometry->hit(pt) >= 0 ? NotSelect : Select;
 }
 
 void GeometryControl::select(bool selected)
