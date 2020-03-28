@@ -36,7 +36,7 @@ void Geometry2D::moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & p
                 QPointF & npt, QPointF const & nnpt)
 {
     QPointF lp = GeometryHelper::crossPoint(llpt, lpt, pt, pt + npt - lpt);
-    QPointF np = GeometryHelper::crossPoint(npt, nnpt, pt, pt + npt - lpt);
+    QPointF np = GeometryHelper::crossPoint(pt, pt + npt - lpt, npt, nnpt);
     lpt = lp;
     npt = np;
 }
@@ -56,11 +56,14 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QP
     GeometryHelper::adjustToLength(pt, np, GeometryHelper::HIT_DIFF);
     QPointF rpt = lp + np - pt;
     //qDebug() << pt << angle;
+    QPolygonF polygon({lpt, pt, npt, lpt});
     if (qFuzzyCompare(angle, 90.0)) {
-        path.moveTo(lp);
-        path.lineTo(rpt);
-        path.lineTo(np);
-        //path.addText(txt, QFont(), QString("90°"));
+        if (polygon.containsPoint(rpt, Qt::OddEvenFill)) {
+                    path.moveTo(lp);
+                    path.lineTo(rpt);
+                    path.lineTo(np);
+                    //path.addText(txt, QFont(), QString("90°"));
+        }
     } else if ((angle < 90) ? (qFuzzyCompare(angle, 30.0)
                || qFuzzyCompare(angle, 45.0) || qFuzzyCompare(angle, 60.0))
                : ((angle < 180) ? (qFuzzyCompare(angle, 120.0)
@@ -98,7 +101,6 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QP
         }
         path.arcMoveTo(bound, start);
         path.arcTo(bound, start, length);
-        QPolygonF polygon({lpt, pt, npt, lpt});
         if (polygon.containsPoint(txtPos, Qt::OddEvenFill)
                 && polygon.containsPoint(rpt - txtOff, Qt::OddEvenFill))
             textPath.addText(txtPos, GeometryHelper::TEXT_FONT, text);
