@@ -366,10 +366,7 @@ bool GeometryControl::event(QEvent *event)
     case QEvent::User:
         if (geometry->canFinish()) {
             finishGeometry();
-        } else {
-            whiteCanvas()->removeResource(this);
         }
-
         break;
     default:
         break;

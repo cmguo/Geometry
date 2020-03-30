@@ -55,7 +55,8 @@ void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
 {
      WhiteCanvas * canvas = WhiteCanvasWidget::mainInstance()->canvas();
      Control * drawControl = canvas->getToolControl("drawing");
-     QObject::connect(drawControl, SIGNAL(controlCreated(Control*)), button, SIGNAL(delayActive()));
+     QObject::connect(drawControl, SIGNAL(drawFinished(bool)),
+                      button, SIGNAL(delayActive(bool)));
      drawControl->setOption("newUrl", button->name());
      canvas->showToolControl(drawControl);
 }
