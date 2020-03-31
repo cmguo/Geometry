@@ -39,6 +39,8 @@ protected:
     virtual bool setPoint(int index, QVector3D const & pt);
 
 protected:
+    void clearLines();
+
     void makeLine(int startIndex, int endIndex);
 
     void collect(QVector<QPointF> & points, QVector<bool> & hidden);

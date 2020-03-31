@@ -40,6 +40,8 @@ public:
 
     static void reverseRotate(QPointF & pt, QPointF const & angle);
 
+    static void adjustToLength( QPointF & vec, qreal length);
+
     static void adjustToLength(QPointF const & start, QPointF & end, qreal length);
 
 public:

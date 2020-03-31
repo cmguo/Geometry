@@ -135,6 +135,16 @@ QPointF GeometryHelper::nearestPointAtVerticalBisector(QPointF const & pt1, QPoi
     return c + d * r;
 }
 
+// 调整矢量vec，是其长度变为length，方向保持不变
+void GeometryHelper::adjustToLength(QPointF &vec, qreal length)
+{
+    qreal l = sqrt(length2(vec));
+    if (qFuzzyIsNull(l))
+        vec = vec + QPointF(length, 0);
+    else
+        vec = vec * (length / l);
+}
+
 // 沿方向(start->end)调整点end，使点start和end之间的距离为length
 void GeometryHelper::adjustToLength(QPointF const & start, QPointF & end, qreal length)
 {

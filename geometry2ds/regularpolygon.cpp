@@ -99,8 +99,8 @@ void RegularPolygon::setSpan(int n)
     if (nSpan_ == n)
         return;
     nSpan_ = n;
-    qreal radius = M_PI * 2 * nSpan_ / nEdges_;
-    vAngle_ = QPointF(cos(radius), sin(radius));
+    qreal radiusStep = M_PI * 2 * nSpan_ / nEdges_;
+    vAngleStep_ = QPointF(cos(radiusStep), sin(radiusStep));
     dirty_ = true;
     emit changed();
 }
@@ -123,10 +123,10 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
     if (index == 0) {
         return pt;
     } else if (index == 1) {
-        GeometryHelper::reverseRotate(hint, vAngle_);
+        GeometryHelper::reverseRotate(hint, vAngleStep_);
         return center + hint;
     } else if (index == nEdges_ - 1) {
-        GeometryHelper::reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+        GeometryHelper::reverseRotate(hint, QPointF(vAngleStep_.x(), -vAngleStep_.y()));
         return center + hint;
     } else {
         qreal radius = M_PI * 2 * nSpan_ * index / nEdges_;
@@ -138,14 +138,14 @@ QPointF RegularPolygon::iterPoint(int index, QPointF &hint)
 QPointF RegularPolygon::nextPoint(int index, QPointF &hint)
 {
     (void) index;
-    GeometryHelper::reverseRotate(hint, vAngle_);
+    GeometryHelper::reverseRotate(hint, vAngleStep_);
     return points_.front() + hint;
 }
 
 QPointF RegularPolygon::prevPoint(int index, QPointF &hint)
 {
     (void) index;
-    GeometryHelper::reverseRotate(hint, QPointF(vAngle_.x(), -vAngle_.y()));
+    GeometryHelper::reverseRotate(hint, QPointF(vAngleStep_.x(), -vAngleStep_.y()));
     return points_.front() + hint;
 }
 

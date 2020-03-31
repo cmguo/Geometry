@@ -84,7 +84,7 @@ void Polyhedron::draw(QPainter *painter)
         painter->drawText(points[i] + QPointF(10, -5), QString("%1").arg(i));
     }
 #endif
-    for (int l :lines_) {
+    for (int l : lines_) {
         int s = l & 0xff;
         int e = (l >> 8) & 0xff;
         bool h = hidden[s] || hidden[e];
@@ -130,6 +130,12 @@ bool Polyhedron::move(int elem, const QPointF &pt)
     return Geometry3D::move(elem, pt);
 }
 
+void Polyhedron::clearLines()
+{
+    lines_.clear();
+    dirty_ = true;
+}
+
 void Polyhedron::makeLine(int startIndex, int endIndex)
 {
     lines_.append(startIndex | endIndex << 8);
@@ -142,6 +148,9 @@ void Polyhedron::collect(QVector<QPointF> &points, QVector<bool> &hidden)
         point3ds[i] = point(i);
     }
     QVector3D limit = point3ds[0];
+//    QVector<QPointF> xy(pointCount());
+//    QVector<QPointF> yz(pointCount());
+//    QVector<QPointF> zx(pointCount());
 #ifndef POLYHEDRON_ISOMETRIC_PROJECTION
     points[0] = PO.map(limit).toPointF();
 #else
@@ -161,7 +170,13 @@ void Polyhedron::collect(QVector<QPointF> &points, QVector<bool> &hidden)
 #else
         points[i] = PI.map(pt).toPointF();
 #endif
+//        xy[i] = QPointF(pt.x(), pt.y());
+//        yz[i] = QPointF(pt.y(), pt.z());
+//        zx[i] = QPointF(pt.z(), pt.x());
     }
+//    QPolygonF pgXY = GeometryHelper::smallestEnclosingPolygon(xy);
+//    QPolygonF pgYZ = GeometryHelper::smallestEnclosingPolygon(yz);
+//    QPolygonF pgZX = GeometryHelper::smallestEnclosingPolygon(zx);
     for (int i = 0; i < pointCount(); ++i) {
         QVector3D pt = point3ds[i];
 #ifndef POLYHEDRON_ISOMETRIC_PROJECTION

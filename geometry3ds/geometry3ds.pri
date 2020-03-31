@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/geometry3d.h \
     $$PWD/geometry3ds.h \
     $$PWD/polyhedron.h \
+    $$PWD/regularprism.h \
     $$PWD/sphere.h
 
 SOURCES += \
@@ -17,4 +18,5 @@ SOURCES += \
     $$PWD/frustumcone.cpp \
     $$PWD/geometry3d.cpp \
     $$PWD/polyhedron.cpp \
+    $$PWD/regularprism.cpp \
     $$PWD/sphere.cpp

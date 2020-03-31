@@ -4,12 +4,30 @@
 
 #include <QtMath>
 
+/*
+ *              Z ^      _/ Y
+ *                |    _/
+ *                |  _/
+ *                | /
+ *                o---------------> X
+ */
 QMatrix4x4 Geometry3D::PO(
         1, float(CO), 0, 0,
         0, -float(CO), -1, 0,
         0, 0, 0, 0,
         0, 0, 0, 1);
 
+/*
+ *              Z ^
+ *                |
+ *                |
+ *                |
+ *                o
+ *              /   \
+ *           /         \
+ *        /               \
+ *   X /                     \ Y
+ */
 QMatrix4x4 Geometry3D::PI(
         -float(CIX), float(CIX), 0, 0,
         float(CIY), float(CIY), -float(CIY) * 2, 0,

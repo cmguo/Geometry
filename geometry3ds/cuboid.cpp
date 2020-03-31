@@ -34,6 +34,8 @@ int Cuboid::pointCount()
     return points_.size() >= 2 ? 8 : 1;
 }
 
+// @see Geometry3D::PO,Geometry3D::PI
+
 QVector3D Cuboid::point(int index)
 {
     if (dirty_ && points_.size() > 1) {

@@ -45,9 +45,8 @@ public slots:
 private:
     int nEdges_;
     int nSpan_;
-    QPointF vAngle_;
+    QPointF vAngleStep_;
     QPointF vAngleAttach_;
-    bool commit_ = false;
 };
 
 #endif // REGULARPOLYGON_H
