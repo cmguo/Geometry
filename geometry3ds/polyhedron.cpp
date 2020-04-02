@@ -87,7 +87,7 @@ void Polyhedron::draw(QPainter *painter)
     for (int l : lines_) {
         int s = l & 0xff;
         int e = (l >> 8) & 0xff;
-        bool h = hidden[s] || hidden[e];
+        bool h = hidden[s] || hidden[e] || (l >> 16);
         painter->setPen(h ? pen2 : pen1);
         painter->drawLine(points[s], points[e]);
     }
@@ -143,48 +143,51 @@ void Polyhedron::makeLine(int startIndex, int endIndex)
 
 void Polyhedron::collect(QVector<QPointF> &points, QVector<bool> &hidden)
 {
-    QVector<QVector3D> point3ds(pointCount());
-    for (int i = 0; i < pointCount(); ++i) {
+    QVector<QVector3D> point3ds(pointCount() + lines_.count());
+    QVector<QVector3D*> orders(pointCount() + lines_.count());
+    int i = 0;
+    for (; i < pointCount(); ++i) {
         point3ds[i] = point(i);
+#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
+        points[i] = PO.map(point3ds[i]).toPointF();
+#else
+        points[i] = PI.map(point3ds[i]).toPointF();
+#endif
+        orders[i] = &point3ds[i];
+        hidden[i] = true;
     }
-    QVector3D limit = point3ds[0];
-//    QVector<QPointF> xy(pointCount());
-//    QVector<QPointF> yz(pointCount());
-//    QVector<QPointF> zx(pointCount());
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-    points[0] = PO.map(limit).toPointF();
-#else
-    points[0] = PI.map(limit).toPointF();
-#endif
-    for (int i = 1; i < pointCount(); ++i) {
-        QVector3D pt = point3ds[i];
-        limit.setX(qMax(limit.x(), pt.x()));
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        limit.setY(qMin(limit.y(), pt.y()));
-#else
-        limit.setY(qMax(limit.y(), pt.y()));
-#endif
-        limit.setZ(qMax(limit.z(), pt.z()));
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        points[i] = PO.map(pt).toPointF();
-#else
-        points[i] = PI.map(pt).toPointF();
-#endif
-//        xy[i] = QPointF(pt.x(), pt.y());
-//        yz[i] = QPointF(pt.y(), pt.z());
-//        zx[i] = QPointF(pt.z(), pt.x());
+    for (int j = 0 ; j < lines_.size(); ++j, ++i) {
+        lines_[j] &= 0xffff; // clear old
+        int l = lines_[j];
+        int r = l >> 8;
+        l &= 0xff;
+        point3ds[i] = (point3ds[l] + point3ds[r]) / 2; // line center
+        orders[i] = &point3ds[i];
     }
-//    QPolygonF pgXY = GeometryHelper::smallestEnclosingPolygon(xy);
-//    QPolygonF pgYZ = GeometryHelper::smallestEnclosingPolygon(yz);
-//    QPolygonF pgZX = GeometryHelper::smallestEnclosingPolygon(zx);
-    for (int i = 0; i < pointCount(); ++i) {
-        QVector3D pt = point3ds[i];
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        if (pt.x() < limit.x() && pt.y() > limit.y() && pt.z() < limit.z())
-#else
-        if (pt.x() < limit.x() && pt.y() < limit.y() && pt.z() < limit.z())
-#endif
-            hidden[i] = true;
+    i -= lines_.count(); // pointCount()
+    // sort by y
+    std::sort(orders.begin(), orders.end(), [](QVector3D*l, QVector3D*r) {
+        return l->y() < r->y();
+    });
+    QPolygonF bound;
+    QVector<QPointF> pts;
+    for (QVector3D * p : orders) {
+        QPointF pt(p->x() + p->y() * CO, p->z() + p->y() * CO);
+        int j = p - point3ds.data();
+        if (bound.containsPoint(pt, Qt::OddEvenFill)) {
+            if (j >= i) {
+                int l = lines_[j - i];
+                int r = l >> 8;
+                l &= 0xff;
+                if (hidden[l] || hidden[r])
+                    lines_[j - i] |= 0x10000;
+            }
+        } else if (j < i) {
+            hidden[j] = false;
+            pts.append(pt);
+            if (pts.size() > 2)
+                bound = GeometryHelper::smallestEnclosingPolygon(pts);
+        }
     }
 }
 
