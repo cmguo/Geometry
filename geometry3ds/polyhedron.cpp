@@ -172,8 +172,8 @@ void Polyhedron::collect(QVector<QPointF> &points, QVector<bool> &hidden)
     QPolygonF bound;
     QVector<QPointF> pts;
     for (QVector3D * p : orders) {
-        QPointF pt(p->x() + p->y() * CO, p->z() + p->y() * CO);
-        int j = p - point3ds.data();
+        QPointF pt(qreal(p->x()) + qreal(p->y()) * CO, qreal(p->z()) + qreal(p->y()) * CO);
+        int j = int(p - point3ds.data());
         if (bound.containsPoint(pt, Qt::OddEvenFill)) {
             if (j >= i) {
                 int l = lines_[j - i];
