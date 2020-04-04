@@ -23,8 +23,8 @@ Line::Line(Resource * res)
     , beginType_(None)
     , endType_(None)
 {
-    QString type = res->property(Resource::PROP_SUB_TYPE).toString();
-    QString endtype = res->property(Resource::PROP_SUB_TYPE2).toString();
+    QByteArray type = res->property(Resource::PROP_SUB_TYPE).toByteArray();
+    QByteArray endtype = res->property(Resource::PROP_SUB_TYPE2).toByteArray();
     if (type == "solidline") {
         lineType_ = Solid;
     } else if (type == "dashline") {
@@ -37,7 +37,7 @@ Line::Line(Resource * res)
         lineType_ = DashDotDot;
     }
     if (!endtype.isEmpty()) {
-        QChar * p = endtype.data();
+        char * p = endtype.data();
         int n = sizeof (endtypes) / sizeof (endtypes[0]);
         if (*p != '-') {
             for (int i = 1; i < n; ++i) {

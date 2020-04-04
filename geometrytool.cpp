@@ -12,11 +12,10 @@
 
 #include <QVBoxLayout>
 
+#ifndef QT_DEBUG
+
 static char const * const geometry2ds[] = {
-    "line",
-    #ifndef QT_DEBUG
-    "dotline", "line.so-", "line.so-so",
-    #endif
+    "line", "dotline", "line.so-", "line.so-so",
     "circle", "isoscelestriangle",  "righttriangle",
     "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "parallelogram",
     "arbitrarypolygon", "sector", "diamond", "rectangle"
@@ -24,27 +23,28 @@ static char const * const geometry2ds[] = {
 
 static char const * const geometry3ds[] = {
     "cube", "cuboid", "cylinder", "cone", "sphere",
-    #ifdef QT_DEBUG
-    "frustumcone", "regularprism"
-    #endif
 };
+
+#endif
 
 void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const & type)
 {
     GeometryHelper::init();
-    char const * const * geometries = nullptr;
-    int count = 0;
-    if (type == "geometry2d") {
-        geometries = geometry2ds;
-        count = sizeof(geometry2ds) / sizeof(geometry2ds[0]);
-    } else if (type == "geometry3d") {
-        geometries = geometry3ds;
-        count = sizeof(geometry3ds) / sizeof(geometry3ds[0]);
-    }
+    QList<QByteArray> names;
     ResourceFactory * factory = ResourceManager::instance()->getFactory(type);
+#ifdef QT_DEBUG
+    names = factory->resourceTypes();
+#else
+    if (type == "geometry2d") {
+        for (auto g : geometry2ds)
+            names.append(g);
+    } else if (type == "geometry3d") {
+        for (auto g : geometry3ds)
+            names.append(g);
+    }
+#endif
     ToolButton::Flags flags = {ToolButton::Dynamic};
-    for (int i = 0; i < count; ++i) {
-        char const * f = geometries[i];
+    for (QByteArray & f : names) {
         ToolButton * btn = new ToolButton(
             {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icon/" + type + "/" + f + ".svg"});
         result.append(btn);

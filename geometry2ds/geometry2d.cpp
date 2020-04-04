@@ -118,10 +118,10 @@ ResourceView * Geometry2DFactory::create(Resource *res)
     int n = type.indexOf('/');
     if (n > 0)
         type = type.left(n);
-    return ResourceFactory::create(res, type);
+    return ResourceFactory::create(res, type.toUtf8());
 }
 
-QUrl Geometry2DFactory::newUrl(const QString &type) const
+QUrl Geometry2DFactory::newUrl(const QByteArray &type) const
 {
-    return "geometry2d:///" + type;
+    return QUrl("geometry2d:///" + type);
 }

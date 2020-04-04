@@ -75,10 +75,10 @@ ResourceView * Geometry3DFactory::create(Resource *res)
     int n = type.indexOf('/');
     if (n > 0)
         type = type.left(n);
-    return ResourceFactory::create(res, type);
+    return ResourceFactory::create(res, type.toUtf8());
 }
 
-QUrl Geometry3DFactory::newUrl(const QString &type) const
+QUrl Geometry3DFactory::newUrl(const QByteArray &type) const
 {
-    return "geometry3d:///" + type;
+    return QUrl("geometry3d:///" + type);
 }

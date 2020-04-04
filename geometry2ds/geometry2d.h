@@ -40,7 +40,7 @@ public:
 public:
     virtual ResourceView * create(Resource * res) override;
 
-    virtual QUrl newUrl(const QString &type) const override;
+    virtual QUrl newUrl(const QByteArray &type) const override;
 };
 
 #define REGISTER_GEOMETRY_2D(ctype, type) \

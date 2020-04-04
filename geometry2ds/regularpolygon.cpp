@@ -15,7 +15,7 @@ RegularPolygon::RegularPolygon(Resource * res)
 {
     int edges = 3;
     int span = 1;
-    QString size(res->property(Resource::PROP_SUB_TYPE2).toString());
+    QByteArray size(res->property(Resource::PROP_SUB_TYPE2).toByteArray());
     int n = size.indexOf('-');
     if (n > 0) {
         edges = size.left(n).toInt();
