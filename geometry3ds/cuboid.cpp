@@ -17,11 +17,6 @@ Cuboid::Cuboid(Resource * res)
     makeLine(5, 1);
 }
 
-Cuboid::Cuboid(QPointF const & pt)
-    : Polyhedron(pt)
-{
-}
-
 Cuboid::Cuboid(Cuboid const & o)
     : Polyhedron(o)
     , moveElem_(o.moveElem_)

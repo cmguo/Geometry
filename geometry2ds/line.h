@@ -46,8 +46,6 @@ public:
 public:
     Q_INVOKABLE Line(Resource * res);
 
-    Line(QPointF const & pt);
-
     Q_INVOKABLE Line(Line const & o);
 
 public:

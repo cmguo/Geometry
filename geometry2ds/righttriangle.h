@@ -9,8 +9,6 @@ class RightTriangle : public Triangle
 public:
     Q_INVOKABLE RightTriangle(Resource * res);
 
-    RightTriangle(QPointF const & pt);
-
     Q_INVOKABLE RightTriangle(RightTriangle const & o);
 
 public:

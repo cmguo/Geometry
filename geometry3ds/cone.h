@@ -9,8 +9,6 @@ class Cone : public FrustumCone
 public:
     Q_INVOKABLE Cone(Resource * res);
 
-    Cone(QPointF const & pt);
-
     Q_INVOKABLE Cone(Cone const & o);
 
 protected:

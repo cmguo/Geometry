@@ -5,11 +5,6 @@ Cylinder::Cylinder(Resource * res)
 {
 }
 
-Cylinder::Cylinder(QPointF const & pt)
-    : FrustumCone(pt)
-{
-}
-
 Cylinder::Cylinder(Cylinder const & o)
     : FrustumCone(o)
 {

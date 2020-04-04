@@ -9,8 +9,6 @@ class Cuboid : public Polyhedron
 public:
     Q_INVOKABLE Cuboid(Resource * res);
 
-    Cuboid(QPointF const & pt);
-
     Q_INVOKABLE Cuboid(Cuboid const & o);
 
 public:

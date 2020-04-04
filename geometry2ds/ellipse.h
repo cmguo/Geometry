@@ -9,8 +9,6 @@ class Ellipse : public Geometry2D
 public:
     Q_INVOKABLE Ellipse(Resource * res);
 
-    Ellipse(QPointF const & pt);
-
     Q_INVOKABLE Ellipse(Ellipse const & o);
 
 public:

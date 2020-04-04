@@ -13,11 +13,6 @@ Sector::Sector(Resource * res)
     //setToolsString("angle|角度|Popup,OptionsGroup,NeedUpdate|;");
 }
 
-Sector::Sector(QPointF const & pt)
-    : Geometry2D(pt)
-{
-}
-
 Sector::Sector(Sector const & o)
     : Geometry2D(o),angle_(o.angle_)
     , path_(o.path_)

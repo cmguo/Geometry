@@ -80,8 +80,6 @@ public:
 protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
-    Geometry(QByteArray const & type);
-
     Geometry(Geometry const & o);
 
 protected:

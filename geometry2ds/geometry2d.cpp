@@ -11,12 +11,6 @@ Geometry2D::Geometry2D(Resource * res, Flags flags, Flags clearFlags)
 {
 }
 
-Geometry2D::Geometry2D(QPointF const & pt)
-    : Geometry("geometry2d")
-{
-    addPoint(pt);
-}
-
 Geometry2D::Geometry2D(Geometry2D const & o)
     : Geometry(o)
 {

@@ -6,11 +6,6 @@ IsopopeTrapezoid::IsopopeTrapezoid(Resource * res)
 {
 }
 
-IsopopeTrapezoid::IsopopeTrapezoid(QPointF const & pt)
-    : Trapezoid(pt)
-{
-}
-
 IsopopeTrapezoid::IsopopeTrapezoid(IsopopeTrapezoid const & o)
     : Trapezoid(o)
 {

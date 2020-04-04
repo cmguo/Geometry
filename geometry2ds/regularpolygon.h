@@ -14,8 +14,6 @@ class RegularPolygon : public Polygon
 public:
     Q_INVOKABLE RegularPolygon(Resource * res);
 
-    RegularPolygon(QPointF const & pt);
-
     Q_INVOKABLE RegularPolygon(RegularPolygon const & o);
 
 public:

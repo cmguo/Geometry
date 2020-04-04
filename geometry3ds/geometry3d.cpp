@@ -39,12 +39,6 @@ Geometry3D::Geometry3D(Resource * res)
 {
 }
 
-Geometry3D::Geometry3D(QPointF const & pt)
-    : Geometry("geometry3d")
-{
-    addPoint(pt);
-}
-
 Geometry3D::Geometry3D(Geometry3D const & o)
     : Geometry(o)
     , origin_(o.origin_)

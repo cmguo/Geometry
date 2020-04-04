@@ -9,8 +9,6 @@ class Triangle : public Polygon
 public:
     Q_INVOKABLE Triangle(Resource * res);
 
-    Triangle(QPointF const & pt);
-
     Triangle(Triangle const & o);
 
 public:

@@ -9,8 +9,6 @@ class Parallelogram : public Trapezoid
 public:
     Q_INVOKABLE Parallelogram(Resource * res);
 
-    Parallelogram(QPointF const & pt);
-
     Q_INVOKABLE Parallelogram(Parallelogram const & o);
 
 protected:

@@ -11,11 +11,6 @@ FrustumCone::FrustumCone(Resource * res)
 {
 }
 
-FrustumCone::FrustumCone(QPointF const & pt)
-    : Geometry3D(pt)
-{
-}
-
 FrustumCone::FrustumCone(FrustumCone const & o)
     : Geometry3D(o)
 {

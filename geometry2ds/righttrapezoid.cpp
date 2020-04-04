@@ -5,11 +5,6 @@ RightTrapezoid::RightTrapezoid(Resource * res)
 {
 }
 
-RightTrapezoid::RightTrapezoid(QPointF const & pt)
-    : Trapezoid(pt)
-{
-}
-
 RightTrapezoid::RightTrapezoid(RightTrapezoid const & o)
     : Trapezoid(o)
 {

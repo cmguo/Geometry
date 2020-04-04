@@ -6,11 +6,6 @@ RightTriangle::RightTriangle(Resource * res)
 {
 }
 
-RightTriangle::RightTriangle(QPointF const & pt)
-    : Triangle(pt)
-{
-}
-
 RightTriangle::RightTriangle(RightTriangle const & o)
     : Triangle(o)
 {

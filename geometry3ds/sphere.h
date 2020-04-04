@@ -9,8 +9,6 @@ class Sphere : public Geometry3D
 public:
     Q_INVOKABLE Sphere(Resource * res);
 
-    Sphere(QPointF const & pt);
-
     Q_INVOKABLE Sphere(Sphere const & o);
 
 public:

@@ -9,11 +9,6 @@ Polygon::Polygon(Resource * res, Flags flags)
 {
 }
 
-Polygon::Polygon(QPointF const & pt)
-    : Geometry2D(pt)
-{
-}
-
 Polygon::Polygon(Polygon const & o)
     : Geometry2D(o)
     , path_(o.path_)

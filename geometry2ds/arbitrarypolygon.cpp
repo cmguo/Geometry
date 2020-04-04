@@ -6,11 +6,6 @@ ArbitraryPolygon::ArbitraryPolygon(Resource * res)
 {
 }
 
-ArbitraryPolygon::ArbitraryPolygon(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 ArbitraryPolygon::ArbitraryPolygon(ArbitraryPolygon const & o)
     : Polygon(o)
 {

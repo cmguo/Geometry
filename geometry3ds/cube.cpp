@@ -5,11 +5,6 @@ Cube::Cube(Resource * res)
 {
 }
 
-Cube::Cube(QPointF const & pt)
-    : Cuboid(pt)
-{
-}
-
 Cube::Cube(Cube const & o)
     : Cuboid(o)
 {

@@ -9,8 +9,6 @@ class Arc : public Geometry2D
 public:
     Q_INVOKABLE Arc(Resource * res);
 
-    Arc(QPointF const & pt);
-
     Q_INVOKABLE Arc(Arc const & o);
 
 public:

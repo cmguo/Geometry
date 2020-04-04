@@ -9,8 +9,6 @@ class Circle : public Ellipse
 public:
     Q_INVOKABLE Circle(Resource * res);
 
-    Circle(QPointF const & pt);
-
     Q_INVOKABLE Circle(Circle const & o);
 
 public:

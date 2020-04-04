@@ -9,8 +9,6 @@ class Rectangle : public Polygon
 public:
     Q_INVOKABLE Rectangle(Resource * res);
 
-    Rectangle(QPointF const & pt);
-
     Q_INVOKABLE Rectangle(Rectangle const & o);
 
 public:

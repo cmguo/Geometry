@@ -9,8 +9,6 @@ class IsopopeTrapezoid : public Trapezoid
 public:
     Q_INVOKABLE IsopopeTrapezoid(Resource * res);
 
-    IsopopeTrapezoid(QPointF const & pt);
-
     Q_INVOKABLE IsopopeTrapezoid(IsopopeTrapezoid const & o);
 
 protected:

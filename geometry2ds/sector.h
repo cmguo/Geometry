@@ -14,8 +14,6 @@ class Sector : public Geometry2D
 public:
     Q_INVOKABLE Sector(Resource * res);
 
-    Sector(QPointF const & pt);
-
     Q_INVOKABLE Sector(Sector const & o);
 
 public:

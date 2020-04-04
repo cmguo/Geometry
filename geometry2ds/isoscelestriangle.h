@@ -9,8 +9,6 @@ class IsoscelesTriangle : public Triangle
 public:
     Q_INVOKABLE IsoscelesTriangle(Resource * res);
 
-    IsoscelesTriangle(QPointF const & pt);
-
     Q_INVOKABLE IsoscelesTriangle(IsoscelesTriangle const & o);
 
 public:

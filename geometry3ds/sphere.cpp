@@ -11,11 +11,6 @@ Sphere::Sphere(Resource * res)
 {
 }
 
-Sphere::Sphere(QPointF const & pt)
-    : Geometry3D(pt)
-{
-}
-
 Sphere::Sphere(Sphere const & o)
     : Geometry3D(o)
 {

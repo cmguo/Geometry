@@ -9,8 +9,6 @@ class ArbitraryPolygon : public Polygon
 public:
     Q_INVOKABLE ArbitraryPolygon(Resource * res);
 
-    ArbitraryPolygon(QPointF const & pt);
-
     Q_INVOKABLE ArbitraryPolygon(ArbitraryPolygon const & o);
 
 public:

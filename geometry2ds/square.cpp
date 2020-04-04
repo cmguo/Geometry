@@ -5,11 +5,6 @@ Square::Square(Resource * res)
 {
 }
 
-Square::Square(QPointF const & pt)
-    : Rectangle(pt)
-{
-}
-
 Square::Square(Square const & o)
     : Rectangle(o)
 {

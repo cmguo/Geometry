@@ -67,14 +67,6 @@ Line::Line(Resource * res)
 #endif
 }
 
-Line::Line(QPointF const & pt)
-    : Geometry2D(pt)
-    , lineType_(Solid)
-    , beginType_(None)
-    , endType_(None)
-{
-}
-
 Line::Line(Line const & o)
     : Geometry2D(o)
     , lineType_(o.lineType_)

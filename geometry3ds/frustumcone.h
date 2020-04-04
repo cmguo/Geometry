@@ -9,8 +9,6 @@ class FrustumCone : public Geometry3D
 public:
     Q_INVOKABLE FrustumCone(Resource * res);
 
-    FrustumCone(QPointF const & pt);
-
     Q_INVOKABLE FrustumCone(FrustumCone const & o);
 
 public:

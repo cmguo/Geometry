@@ -8,11 +8,6 @@ Arc::Arc(Resource * res)
 {
 }
 
-Arc::Arc(QPointF const & pt)
-    : Geometry2D(pt)
-{
-}
-
 Arc::Arc(Arc const & o)
     : Geometry2D(o)
 {

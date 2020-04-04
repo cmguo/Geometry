@@ -13,8 +13,6 @@ class Geometry2D : public Geometry
 public:
     Geometry2D(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
-    Geometry2D(QPointF const & pt);
-
     Geometry2D(Geometry2D const & o);
 
 public:

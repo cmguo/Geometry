@@ -5,11 +5,6 @@ Diamond::Diamond(Resource * res)
 {
 }
 
-Diamond::Diamond(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 Diamond::Diamond(Diamond const & o)
     : Polygon(o)
 {

@@ -15,8 +15,6 @@ class Geometry3D : public Geometry
 public:
     Geometry3D(Resource * res);
 
-    Geometry3D(QPointF const & pt);
-
     Geometry3D(Geometry3D const & o);
 
 public:

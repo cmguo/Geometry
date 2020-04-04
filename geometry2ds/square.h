@@ -9,8 +9,6 @@ class Square : public Rectangle
 public:
     Q_INVOKABLE Square(Resource * res);
 
-    Square(QPointF const & pt);
-
     Q_INVOKABLE Square(Square const & o);
 
 public:

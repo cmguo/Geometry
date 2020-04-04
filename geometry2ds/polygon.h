@@ -9,8 +9,6 @@ class Polygon : public Geometry2D
 public:
     Q_INVOKABLE Polygon(Resource * res, Flags flags = {});
 
-    Polygon(QPointF const & pt);
-
     Polygon(Polygon const & o);
 
 public:

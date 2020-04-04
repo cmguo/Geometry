@@ -15,14 +15,6 @@ Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
 {
 }
 
-Geometry::Geometry(QByteArray const & type)
-    : ResourceView(new Resource(type), CanCopy)
-    , dirty_(false)
-    , color_("#FFF0F0F0")
-    , width_(GeometryHelper::DEFAULT_LINE_WIDTH)
-{
-}
-
 Geometry::Geometry(Geometry const & o)
     : ResourceView(o)
     , points_(o.points_)

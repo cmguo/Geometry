@@ -5,11 +5,6 @@ Rectangle::Rectangle(Resource * res)
 {
 }
 
-Rectangle::Rectangle(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 Rectangle::Rectangle(Rectangle const & o)
     : Polygon(o)
 {

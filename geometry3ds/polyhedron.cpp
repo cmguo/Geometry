@@ -10,11 +10,6 @@ Polyhedron::Polyhedron(Resource * res)
 {
 }
 
-Polyhedron::Polyhedron(QPointF const & pt)
-    : Geometry3D(pt)
-{
-}
-
 Polyhedron::Polyhedron(Polyhedron const & o)
     : Geometry3D(o)
     , lines_(o.lines_)

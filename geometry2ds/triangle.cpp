@@ -5,11 +5,6 @@ Triangle::Triangle(Resource * res)
 {
 }
 
-Triangle::Triangle(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 Triangle::Triangle(Triangle const & o)
     : Polygon(o)
 {

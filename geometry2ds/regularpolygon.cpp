@@ -28,11 +28,6 @@ RegularPolygon::RegularPolygon(Resource * res)
     setToolsString("edgeSpan|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
-RegularPolygon::RegularPolygon(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 RegularPolygon::RegularPolygon(RegularPolygon const & o)
     : Polygon(o)
     , nEdges_(0)

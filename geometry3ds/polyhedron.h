@@ -11,8 +11,6 @@ class Polyhedron : public Geometry3D
 public:
     Q_INVOKABLE Polyhedron(Resource * res);
 
-    Polyhedron(QPointF const & pt);
-
     Polyhedron(Polyhedron const & o);
 
 public:

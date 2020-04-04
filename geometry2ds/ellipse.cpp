@@ -8,11 +8,6 @@ Ellipse::Ellipse(Resource * res)
 {
 }
 
-Ellipse::Ellipse(QPointF const & pt)
-    : Geometry2D(pt)
-{
-}
-
 Ellipse::Ellipse(Ellipse const & o)
     : Geometry2D(o)
 {

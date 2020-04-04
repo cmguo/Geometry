@@ -6,11 +6,6 @@ Trapezoid::Trapezoid(Resource * res)
 {
 }
 
-Trapezoid::Trapezoid(QPointF const & pt)
-    : Polygon(pt)
-{
-}
-
 Trapezoid::Trapezoid(Trapezoid const & o)
     : Polygon(o)
 {

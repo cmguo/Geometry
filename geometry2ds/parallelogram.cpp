@@ -6,11 +6,6 @@ Parallelogram::Parallelogram(Resource * res)
 {
 }
 
-Parallelogram::Parallelogram(QPointF const & pt)
-    : Trapezoid(pt)
-{
-}
-
 Parallelogram::Parallelogram(Parallelogram const & o)
     : Trapezoid(o)
 {

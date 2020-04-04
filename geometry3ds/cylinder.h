@@ -9,8 +9,6 @@ class Cylinder : public FrustumCone
 public:
     Q_INVOKABLE Cylinder(Resource * res);
 
-    Cylinder(QPointF const & pt);
-
     Q_INVOKABLE Cylinder(Cylinder const & o);
 
 public:

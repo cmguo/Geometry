@@ -9,8 +9,6 @@ class RightTrapezoid : public Trapezoid
 public:
     Q_INVOKABLE RightTrapezoid(Resource * res);
 
-    RightTrapezoid(QPointF const & pt);
-
     Q_INVOKABLE RightTrapezoid(RightTrapezoid const & o);
 
 protected:

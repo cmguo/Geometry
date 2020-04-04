@@ -6,11 +6,6 @@ IsoscelesTriangle::IsoscelesTriangle(Resource * res)
 {
 }
 
-IsoscelesTriangle::IsoscelesTriangle(QPointF const & pt)
-    : Triangle(pt)
-{
-}
-
 IsoscelesTriangle::IsoscelesTriangle(IsoscelesTriangle const & o)
     : Triangle(o)
 {

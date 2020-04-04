@@ -8,11 +8,6 @@ Circle::Circle(Resource * res)
 {
 }
 
-Circle::Circle(QPointF const & pt)
-    : Ellipse(pt)
-{
-}
-
 Circle::Circle(Circle const & o)
     : Ellipse(o)
 {

@@ -9,8 +9,6 @@ class Cube : public Cuboid
 public:
     Q_INVOKABLE Cube(Resource * res);
 
-    Cube(QPointF const & pt);
-
     Q_INVOKABLE Cube(Cube const & o);
 
 public:

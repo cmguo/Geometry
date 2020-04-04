@@ -9,8 +9,6 @@ class Trapezoid : public Polygon
 public:
     Trapezoid(Resource * res);
 
-    Trapezoid(QPointF const & pt);
-
     Trapezoid(Trapezoid const & o);
 
 public:

@@ -9,8 +9,6 @@ class Diamond : public Polygon
 public:
     Q_INVOKABLE Diamond(Resource * res);
 
-    Diamond(QPointF const & pt);
-
     Q_INVOKABLE Diamond(Diamond const & o);
 
 public:
