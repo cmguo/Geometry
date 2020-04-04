@@ -1,21 +1,15 @@
 #include "regularprism.h"
 
-RegularPrism::RegularPrism(Resource * res)
-    : RegularPrismoid(res)
-{
-}
+static EdgesToolButtons edgesButtons("正%1棱柱");
+REGISTER_OPTION_BUTTONS(RegularPrism, edges, edgesButtons)
 
-RegularPrism::RegularPrism(QPointF const & pt)
-    : RegularPrismoid(pt)
+RegularPrism::RegularPrism(Resource * res)
+    : RegularPrismoid(res, 1.0)
 {
+    ratio_ = 1.0;
 }
 
 RegularPrism::RegularPrism(RegularPrism const & o)
     : RegularPrismoid(o)
 {
-}
-
-qreal RegularPrism::r2(qreal r)
-{
-    return r;
 }

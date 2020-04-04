@@ -8,8 +8,26 @@
 #include <QFile>
 #include <QtMath>
 
+static EdgesToolButtons edgesButtons("正%1棱台");
+REGISTER_OPTION_BUTTONS(RegularPrismoid, edges, edgesButtons)
+
 RegularPrismoid::RegularPrismoid(Resource * res)
+    : RegularPrismoid(res, 0.5)
+{
+}
+
+RegularPrismoid::RegularPrismoid(RegularPrismoid const & o)
+    : Polyhedron(o)
+    , nEdges_(o.nEdges_)
+    , ratio_(o.ratio_)
+    , vAngleStep_(o.vAngleStep_)
+    , vAngleInit_(o.vAngleInit_)
+{
+}
+
+RegularPrismoid::RegularPrismoid(Resource *res, qreal ratio)
     : Polyhedron(res)
+    , ratio_(ratio)
 {
     setToolsString("edges|边数|Popup,OptionsGroup,NeedUpdate|;");
 
@@ -20,51 +38,10 @@ RegularPrismoid::RegularPrismoid(Resource * res)
     setEdges(edges);
 }
 
-RegularPrismoid::RegularPrismoid(QPointF const & pt)
-    : Polyhedron(pt)
-{
-}
-
-RegularPrismoid::RegularPrismoid(RegularPrismoid const & o)
-    : Polyhedron(o)
-    , nEdges_(o.nEdges_)
-    , ratio_(o.ratio_)
-{
-}
-
-class EdgesToolButtons : public OptionToolButtons
-{
-public:
-    EdgesToolButtons(QString const & title)
-        : OptionToolButtons({3, 4, 5, 6, 7, 8}, 3)
-        , title_(title)
-    {
-    }
-protected:
-    virtual QString buttonTitle(const QVariant &value) override
-    {
-        return buttonTitle(title_, value.toInt());
-    }
-private:
-    static QString buttonTitle(QString const & title, int n)
-    {
-        static QString numberChar;
-        if (numberChar.isEmpty()) {
-            QFile file(":/geometry/string/number.txt");
-            file.open(QFile::ReadOnly);
-            numberChar = file.readAll();
-        }
-        return title.arg(numberChar[n]);
-    }
-private:
-    QString title_;
-};
-
-static EdgesToolButtons edgesButtons("正%1棱柱");
-REGISTER_OPTION_BUTTONS(RegularPrismoid, edges, edgesButtons)
-
 void RegularPrismoid::setEdges(int n)
 {
+    if (nEdges_ == n)
+        return;
     nEdges_ = n;
     qreal radiusStep = M_PI * 2 / nEdges_;
     vAngleStep_ = QPointF(cos(radiusStep), sin(radiusStep));
@@ -73,8 +50,7 @@ void RegularPrismoid::setEdges(int n)
         radiusInit -= M_PI * 2 / nEdges_;
     vAngleInit_ = QPointF(cos(radiusInit), sin(radiusInit));
     clearLines();
-    qreal ratio = r2(1.0);
-    if (ratio <= 0) { // Orthoprism 正棱锥
+    if (ratio_ <= 0) { // Orthoprism 正棱锥
         for (int i = 1; i <= nEdges_; ++i) {
             int j = i % nEdges_ + 1;
             makeLine(0, i);
@@ -93,8 +69,7 @@ void RegularPrismoid::setEdges(int n)
 
 int RegularPrismoid::pointCount()
 {
-    qreal ratio = r2(1.0);
-    return points_.size() == 2 ? (ratio <= 0 ? 1 + nEdges_ : nEdges_ * 2) : 0;
+    return points_.size() == 2 ? (ratio_ <= 0 ? 1 + nEdges_ : nEdges_ * 2) : 0;
 }
 
 /*
@@ -124,14 +99,13 @@ QVector3D RegularPrismoid::point(int index)
         qreal h = -points_[0].y() - z0;
         origin_ = QVector3D(float(x0), float(y0), float(z0));
         size_ = QVector3D(float(r * vAngleInit_.x()), float(-r * vAngleInit_.y()), float(h));
-        if (!finished())
-            ratio_ = this->r2(r) / r;
+        dirty_ = false;
     }
     QVector3D pt3(size_);
     if (ratio_ <= 0) {
         if (index == 0) {
             QVector3D pt = origin_;
-            pt.setZ(size_.z());
+            pt.setZ(pt.z() + size_.z());
             return pt;
         }
         --index;
@@ -166,44 +140,88 @@ QVector<QPointF> RegularPrismoid::movePoints()
     return mpts;
 }
 
-qreal RegularPrismoid::r2(qreal r)
-{
-    return r / 2.0;
-}
-
 bool RegularPrismoid::move(int elem, const QPointF &pt)
 {
+    if (ratio_ <= 0) {
+        if (elem == 0)
+            elem = nEdges_ * 2;
+        else if (elem <= nEdges_)
+            elem = elem + nEdges_ - 1;
+        else
+            elem = nEdges_ * 2 + 1;
+    }
     QPointF pt2 = pt;
     if (elem < nEdges_ * 2) {
-        qreal x1 = pt.x() - points_[0].x(); // x + Cy
-        qreal y1 = pt.y() - points_[0].y(); // -Cy
+        qreal dx = pt.x() - points_[0].x(); // x + Cy
+        qreal dy = pt.y() - points_[0].y(); // -Cy
         if (elem >= nEdges_)
-            y1 -= qreal(size_.z());
-        QPointF pt3(x1 + y1, -y1 / CO);
+            dy -= qreal(size_.z());
+        QPointF pt3(dx + dy, -dy / CO);
         if (elem > 0) {
             qreal radius = M_PI * 2 * elem / nEdges_;
             GeometryHelper::rotate(pt3, QPointF(cos(radius), sin(radius))); // reverse
-            QVector3D ptm = PO.map(QVector3D(pt3.x(), pt3.y(), 0) + origin_);
-            pt2 = QPointF(ptm.x(), ptm.y());
+            QVector3D ptm = PO.map(QVector3D(pt3) + origin_);
+            pt2 = ptm.toPointF();
+        } else {
+            pt2.setY(pt2.y() + qreal(size_.z()));
         }
         vAngleInit_ = QPointF(pt3.x(), -pt3.y());
         GeometryHelper::adjustToLength(vAngleInit_, 1);
-        size_.setX(pt3.x());
-        size_.setY(pt3.y());
+        if (metaObject() == &staticMetaObject) {
+            if (elem < nEdges_) {
+                ratio_ = GeometryHelper::length(pt3) / GeometryHelper::length(size_.toPointF());
+                size_.setX(float(pt3.x() / ratio_));
+                size_.setY(float(pt3.y() / ratio_));
+                pt2 = PO.map(QVector3D(size_.toPointF()) + origin_).toPointF();
+            } else {
+                ratio_ /= GeometryHelper::length(pt3) / GeometryHelper::length(size_.toPointF());
+                size_.setX(float(pt3.x()));
+                size_.setY(float(pt3.y()));
+                qDebug() << "size_" << __LINE__ << size_;
+            }
+        } else {
+            size_.setX(float(pt3.x()));
+            size_.setY(float(pt3.y()));
+            qDebug() << "size_" << __LINE__ << size_;
+        }
         elem = 1;
     } else if (elem == nEdges_ * 2) {
-        size_.setZ(-pt.y() - origin_.z());
+        size_.setZ(float(-pt.y()) - origin_.z());
+        qDebug() << "size_" << __LINE__ << size_;
         pt2.setX(points_[0].x());
         elem = 0;
     } else {
-        qreal d = pt.y() + origin_.z();
-        origin_.setZ(-pt.y());
+        float d = float(pt.y()) + origin_.z();
+        origin_.setZ(float(-pt.y()));
         size_.setZ(size_.z() + d);
+        qDebug() << "size_" << __LINE__ << size_;
         pt2.setX(points_[1].x());
-        pt2.setY(points_[1].y() + d);
+        pt2.setY(points_[1].y() + qreal(d));
         elem = 1;
     }
     Polyhedron::move(elem, pt2);
     dirty_ = false;
     return true;
+}
+
+EdgesToolButtons::EdgesToolButtons(QString const & title)
+    : OptionToolButtons({3, 4, 5, 6, 7, 8}, 3)
+    , title_(title)
+{
+}
+
+QString EdgesToolButtons::buttonTitle(const QVariant &value)
+{
+    return buttonTitle(title_, value.toInt());
+}
+
+QString EdgesToolButtons::buttonTitle(QString const & title, int n)
+{
+    static QString numberChar;
+    if (numberChar.isEmpty()) {
+        QFile file(":/geometry/string/number.txt");
+        file.open(QFile::ReadOnly);
+        numberChar = file.readAll();
+    }
+    return title.arg(numberChar[n]);
 }

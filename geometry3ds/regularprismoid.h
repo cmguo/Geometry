@@ -3,6 +3,8 @@
 
 #include "polyhedron.h"
 
+#include <core/optiontoolbuttons.h>
+
 class RegularPrismoid : public Polyhedron
 {
     Q_OBJECT
@@ -10,8 +12,6 @@ class RegularPrismoid : public Polyhedron
 
 public:
     Q_INVOKABLE RegularPrismoid(Resource * res);
-
-    RegularPrismoid(QPointF const & pt);
 
     Q_INVOKABLE RegularPrismoid(RegularPrismoid const & o);
 
@@ -30,13 +30,25 @@ public:
     virtual QVector<QPointF> movePoints() override;
 
 protected:
-    virtual qreal r2(qreal r);
+    RegularPrismoid(Resource * res, qreal ratio);
 
 protected:
-    int nEdges_;
-    qreal ratio_ = -1;
+    int nEdges_ = 0;
+    qreal ratio_ = 0.5;
     QPointF vAngleStep_;
     QPointF vAngleInit_;
+};
+
+class EdgesToolButtons : public OptionToolButtons
+{
+public:
+    EdgesToolButtons(QString const & title);
+protected:
+    virtual QString buttonTitle(const QVariant &value) override;
+private:
+    static QString buttonTitle(QString const & title, int n);
+private:
+    QString title_;
 };
 
 #endif // REGULARPRISMOID_H
