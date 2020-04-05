@@ -18,6 +18,8 @@ public:
 
     virtual bool move(int elem, const QPointF &pt) override;
 
+    virtual void sync() override;
+
 protected:
     void setMoveElem(int elem);
 

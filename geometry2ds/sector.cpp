@@ -64,7 +64,6 @@ void Sector::setAngle(qreal angle)
     QPointF d = pt3 - points_[0];
     GeometryHelper::reverseRotate(d, QPointF(cos(la), -sin(la)));
     points_[1] = points_[0] + d;
-    dirty_ = true;
 }
 
 void Sector::draw(QPainter *painter)
@@ -79,47 +78,6 @@ void Sector::draw(QPainter *painter)
 
 QPainterPath Sector::path()
 {
-    if (!dirty_)
-        return path_ | textPath_;
-    dirty_ = false;
-    QPainterPath ph;
-    QPainterPath tph;
-    if (points_.size() > 1)
-    {
-        QPointF pt1 = points_[0];
-        QPointF pt2 = points_[1];
-        ph.moveTo(pt1);
-        ph.lineTo(pt2);
-        qreal r = GeometryHelper::length(pt2 - pt1);
-        QPointF pt3;
-        if (points_.size() > 2) {
-            pt3 = points_[2];
-        } else {
-            pt3 = pt1 + QPointF(r, 0);
-        }
-        QRectF rect(-r, -r, r * 2, r * 2);
-        rect.moveCenter(points_[0]);
-        qreal a1 = GeometryHelper::angle(pt2 - pt1);
-        qreal a2 = GeometryHelper::angle(pt3 - pt1);
-        qreal la = a2 - a1;
-        if (la > 0 && la > angle_ + 180.0)
-            la -= 360.0;
-        else if (la < 0 && la < angle_ - 180.0)
-            la += 360.0;
-        if (qFuzzyIsNull(la))
-            la = qAbs(angle_) < 180 ? 0 : 360;
-        angle_ = la;
-        qDebug() << "sector" << a1 << a2;
-        qDebug() << "sector angle" << (a2 - a1) << angle_;
-        ph.arcTo(rect, a1, la);
-        ph.closeSubpath();
-        if (angle_ < 0)
-            addAngleLabeling(ph, tph, pt3, pt1, pt2, -angle_);
-        else
-            addAngleLabeling(ph, tph, pt2, pt1, pt3, angle_);
-    }
-    path_ = ph;
-    textPath_ = tph;
     return path_ | textPath_;
 }
 
@@ -241,4 +199,48 @@ bool Sector::move(int elem, const QPointF &pt)
     }
     dirty_ = true;
     return true;
+}
+
+void Sector::sync()
+{
+    if (!dirty_)
+        return;
+    dirty_ = false;
+    if (points_.size() < 2)
+        return;
+    QPainterPath ph;
+    QPainterPath tph;
+    QPointF pt1 = points_[0];
+    QPointF pt2 = points_[1];
+    ph.moveTo(pt1);
+    ph.lineTo(pt2);
+    qreal r = GeometryHelper::length(pt2 - pt1);
+    QPointF pt3;
+    if (points_.size() > 2) {
+        pt3 = points_[2];
+    } else {
+        pt3 = pt1 + QPointF(r, 0);
+    }
+    QRectF rect(-r, -r, r * 2, r * 2);
+    rect.moveCenter(points_[0]);
+    qreal a1 = GeometryHelper::angle(pt2 - pt1);
+    qreal a2 = GeometryHelper::angle(pt3 - pt1);
+    qreal la = a2 - a1;
+    if (la > 0 && la > angle_ + 180.0)
+        la -= 360.0;
+    else if (la < 0 && la < angle_ - 180.0)
+        la += 360.0;
+    if (qFuzzyIsNull(la))
+        la = qAbs(angle_) < 180 ? 0 : 360;
+    angle_ = la;
+    qDebug() << "sector" << a1 << a2;
+    qDebug() << "sector angle" << (a2 - a1) << angle_;
+    ph.arcTo(rect, a1, la);
+    ph.closeSubpath();
+    if (angle_ < 0)
+        addAngleLabeling(ph, tph, pt3, pt1, pt2, -angle_);
+    else
+        addAngleLabeling(ph, tph, pt2, pt1, pt3, angle_);
+    path_ = ph;
+    textPath_ = tph;
 }

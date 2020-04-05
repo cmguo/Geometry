@@ -18,37 +18,6 @@ Polygon::Polygon(Polygon const & o)
 
 QPainterPath Polygon::path()
 {
-    if (!dirty_)
-        return path_ | textPath_;
-    dirty_ = false;
-    QPainterPath ph;
-    QPainterPath tph;
-    if (pointCount() < 2)
-        return ph;
-    QPolygonF polygon;
-    QPointF hint;
-    QPointF first = firstPoint(hint);
-    polygon.append(first);
-    for (int i = 1; i < pointCount(); ++i)
-        polygon.append(nextPoint(i, hint));
-    if (metaObject() != &ArbitraryPolygon::staticMetaObject
-            || (flags_ & DrawFinised)) {
-        polygon.append(first);
-    }
-    ph.addPolygon(polygon);
-    if (pointCount() > 2) {
-        QPointF lpt = lastPoint(hint);
-        QPointF cpt = nextPoint(0, hint);
-        for (int i = 0; i < pointCount() - 1; ++i) {
-            QPointF npt = nextPoint(i + 1, hint);
-            addAngleLabeling(ph, tph, lpt, cpt, npt);
-            lpt = cpt;
-            cpt = npt;
-        }
-        addAngleLabeling(ph, tph, lpt, cpt, first);
-    }
-    path_ = ph;
-    textPath_ = tph;
     return path_ | textPath_;
 }
 
@@ -108,6 +77,41 @@ bool Polygon::move(int elem, const QPointF &pt)
     setPoint((pointCount() + elem - 1) % pointCount(), lpt);
     setPoint(elem, npt);
     return true;
+}
+
+void Polygon::sync()
+{
+    if (!dirty_)
+        return;
+    dirty_ = false;
+    if (pointCount() < 2)
+        return;
+    QPainterPath ph;
+    QPainterPath tph;
+    QPolygonF polygon;
+    QPointF hint;
+    QPointF first = firstPoint(hint);
+    polygon.append(first);
+    for (int i = 1; i < pointCount(); ++i)
+        polygon.append(nextPoint(i, hint));
+    if (metaObject() != &ArbitraryPolygon::staticMetaObject
+            || (flags_ & DrawFinised)) {
+        polygon.append(first);
+    }
+    ph.addPolygon(polygon);
+    if (pointCount() > 2) {
+        QPointF lpt = lastPoint(hint);
+        QPointF cpt = nextPoint(0, hint);
+        for (int i = 0; i < pointCount() - 1; ++i) {
+            QPointF npt = nextPoint(i + 1, hint);
+            addAngleLabeling(ph, tph, lpt, cpt, npt);
+            lpt = cpt;
+            cpt = npt;
+        }
+        addAngleLabeling(ph, tph, lpt, cpt, first);
+    }
+    path_ = ph;
+    textPath_ = tph;
 }
 
 void Polygon::draw(QPainter *painter)

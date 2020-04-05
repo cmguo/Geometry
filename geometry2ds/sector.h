@@ -25,6 +25,8 @@ public:
 
     virtual bool move(int elem, QPointF const & pt) override;
 
+    virtual void sync() override;
+
 public slots:
     qreal angle();
 

@@ -27,10 +27,14 @@ public:
 
     virtual bool move(int elem, const QPointF &pt) override;
 
+    virtual void sync() override;
+
     virtual QVector<QPointF> movePoints() override;
 
 protected:
     RegularPrismoid(Resource * res, qreal ratio);
+
+    virtual void makeLines();
 
 protected:
     int nEdges_ = 0;

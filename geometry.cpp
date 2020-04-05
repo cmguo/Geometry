@@ -46,6 +46,7 @@ QPromise<void> Geometry::load()
 
 void Geometry::setOption(const QByteArray &key, QVariant value)
 {
+    dirty_ = true;
     ResourceView::setOption(key, value);
     emit changed();
 }
@@ -96,6 +97,11 @@ bool Geometry::moveTempPoint(const QPointF &pt)
 {
     (void) pt;
     return false;
+}
+
+void Geometry::sync()
+{
+    dirty_ = false;
 }
 
 bool Geometry::canFinish()

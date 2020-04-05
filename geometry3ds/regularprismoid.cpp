@@ -38,10 +38,22 @@ RegularPrismoid::RegularPrismoid(Resource *res, qreal ratio)
     setEdges(edges);
 }
 
+void RegularPrismoid::makeLines()
+{
+    for (int i = 0; i < nEdges_; ++i) {
+        int j = (i + 1) % nEdges_;
+        makeLine(i, j);
+        makeLine(i, i + nEdges_);
+        makeLine(i + nEdges_, j + nEdges_);
+    }
+}
+
 void RegularPrismoid::setEdges(int n)
 {
-    if (nEdges_ == n)
+    if (nEdges_ == n) {
+        dirty_ = false;
         return;
+    }
     nEdges_ = n;
     qreal radiusStep = M_PI * 2 / nEdges_;
     vAngleStep_ = QPointF(cos(radiusStep), sin(radiusStep));
@@ -50,26 +62,12 @@ void RegularPrismoid::setEdges(int n)
         radiusInit -= M_PI * 2 / nEdges_;
     vAngleInit_ = QPointF(cos(radiusInit), sin(radiusInit));
     clearLines();
-    if (ratio_ <= 0) { // Orthoprism 正棱锥
-        for (int i = 1; i <= nEdges_; ++i) {
-            int j = i % nEdges_ + 1;
-            makeLine(0, i);
-            makeLine(i, j);
-        }
-    } else {
-        for (int i = 0; i < nEdges_; ++i) {
-            int j = (i + 1) % nEdges_;
-            makeLine(i, j);
-            makeLine(i, i + nEdges_);
-            makeLine(i + nEdges_, j + nEdges_);
-        }
-    }
-    emit changed();
+    // delay makeLines, not call from constructor
 }
 
 int RegularPrismoid::pointCount()
 {
-    return points_.size() == 2 ? (ratio_ <= 0 ? 1 + nEdges_ : nEdges_ * 2) : 0;
+    return points_.size() == 2 ? nEdges_ * 2 : 0;
 }
 
 /*
@@ -91,26 +89,8 @@ int RegularPrismoid::pointCount()
 
 QVector3D RegularPrismoid::point(int index)
 {
-    if (dirty_) {
-        qreal x0 = points_[0].x();
-        qreal y0 = 0;
-        qreal r = (points_[1].x() - x0) / (vAngleInit_.x() - CO * vAngleInit_.y());
-        qreal z0 = -points_[1].y() + CO * r * vAngleInit_.y();
-        qreal h = -points_[0].y() - z0;
-        origin_ = QVector3D(float(x0), float(y0), float(z0));
-        size_ = QVector3D(float(r * vAngleInit_.x()), float(-r * vAngleInit_.y()), float(h));
-        dirty_ = false;
-    }
     QVector3D pt3(size_);
-    if (ratio_ <= 0) {
-        if (index == 0) {
-            QVector3D pt = origin_;
-            pt.setZ(pt.z() + size_.z());
-            return pt;
-        }
-        --index;
-        pt3.setZ(0);
-    } else if (index < nEdges_) {
+    if (index < nEdges_) {
         pt3.setX(pt3.x() * float(ratio_));
         pt3.setY(pt3.y() * float(ratio_));
     } else {
@@ -142,14 +122,6 @@ QVector<QPointF> RegularPrismoid::movePoints()
 
 bool RegularPrismoid::move(int elem, const QPointF &pt)
 {
-    if (ratio_ <= 0) {
-        if (elem == 0)
-            elem = nEdges_ * 2;
-        else if (elem <= nEdges_)
-            elem = elem + nEdges_ - 1;
-        else
-            elem = nEdges_ * 2 + 1;
-    }
     QPointF pt2 = pt;
     if (elem < nEdges_ * 2) {
         qreal dx = pt.x() - points_[0].x(); // x + Cy
@@ -202,6 +174,22 @@ bool RegularPrismoid::move(int elem, const QPointF &pt)
     Polyhedron::move(elem, pt2);
     dirty_ = false;
     return true;
+}
+
+void RegularPrismoid::sync()
+{
+    if (dirty_ && points_.size() > 1) {
+        if (lines_.empty())
+            makeLines();
+        qreal x0 = points_[0].x();
+        qreal y0 = 0;
+        qreal r = (points_[1].x() - x0) / (vAngleInit_.x() - CO * vAngleInit_.y());
+        qreal z0 = -points_[1].y() + CO * r * vAngleInit_.y();
+        qreal h = -points_[0].y() - z0;
+        origin_ = QVector3D(float(x0), float(y0), float(z0));
+        size_ = QVector3D(float(r * vAngleInit_.x()), float(-r * vAngleInit_.y()), float(h));
+        dirty_ = false;
+    }
 }
 
 EdgesToolButtons::EdgesToolButtons(QString const & title)

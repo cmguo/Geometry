@@ -43,7 +43,7 @@ protected:
 
     void collect(QVector<QPointF> & points, QVector<bool> & hidden);
 
-private:
+protected:
     QVector<int> lines_;
 };
 

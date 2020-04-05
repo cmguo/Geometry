@@ -33,40 +33,6 @@ int Cuboid::pointCount()
 
 QVector3D Cuboid::point(int index)
 {
-    if (dirty_ && points_.size() > 1) {
-        QPointF pt1 = points_[0];
-        QPointF pt2 = points_[1];
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        qreal x0, y0, z0;
-        qreal w, h;
-        if (inner_) {
-            x0 = pt1.x();
-            y0 = 0;
-            h = (pt2.y() - pt1.y()) / (1 - CO);
-            z0 = -pt1.y() - h;
-            w = pt2.x() - pt1.x() - h * CO;
-        } else {
-            y0 = 0;
-            z0 = -pt2.y();
-            h = (pt2.y() - pt1.y()) / (1 + CO);
-            x0 = pt1.x() - CO * h;
-            w = pt2.x() - x0;
-        }
-#else
-        qreal x0 = 0;
-        qreal y0 = 0;
-        qreal z0 = 0;
-        qreal w = 300;
-        qreal h = 200;
-#endif
-        origin_ = QVector3D(float(x0), float(y0), float(z0));
-#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
-        size_ = QVector3D(float(w), float(h), float(h));
-#else
-        size_ = QVector3D(float(h), float(w), float(h));
-#endif
-        dirty_ = false;
-    }
     QVector3D pt(origin_);
     if (index >= 4)
 #ifndef POLYHEDRON_ISOMETRIC_PROJECTION
@@ -117,4 +83,42 @@ bool Cuboid::move(int elem, const QPointF &pt)
 {
     setMoveElem(elem);
     return Polyhedron::move(1, pt);
+}
+
+void Cuboid::sync()
+{
+    if (dirty_ && points_.size() > 1) {
+        QPointF pt1 = points_[0];
+        QPointF pt2 = points_[1];
+#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
+        qreal x0, y0, z0;
+        qreal w, h;
+        if (inner_) {
+            x0 = pt1.x();
+            y0 = 0;
+            h = (pt2.y() - pt1.y()) / (1 - CO);
+            z0 = -pt1.y() - h;
+            w = pt2.x() - pt1.x() - h * CO;
+        } else {
+            y0 = 0;
+            z0 = -pt2.y();
+            h = (pt2.y() - pt1.y()) / (1 + CO);
+            x0 = pt1.x() - CO * h;
+            w = pt2.x() - x0;
+        }
+#else
+        qreal x0 = 0;
+        qreal y0 = 0;
+        qreal z0 = 0;
+        qreal w = 300;
+        qreal h = 200;
+#endif
+        origin_ = QVector3D(float(x0), float(y0), float(z0));
+#ifndef POLYHEDRON_ISOMETRIC_PROJECTION
+        size_ = QVector3D(float(w), float(h), float(h));
+#else
+        size_ = QVector3D(float(h), float(w), float(h));
+#endif
+        dirty_ = false;
+    }
 }

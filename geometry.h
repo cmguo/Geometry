@@ -34,6 +34,8 @@ public:
 
     virtual bool moveTempPoint(QPointF const & pt);
 
+    virtual void sync();
+
     virtual bool canFinish();
 
     virtual void finish(const QPointF &c);

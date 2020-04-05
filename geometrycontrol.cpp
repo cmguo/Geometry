@@ -185,6 +185,7 @@ void GeometryControl::updateGeometry()
 {
     Geometry * geometry = qobject_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
+    geometry->sync();
     QPainterPath ph(geometry->path());
     item->setPath(ph);
     if (editing_) {
@@ -197,6 +198,7 @@ void GeometryControl::finishGeometry(bool valid)
 {
     Geometry * geometry = static_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
+    geometry->sync();
     if (!valid) {
         item->setPath(geometry->path());
     }

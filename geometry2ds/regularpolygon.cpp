@@ -80,8 +80,10 @@ void RegularPolygon::setEdges(int n)
     } else {
         s = 1;
     }
-    if (nEdges_ == n && nSpan_ == s)
+    if (nEdges_ == n && nSpan_ == s) {
+        dirty_ = false;
         return;
+    }
     nEdges_ = n;
     nSpan_ = 0;
     qreal radiusAttach = M_PI / 2 - M_PI / nEdges_;
@@ -96,8 +98,6 @@ void RegularPolygon::setSpan(int n)
     nSpan_ = n;
     qreal radiusStep = M_PI * 2 * nSpan_ / nEdges_;
     vAngleStep_ = QPointF(cos(radiusStep), sin(radiusStep));
-    dirty_ = true;
-    emit changed();
 }
 
 int RegularPolygon::edgeSpan()

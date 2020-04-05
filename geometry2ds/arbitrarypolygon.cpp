@@ -55,6 +55,7 @@ void ArbitraryPolygon::finish(const QPointF &c)
     if (tempValid_) {
         tempValid_ = false;
         dirty_ = true;
+        sync();
         QPointF c1 = path().boundingRect().center();
         Polygon::finish(c1);
     } else {

@@ -20,6 +20,8 @@ public:
 
     virtual bool move(int elem, const QPointF &pt) override;
 
+    virtual void sync() override;
+
 public slots:
     void draw(QPainter *painter);
 
