@@ -3,6 +3,7 @@ HEADERS += \
     $$PWD/cube.h \
     $$PWD/cuboid.h \
     $$PWD/cylinder.h \
+    $$PWD/ellipsoid.h \
     $$PWD/frustumcone.h \
     $$PWD/geometry3d.h \
     $$PWD/geometry3ds.h \
@@ -17,6 +18,7 @@ SOURCES += \
     $$PWD/cube.cpp \
     $$PWD/cuboid.cpp \
     $$PWD/cylinder.cpp \
+    $$PWD/ellipsoid.cpp \
     $$PWD/frustumcone.cpp \
     $$PWD/geometry3d.cpp \
     $$PWD/polyhedron.cpp \

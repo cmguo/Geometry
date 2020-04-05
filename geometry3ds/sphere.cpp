@@ -1,19 +1,26 @@
 #include "sphere.h"
-#include "geometryhelper.h"
 
-#include <QPen>
-#include <QPainter>
-
-#include <cmath>
+#include <geometryhelper.h>
 
 Sphere::Sphere(Resource * res)
-    : Geometry3D(res)
+    : Ellipsoid(res)
 {
 }
 
-Sphere::Sphere(Sphere const & o)
-    : Geometry3D(o)
+Sphere::Sphere(const Sphere &o)
+    : Ellipsoid(o)
 {
+}
+
+void Sphere::sync()
+{
+    if (dirty_ && points_.size() > 1) {
+        qreal r = GeometryHelper::length(points_.back() - points_.first());
+        radius_.setX(float(r));
+        radius_.setY(float(r));
+        radius_.setZ(float(r));
+        dirty_ = false;
+    }
 }
 
 QVector<QPointF> Sphere::movePoints()
@@ -49,69 +56,6 @@ int Sphere::hit(QPointF &pt)
 bool Sphere::move(int elem, QPointF const & pt)
 {
     if (elem < 4)
-        return  Geometry3D::move(1, pt);
+        return Geometry3D::move(1, pt);
     return false;
-}
-
-QPainterPath Sphere::path()
-{
-    QPainterPath ph;
-    if (points_.size() < 2)
-        return ph;
-    QPointF center(points_.front());
-    QPointF pt2(points_.back());
-    qreal r = GeometryHelper::length(center - pt2);
-    QRectF circle(0, 0, r * 2, r * 2);
-    circle.moveCenter(center);
-    ph.addEllipse(circle);
-    return ph;
-}
-
-void Sphere::draw(QPainter *painter)
-{
-    if (points_.size() < 2)
-        return;
-    QPen pen1(color_, width_);
-    QPen pen2(color_, width_, Qt::DotLine);
-    QPointF center(points_.front());
-    QPointF pt2(points_.back());
-    qreal r = GeometryHelper::length(center - pt2);
-    QRectF circle(0, 0, r * 2, r * 2);
-    circle.moveCenter(center);
-    painter->setPen(pen1);
-    painter->drawEllipse(circle);
-    {
-        QRectF rect(-r, -r * CIY, r * 2, r * 2 * CIY);
-        QPointF rx(r, 0);
-        rect.moveCenter(center);
-        QPainterPath ph;
-        ph.moveTo(center - rx);
-        ph.arcTo(rect, 180.0, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(ph);
-        {
-            QPainterPath ph1;
-            ph1.moveTo(center + rx);
-            ph1.arcTo(rect, 0.0, 180.0);
-            painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
-    {
-        QRectF rect(-r * CIY, -r, r * 2 * CIY, r * 2);
-        QPointF ry(0, r);
-        rect.moveCenter(center);
-        QPainterPath ph;
-        ph.moveTo(center + ry);
-        ph.arcTo(rect, 270.0, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(ph);
-        {
-            QPainterPath ph1;
-            ph1.moveTo(center - ry);
-            ph1.arcTo(rect, 90.0, 180.0);
-            painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
 }

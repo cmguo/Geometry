@@ -7,6 +7,7 @@
 #include "frustumcone.h"
 #include "cone.h"
 #include "cylinder.h"
+#include "ellipsoid.h"
 #include "sphere.h"
 #include "regularprism.h"
 #include "regularprismoid.h"
@@ -19,6 +20,7 @@ REGISTER_GEOMETRY_3D(FrustumCone, "frustumcone")
 REGISTER_GEOMETRY_3D(Cone, "cone")
 REGISTER_GEOMETRY_3D(Cylinder, "cylinder")
 REGISTER_GEOMETRY_3D(Sphere, "sphere")
+REGISTER_GEOMETRY_3D(Ellipsoid, "ellipsoid")
 REGISTER_GEOMETRY_3D(RegularPrism, "regularprism")
 REGISTER_GEOMETRY_3D(RegularPrismoid, "regularprismoid")
 REGISTER_GEOMETRY_3D(Qrthoprism, "qrthoprism")

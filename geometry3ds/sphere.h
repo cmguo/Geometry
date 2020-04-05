@@ -1,9 +1,9 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "geometry3d.h"
+#include "ellipsoid.h"
 
-class Sphere : public Geometry3D
+class Sphere : public Ellipsoid
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE Sphere(Sphere const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual void sync() override;
 
     virtual QVector<QPointF> movePoints() override;
 
@@ -20,8 +20,6 @@ public:
 
     virtual bool move(int elem, QPointF const & pt) override;
 
-public slots:
-    void draw(QPainter *painter);
 };
 
 #endif // SPHERE_H
