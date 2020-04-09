@@ -42,20 +42,22 @@ bool Diamond::setPoint(int index, const QPointF &pt)
     case 0:
         pt1.setY(pt.y());
         pt2.setY(c.y() - pt.y());
-        return true;
+        break;
     case 1:
         pt1.setX(c.x() - pt.x());
         pt2.setX(pt.x());
-        return true;
+        break;
     case 2:
         pt1.setY(c.y() - pt.y());
         pt2.setY(pt.y());
-        return true;
+        break;
     case 3:
         pt1.setX(pt.x());
         pt2.setX(c.x() - pt.x());
-        return true;
+        break;
     default:
         return false;
     }
+    dirty_ = true;
+    return true;
 }
