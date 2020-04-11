@@ -77,7 +77,7 @@ public:
 public:
     virtual QtPromise::QPromise<void> load();
 
-    virtual void setOption(QByteArray const & key, QVariant value) override;
+    virtual bool setOption(QByteArray const & key, QVariant value) override;
 
 protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});

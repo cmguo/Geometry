@@ -30,7 +30,7 @@ static char const * toolstr =
         ;
 
 GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFlags)
-    : Control(res, flags | KeepAspectRatio | LayoutScale | Touchable, clearFlags)
+    : Control(res, flags | KeepAspectRatio | LayoutScale | Touchable | ShowSelectMask, clearFlags)
     , hitElem_(-1)
     , hitMoved_(false)
     , editing_(false)
@@ -120,11 +120,13 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
     }
 }
 
-void GeometryControl::setOption(const QByteArray &key, QVariant value)
+bool GeometryControl::setOption(const QByteArray &key, QVariant value)
 {
     // set to geometry
-    res_->setProperty(key, value);
+    if (!res_->setOption(key, value))
+        return false;
     updateSettings();
+    return true;
 }
 
 QVariant GeometryControl::getOption(const QByteArray &key)

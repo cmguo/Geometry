@@ -75,9 +75,10 @@ void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *pare
     getToolButtons(buttons, type);
 }
 
-void GeometryTool::handleToolButton(ToolButton * button, QStringList const &)
+bool GeometryTool::handleToolButton(ToolButton * button, QStringList const &)
 {
     WhiteCanvas * canvas = static_cast<WhiteCanvas*>(item_->parentItem()->parentItem());
     canvas->getToolControl("drawing")->setOption("newUrl", button->name());
     canvas->showToolControl("drawing");
+    return true;
 }

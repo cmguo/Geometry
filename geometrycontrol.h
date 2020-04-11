@@ -31,11 +31,13 @@ public:
 
     virtual void getToolButtons(QList<ToolButton *> &buttons, const QList<ToolButton *> &parents = {}) override;
 
-    virtual void setOption(const QByteArray &key, QVariant value) override;
+    virtual bool setOption(const QByteArray &key, QVariant value) override;
 
     virtual QVariant getOption(QByteArray const & key) override;
 
 protected:
+    using Control::getToolButtons;
+
     virtual SelectMode selectTest(QPointF const & point) override;
 
     virtual void select(bool selected) override;

@@ -44,11 +44,13 @@ QPromise<void> Geometry::load()
     });
 }
 
-void Geometry::setOption(const QByteArray &key, QVariant value)
+bool Geometry::setOption(const QByteArray &key, QVariant value)
 {
+    if (!ResourceView::setOption(key, value))
+        return false;
     dirty_ = true;
-    ResourceView::setOption(key, value);
     emit changed();
+    return true;
 }
 
 bool Geometry::empty() const
