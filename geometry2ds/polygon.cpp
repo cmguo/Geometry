@@ -1,12 +1,20 @@
 #include "polygon.h"
 #include "arbitrarypolygon.h"
 #include "geometryhelper.h"
+#include <core/optiontoolbuttons.h>
 
 #include <QPainter>
 
+static WidthToolButtons buttonRadius({0, 2.0, 4.0, 8.0, 16.0, 32.0});
+REGISTER_OPTION_BUTTONS(Polygon, radius, buttonRadius);
+
 Polygon::Polygon(Resource * res, Flags flags)
     : Geometry2D(res, flags)
+    , radius_(0)
 {
+#ifdef QT_DEBUG
+    setToolsString("radius|圆角|Popup,OptionsGroup,NeedUpdate|;");
+#endif
 }
 
 Polygon::Polygon(Polygon const & o)
@@ -98,7 +106,10 @@ void Polygon::sync()
             || (flags_ & DrawFinised)) {
         polygon.append(first);
     }
-    ph.addPolygon(polygon);
+    if (qFuzzyIsNull(radius_))
+        ph.addPolygon(polygon);
+    else
+        ph = GeometryHelper::toRoundPolygon(polygon, radius_);
     if (pointCount() > 2) {
         QPointF lpt = lastPoint(hint);
         QPointF cpt = nextPoint(0, hint);

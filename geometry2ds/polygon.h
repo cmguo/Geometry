@@ -6,6 +6,8 @@
 class Polygon : public Geometry2D
 {
     Q_OBJECT
+
+    Q_PROPERTY(qreal radius MEMBER radius_)
 public:
     Q_INVOKABLE Polygon(Resource * res, Flags flags = {});
 
@@ -55,6 +57,7 @@ protected:
 private:
     QPainterPath path_;
     QPainterPath textPath_;
+    qreal radius_;
 };
 
 #endif // POLYGON_H

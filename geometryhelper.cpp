@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QScreen>
 #include <QFontMetrics>
+#include <QDebug>
 
 qreal GeometryHelper::HIT_DIFF = 10.0;
 qreal GeometryHelper::HIT_DIFF_DIFF = 100.0;
@@ -42,6 +43,43 @@ QPointF GeometryHelper::textOffset(const QString &text, Qt::Alignment alignment)
     else
         off.setY(rect.bottom());
     return -off;
+}
+
+QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, qreal radius)
+{
+    QPainterPath path;
+    for (int i = 0; i < polygon.size() - 1; ++i) {
+        QPointF l = polygon[i == 0 ? polygon.size() - 2 : i - 1];
+        QPointF const & c = polygon[i];
+        QPointF n = polygon[i + 1];
+        qreal ll = length(l - c);
+        qreal ln = length(n - c);
+        if (ll < ln)
+            l = (l - c) * ln / ll + c;
+        else
+            n = (n - c) * ll / ln + c;
+        QPointF o = (l + n) / 2;
+        qreal d = dist2PointToSegment(l, c, o, l);
+        d = radius / sqrt(d);
+        l = (l - c) * d + c;
+        o = (o - c) * d + c;
+        adjustToLength(c, n, length(l - c));
+        qreal a1 = angle(l - o);
+        qreal a2 = angle(n - o);
+        if (a1 + 180.0 < a2)
+            a1 += 360.0;
+        else if (a2 + 180.0 < a1)
+            a2 += 360.0;
+        QRectF r(0, 0, radius * 2, radius * 2);
+        r.moveCenter(o);
+        if (i > 0)
+            path.lineTo(l);
+        else
+            path.moveTo(l);
+        path.arcTo(r, a1, a2 - a1);
+    }
+    path.closeSubpath();
+    return path;
 }
 
 qreal GeometryHelper::angle(QPointF const & vec) // axis angle

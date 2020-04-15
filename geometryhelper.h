@@ -22,6 +22,8 @@ public:
 
     static QPointF textOffset(QString const & text, Qt::Alignment alignment);
 
+    static QPainterPath toRoundPolygon(QPolygonF const & polygon, qreal radius);
+
 public:
     static qreal angle(QPointF const & vec);
 
