@@ -12,9 +12,6 @@ Polygon::Polygon(Resource * res, Flags flags)
     : Geometry2D(res, flags)
     , radius_(0)
 {
-#ifdef QT_DEBUG
-    setToolsString("radius|圆角|Popup,OptionsGroup,NeedUpdate|;");
-#endif
 }
 
 Polygon::Polygon(Polygon const & o)

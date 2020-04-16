@@ -5,9 +5,11 @@
 #include <QVector>
 #include <QPolygonF>
 #include <QFont>
+#include <QPainterPath>
 
-class GeometryHelper
+class GeometryHelper : public QObject
 {
+    Q_OBJECT
 public:
     static qreal HIT_DIFF;
 
@@ -17,14 +19,18 @@ public:
 
     static QFont TEXT_FONT;
 
-public:
+    Q_INVOKABLE GeometryHelper();
+
+public slots:
     static void init();
 
     static QPointF textOffset(QString const & text, Qt::Alignment alignment);
 
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, qreal radius);
 
-public:
+    static QPainterPath toRoundPolygon(QPolygonF const & polygon, QVector<qreal> const & radiuses);
+
+public slots:
     static qreal angle(QPointF const & vec);
 
     static qreal angle(QPointF const & p1, QPointF const & p2, QPointF const & p3);
@@ -37,16 +43,16 @@ public:
 
     static qreal dotProduct(QPointF const & p1, QPointF const & p2);
 
-public:
+public slots:
     static void rotate(QPointF & pt, QPointF const & angle);
 
     static void reverseRotate(QPointF & pt, QPointF const & angle);
 
-    static void adjustToLength( QPointF & vec, qreal length);
+    static void adjustToLength(QPointF & vec, qreal length);
 
     static void adjustToLength(QPointF const & start, QPointF & end, qreal length);
 
-public:
+public slots:
     static int attachToPoints(QVector<QPointF> const & pts, QPointF & p);
 
     static void attachToLine(QPointF const & p1, QPointF const & p2, QPointF & p);
@@ -61,7 +67,7 @@ public:
 
     static int attachLineToPointsAndLines(QVector<QPointF> const & pts, QVector<int> lines, QPointF & lp1, QPointF & lp2);
 
-public:
+public slots:
     static qreal dist2PointToSegment(QPointF const & p1, QPointF const & p2,
                                     QPointF const & p, QPointF & rp);
 
@@ -71,7 +77,7 @@ public:
     static QPointF crossPoint(QPointF const & p1, QPointF const & p2,
                               QPointF const & q1, QPointF const & q2);
 
-public:
+public slots:
     static QPolygonF smallestEnclosingPolygon(QVector<QPointF> const & pts);
 };
 

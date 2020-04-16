@@ -25,7 +25,6 @@ RegularPolygon::RegularPolygon(Resource * res)
     }
     setEdges(edges);
     setSpan(span);
-    setToolsString("edgeSpan|边数|Popup,OptionsGroup,NeedUpdate|;");
 }
 
 RegularPolygon::RegularPolygon(RegularPolygon const & o)

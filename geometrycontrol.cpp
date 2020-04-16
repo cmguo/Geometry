@@ -113,9 +113,12 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
     Control::getToolButtons(buttons, parents);
     if (parents.isEmpty()) {
         int i = buttons.indexOf(&ToolButton::SPLITTER);
-        if (i > 0 && buttons[i - 1]->name() != "edit()") {
-            buttons.prepend(buttons.takeAt(i++));
-            buttons.prepend(buttons.takeAt(i++));
+        while (i > 0 && buttons[i - 1]->name() != "edit()") {
+            i = buttons.indexOf(&ToolButton::SPLITTER, i + 1);
+        }
+        if (i > 2) {
+            buttons.prepend(buttons.takeAt(i));
+            buttons.prepend(buttons.takeAt(i));
         }
     }
 }

@@ -5,6 +5,7 @@
 #include <QScreen>
 #include <QFontMetrics>
 #include <QDebug>
+#include <qexport.h>
 
 qreal GeometryHelper::HIT_DIFF = 10.0;
 qreal GeometryHelper::HIT_DIFF_DIFF = 100.0;
@@ -13,8 +14,16 @@ QFont GeometryHelper::TEXT_FONT;
 
 static QFontMetrics textMetrics(GeometryHelper::TEXT_FONT);
 
+static QExport<GeometryHelper> export_helper(QPart::shared);
+
+GeometryHelper::GeometryHelper()
+{
+    init();
+}
+
 void GeometryHelper::init()
 {
+    qMetaTypeId<GeometryHelper*>();
     TEXT_FONT = QFont();
     QSize sz  = QApplication::primaryScreen()->size();
     if (sz.width() > 1920) {
@@ -47,8 +56,21 @@ QPointF GeometryHelper::textOffset(const QString &text, Qt::Alignment alignment)
 
 QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, qreal radius)
 {
+    return toRoundPolygon(polygon, QVector<qreal>(polygon.size() - 1, radius));
+}
+
+QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, QVector<qreal> const & radiuses)
+{
     QPainterPath path;
     for (int i = 0; i < polygon.size() - 1; ++i) {
+        qreal radius = radiuses[i];
+        if (qFuzzyIsNull(radius)) {
+            if (i > 0)
+                path.lineTo(polygon[i]);
+            else
+                path.moveTo(polygon[i]);
+            continue;
+        }
         QPointF l = polygon[i == 0 ? polygon.size() - 2 : i - 1];
         QPointF const & c = polygon[i];
         QPointF n = polygon[i + 1];

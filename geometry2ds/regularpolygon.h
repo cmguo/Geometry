@@ -7,6 +7,8 @@ class RegularPolygon : public Polygon
 {
     Q_OBJECT
 
+    Q_CLASSINFO("toolsString", "edgeSpan|边数|Popup,OptionsGroup,NeedUpdate|;")
+
     Q_PROPERTY(int edges READ edges WRITE setEdges)
     Q_PROPERTY(int span READ span WRITE setSpan)
     Q_PROPERTY(int edgeSpan READ edgeSpan WRITE setEdges)

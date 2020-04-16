@@ -7,6 +7,10 @@ class Polygon : public Geometry2D
 {
     Q_OBJECT
 
+#ifdef QT_DEBUG
+    Q_CLASSINFO("toolsString", "radius|圆角|Popup,OptionsGroup,NeedUpdate|;")
+#endif
+
     Q_PROPERTY(qreal radius MEMBER radius_)
 public:
     Q_INVOKABLE Polygon(Resource * res, Flags flags = {});
