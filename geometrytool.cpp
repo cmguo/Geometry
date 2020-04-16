@@ -15,10 +15,9 @@
 #ifndef QT_DEBUG
 
 static char const * const geometry2ds[] = {
-    "line", "dotline", "line.so-", "line.so-so",
-    "circle", "isoscelestriangle",  "righttriangle",
-    "square", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "parallelogram",
-    "arbitrarypolygon", "sector", "diamond", "rectangle"
+    "line", "dotline", "line.so-", "line.so-so", "", "",
+    "circle", "sector", "isoscelestriangle", "righttriangle", "parallelogram", "diamond",
+    "square", "rectangle", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "arbitrarypolygon",
 };
 
 static char const * const geometry3ds[] = {
@@ -45,7 +44,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
 #endif
     ToolButton::Flags flags = {ToolButton::Dynamic};
     for (QByteArray & f : names) {
-        ToolButton * btn = new ToolButton(
+        ToolButton * btn = f.isEmpty() ? &ToolButton::PLACE_HOOLDER : new ToolButton(
             {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icon/" + type + "/" + f + ".svg"});
         result.append(btn);
     }
@@ -53,6 +52,8 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
 
 void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
 {
+    if (button == &ToolButton::PLACE_HOOLDER)
+        return;
      WhiteCanvas * canvas = WhiteCanvasWidget::mainInstance()->canvas();
      Control * drawControl = canvas->getToolControl("drawing");
      QObject::connect(drawControl, SIGNAL(drawFinished(bool)),
