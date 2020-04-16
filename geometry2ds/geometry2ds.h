@@ -33,7 +33,7 @@ REGISTER_GEOMETRY_2D(Diamond, "diamond")
 REGISTER_GEOMETRY_2D(Rectangle, "rectangle")
 REGISTER_GEOMETRY_2D(Square, "square")
 REGISTER_GEOMETRY_2D(ArbitraryPolygon, "arbitrarypolygon")
-REGISTER_GEOMETRY_2D(Line, "line");
+REGISTER_GEOMETRY_2D(Line, "line,dashline,dotline,dashdotline");
 REGISTER_GEOMETRY_2D(RegularPolygon, "regularpolygon")
 
 #endif // GEOMETRY2DS_H
