@@ -29,6 +29,11 @@ static char const * const geometry3ds[] = {
 void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const & type)
 {
     GeometryHelper::init();
+    static QMap<QByteArray, QList<ToolButton*>> gButtons;
+    if (gButtons.contains(type)) {
+        result = gButtons.value(type);
+        return;
+    }
     QList<QByteArray> names;
     ResourceFactory * factory = ResourceManager::instance()->getFactory(type);
 #ifdef QT_DEBUG
@@ -48,6 +53,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
             {factory->newUrl(f).toString().toUtf8(), f, flags, ":geometry/icon/" + type + "/" + f + ".svg"});
         result.append(btn);
     }
+    gButtons.insert(type, result);
 }
 
 void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
