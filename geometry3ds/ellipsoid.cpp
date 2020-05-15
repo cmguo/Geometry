@@ -1,4 +1,4 @@
-#include "ellipsoid.h"
+﻿#include "ellipsoid.h"
 #include "geometryhelper.h"
 
 #include <QPen>
@@ -13,6 +13,7 @@ Ellipsoid::Ellipsoid(Resource * res)
 
 Ellipsoid::Ellipsoid(Ellipsoid const & o)
     : Geometry3D(o)
+    ,radius_(o.radius_)
 {
 }
 
