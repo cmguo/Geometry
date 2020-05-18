@@ -64,10 +64,12 @@ void GeometryControl::attached()
     QObject::connect(geometry, &Geometry::changed,
                      this, &GeometryControl::geometryChanged);
     if (geometry->empty() || (flags_ & RestoreSession)) {
-        if (flags_ & RestoreSession)
+        if (flags_ & RestoreSession) {
             updateGeometry();
-        else
+        } else {
+            flags_ &= ~CanSelect;
             whiteCanvas()->topControl()->setProperty("editingMode", 0);
+        }
         loadFinished(true);
     } else {
         QWeakPointer<int> life(this->life());
@@ -212,6 +214,7 @@ void GeometryControl::finishGeometry(bool valid)
     updateGeometry();
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
+        flags_ |= CanSelect;
         selector->selectImplied(realItem_);
         edit();
     } else {
