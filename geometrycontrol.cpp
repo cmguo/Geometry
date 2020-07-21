@@ -176,7 +176,7 @@ void GeometryControl::select(bool selected)
         GeometryItem * item = static_cast<GeometryItem *>(item_);
         item->showEditor(false);
     } else if (selected && res_->metaObject() == &Line::staticMetaObject) {
-        whiteCanvas()->selector()->selectImplied(realItem_);
+        whiteCanvas()->selector()->selectImplied(this);
         edit();
     }
     Control::select(selected);
@@ -215,10 +215,10 @@ void GeometryControl::finishGeometry(bool valid)
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
         flags_ |= CanSelect;
-        selector->selectImplied(realItem_);
+        selector->selectImplied(this);
         edit();
     } else {
-        selector->updateSelect(realItem_);
+        selector->updateSelect(this);
     }
 }
 
@@ -291,7 +291,7 @@ bool GeometryControl::endPoint(const QPointF &point)
         if (hitMoved_) {
             finishGeometry(true);
         } else {
-            whiteCanvas()->selector()->select(item());
+            whiteCanvas()->selector()->select(this);
         }
     } else {
         if (geometry->commitPoint(point)) {
