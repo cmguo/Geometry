@@ -22,6 +22,8 @@ public slots:
 protected:
     virtual QGraphicsItem * create(ResourceView * res) override;
 
+    virtual void attaching() override;
+
     virtual void attached() override;
 
     virtual void resize(QSizeF const & size) override;

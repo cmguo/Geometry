@@ -6,6 +6,9 @@
 #include <QPolygonF>
 #include <QFont>
 #include <QPainterPath>
+#include <QColor>
+
+class ResourcePage;
 
 class GeometryHelper : public QObject
 {
@@ -20,6 +23,11 @@ public:
     static QFont TEXT_FONT;
 
     Q_INVOKABLE GeometryHelper();
+
+public:
+    static QColor defaultColor(ResourcePage * page);
+
+    static void setDefaultColor(ResourcePage * page, QColor color);
 
 public slots:
     static void init();

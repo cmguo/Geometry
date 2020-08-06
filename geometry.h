@@ -16,8 +16,8 @@ class Geometry : public ResourceView
 
     Q_OBJECT
 
-    Q_PROPERTY(QColor color MEMBER color_)
-    Q_PROPERTY(qreal width MEMBER width_)
+    Q_PROPERTY(QColor color READ color WRITE setColor)
+    Q_PROPERTY(qreal width READ width WRITE setWidth)
 
 public:
     virtual bool empty() const;
@@ -48,10 +48,16 @@ public:
         return color_;
     }
 
+    void setColor(QColor color);
+
     qreal width() const
     {
         return width_;
     }
+
+    void setWidth(qreal width);
+
+    void init();
 
 signals:
     void changed();

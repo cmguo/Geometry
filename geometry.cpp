@@ -2,6 +2,7 @@
 #include "geometryhelper.h"
 
 #include <core/resource.h>
+#include <core/resourcepage.h>
 #include <core/resourcetransform.h>
 #include <core/toolbutton.h>
 
@@ -131,6 +132,22 @@ void Geometry::scale(qreal scale)
         pt *= scale;
     }
     dirty_ = true;
+}
+
+void Geometry::setColor(QColor color)
+{
+    color_ = color;
+    GeometryHelper::setDefaultColor(qobject_cast<ResourcePage*>(parent()), color);
+}
+
+void Geometry::setWidth(qreal width)
+{
+    width_ = width;
+}
+
+void Geometry::init()
+{
+    color_ = GeometryHelper::defaultColor(qobject_cast<ResourcePage*>(parent()));
 }
 
 QVector<QPointF> Geometry::movePoints()

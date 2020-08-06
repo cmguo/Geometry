@@ -57,6 +57,13 @@ QGraphicsItem * GeometryControl::create(ResourceView * res)
     return item;
 }
 
+void GeometryControl::attaching()
+{
+    Geometry * geometry = static_cast<Geometry *>(res_);
+    if (geometry->empty())
+        geometry->init();
+}
+
 void GeometryControl::attached()
 {
     Geometry * geometry = static_cast<Geometry *>(res_);

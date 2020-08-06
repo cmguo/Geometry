@@ -1,24 +1,43 @@
 #include "geometryhelper.h"
 
+#include <core/resourcepage.h>
+
+#include <qexport.h>
+
 #include <QtMath>
 #include <QApplication>
 #include <QScreen>
 #include <QFontMetrics>
 #include <QDebug>
-#include <qexport.h>
 
 qreal GeometryHelper::HIT_DIFF = 10.0;
 qreal GeometryHelper::HIT_DIFF_DIFF = 100.0;
-qreal GeometryHelper::DEFAULT_LINE_WIDTH = 2.0;
+qreal GeometryHelper::DEFAULT_LINE_WIDTH = 4.0;
 QFont GeometryHelper::TEXT_FONT;
 
 static QFontMetrics textMetrics(GeometryHelper::TEXT_FONT);
 
 static QExport<GeometryHelper> export_helper(QPart::shared);
 
+static QColor defaultColor1;
+static QColor defaultColor2;
+
 GeometryHelper::GeometryHelper()
 {
     init();
+}
+
+QColor GeometryHelper::defaultColor(ResourcePage * page)
+{
+    return page->isIndependentPage() ? defaultColor2 : defaultColor1;
+}
+
+void GeometryHelper::setDefaultColor(ResourcePage *page, QColor color)
+{
+    if (page->isIndependentPage())
+        defaultColor2 = color;
+    else
+        defaultColor1 = color;
 }
 
 void GeometryHelper::init()
@@ -33,6 +52,8 @@ void GeometryHelper::init()
         TEXT_FONT.setPixelSize(24);
     }
     textMetrics = QFontMetrics(TEXT_FONT);
+    defaultColor1 = Qt::white;
+    defaultColor2 = Qt::red;
 }
 
 QPointF GeometryHelper::textOffset(const QString &text, Qt::Alignment alignment)
