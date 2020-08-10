@@ -42,6 +42,10 @@ void GeometryHelper::setDefaultColor(ResourcePage *page, QColor color)
 
 void GeometryHelper::init()
 {
+    static bool inited = false;
+    if (inited)
+        return;
+    inited = true;
     qMetaTypeId<GeometryHelper*>();
     TEXT_FONT = QFont();
     QSize sz  = QApplication::primaryScreen()->size();
