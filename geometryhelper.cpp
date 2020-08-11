@@ -29,11 +29,15 @@ GeometryHelper::GeometryHelper()
 
 QColor GeometryHelper::defaultColor(ResourcePage * page)
 {
+    while (page->isSubPage())
+        page = qobject_cast<ResourcePage*>(page->parent());
     return page->isIndependentPage() ? defaultColor2 : defaultColor1;
 }
 
 void GeometryHelper::setDefaultColor(ResourcePage *page, QColor color)
 {
+    while (page->isSubPage())
+        page = qobject_cast<ResourcePage*>(page->parent());
     if (page->isIndependentPage())
         defaultColor2 = color;
     else
