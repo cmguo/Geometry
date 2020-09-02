@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/形状工具/浅色/05 圆</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/形状工具/浅色/05-圆" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <circle id="椭圆形" stroke="#50545E" stroke-width="2" cx="20" cy="20" r="15"></circle>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic4</title>
+    <g id="01-通用/01-图标/48px/graphic4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="graph5" transform="translate(8.000000, 8.000000)" fill="#50545E" fill-rule="nonzero">
+            <path d="M16,0 C24.836556,0 32,7.163444 32,16 C32,24.836556 24.836556,32 16,32 C7.163444,32 0,24.836556 0,16 C0,7.163444 7.163444,0 16,0 Z M16,2 C8.2680135,2 2,8.2680135 2,16 C2,23.7319865 8.2680135,30 16,30 C23.7319865,30 30,23.7319865 30,16 C30,8.2680135 23.7319865,2 16,2 Z" id="椭圆形"></path>
+        </g>
     </g>
 </svg>

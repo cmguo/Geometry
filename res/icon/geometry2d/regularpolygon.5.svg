@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/形状工具/浅色/11 五边形</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/形状工具/浅色/11-五边形" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M20.0000002,6.23606798 L4.95800228,17.1647192 L10.7047659,34.9163319 L29.2952345,34.9163319 L35.0419982,17.1647192 L20.0000002,6.23606798 Z" id="多边形" stroke="#50545E" stroke-width="2"></path>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic13</title>
+    <g id="01-通用/01-图标/48px/graphic13" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01-icon/形状工具/浅色/11-五边形" transform="translate(7.000000, 7.000000)" stroke="#50545E" stroke-width="2">
+            <path d="M17,1.23606798 L32.8244295,12.733189 L26.7800353,31.3359216 L7.21996472,31.3359216 L1.1755705,12.733189 L17,1.23606798 Z" id="多边形"></path>
+        </g>
     </g>
 </svg>

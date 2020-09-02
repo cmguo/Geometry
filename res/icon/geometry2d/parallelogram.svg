@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/形状工具/浅色/12 平行四边形</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/形状工具/浅色/12-平行四边形" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M13.6960133,8 L4.43675408,33 L27.3039867,33 L36.5632459,8 L13.6960133,8 Z" id="矩形" stroke="#50545E" stroke-width="2"></path>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic14</title>
+    <g id="01-通用/01-图标/48px/graphic14" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01-icon/形状工具/浅色/12-平行四边形" transform="translate(5.000000, 10.000000)" stroke="#50545E" stroke-width="2">
+            <path d="M36.5615164,1 L26.8985249,27 L1.43848357,27 L11.1014751,1 L36.5615164,1 Z" id="矩形"></path>
+        </g>
     </g>
 </svg>

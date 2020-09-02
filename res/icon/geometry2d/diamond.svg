@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/形状工具/浅色/15 菱形</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/形状工具/浅色/15-菱形" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M20,5.3073413 L2.55246779,20 L20,34.6926587 L37.4475322,20 L20,5.3073413 Z" id="矩形备份" stroke="#50545E" stroke-width="2"></path>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic10</title>
+    <g id="01-通用/01-图标/48px/graphic10" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01-icon/形状工具/浅色/15-菱形" transform="translate(5.000000, 8.000000)" stroke="#50545E" stroke-width="2">
+            <path d="M19,1.3073413 L36.4475322,16 L19,30.6926587 L1.55246779,16 L19,1.3073413 Z" id="矩形备份"></path>
+        </g>
     </g>
 </svg>

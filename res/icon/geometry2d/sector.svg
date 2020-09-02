@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/形状工具/浅色/14 扇形</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/形状工具/浅色/14-扇形" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M1.4012913,13.5364776 L20.2609857,32.5789135 L38.6120368,14.0497959 C38.5440366,13.9796388 38.4756198,13.9098068 38.4067875,13.8403023 C28.1615331,3.49499407 11.6484686,3.38153793 1.4012913,13.5364776 Z" id="路径" stroke="#50545E" stroke-width="2"></path>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic5</title>
+    <g id="01-通用/01-图标/48px/graphic5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="shanxing" transform="translate(4.000000, 10.000000)" stroke="#50545E" stroke-width="2">
+            <path d="M19.7862304,1.00014106 C26.5168468,1.02222613 33.2550867,3.63829064 38.4067875,8.84030232 L38.4067875,8.84030232 L20.2609857,27.5789135 L1.401,8.537 L1.57547938,8.36543168 C6.52768397,3.54694122 12.9072612,1.09403281 19.3275853,1.0026521 Z" id="路径"></path>
+        </g>
     </g>
 </svg>

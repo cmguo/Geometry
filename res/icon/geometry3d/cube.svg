@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
-    <title>01 icon/立体形状工具/浅色/01 正方体</title>
-    <desc>Created with Sketch.</desc>
-    <g id="01-icon/立体形状工具/浅色/01-正方体" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="编组" transform="translate(5.000000, 5.000000)">
-            <path d="M8.64206399,1 L1,7.46391245 L1,29 L22.5754728,29 L29,22.3460254 L29,1 L8.64206399,1 Z" id="形状结合" stroke="#50545E" stroke-width="2"></path>
-            <path d="M28.5355339,0.0502525317 L29.9497475,1.46446609 L23,8.41325253 L23,28 L21,28 L21,9 L2,9 L2,7 L21,7 L21,7.58525253 L28.5355339,0.0502525317 Z" id="形状结合" fill="#50545E"></path>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>01 通用/01 图标/48px/graphic16</title>
+    <g id="01-通用/01-图标/48px/graphic16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01-icon/立体形状工具/浅色/01-正方体" transform="translate(9.000000, 9.000000)" fill="#50545E" fill-rule="nonzero">
+            <g id="编组">
+                <path d="M30,0 L30,22.75 L23,30 L0,30 L0,7 L8.27586207,0 L30,0 Z M2,28 L22.15,28 L22.151,27.999 L21,28 L21,9 L2,9 L2,28 Z M28,3.413 L23,8.41325253 L23,27.12 L28,21.941 L28,3.413 Z M26.585,2 L9.008,2 L3.097,6.999 L21,7 L21,7.58525253 L26.585,2 Z" id="形状结合"></path>
+            </g>
         </g>
     </g>
 </svg>
