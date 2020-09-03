@@ -29,7 +29,7 @@ QPromise<void> Geometry::load()
 {
     if (!Geometry::empty())
         return QPromise<void>::resolve();
-    QWeakPointer<int> life(this->life());
+    auto life(this->life());
     return res_->getStream().then([this, life](QSharedPointer<QIODevice> s) {
         if (life.isNull())
             return;

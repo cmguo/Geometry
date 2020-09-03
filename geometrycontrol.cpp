@@ -79,7 +79,7 @@ void GeometryControl::attached()
         }
         loadFinished(true);
     } else {
-        QWeakPointer<int> life(this->life());
+        auto life(this->life());
         geometry->load().then([this, life]() {
             if (life.isNull())
                 return;

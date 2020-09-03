@@ -14,6 +14,8 @@ class GeometryControl : public Control
     Q_OBJECT
 
 public:
+    static constexpr Flag ImpliedEditable = static_cast<Flag>(1 << 16);
+
     Q_INVOKABLE GeometryControl(ResourceView * res, Flags flags = None, Flags clearFlags = None);
 
 public slots:
