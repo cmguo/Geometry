@@ -18,6 +18,7 @@ Polygon::Polygon(Polygon const & o)
     : Geometry2D(o)
     , path_(o.path_)
     , textPath_(o.textPath_)
+    , radius_(o.radius_)
 {
 }
 
