@@ -49,6 +49,8 @@ public:
     Q_INVOKABLE Line(Line const & o);
 
 public:
+    virtual bool move(int elem, QPointF const & pt) override;
+
     virtual QPainterPath path() override;
 
 public slots:

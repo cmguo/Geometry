@@ -18,7 +18,7 @@ static char const * endtypes[] = {
 };
 
 Line::Line(Resource * res)
-    : Geometry2D(res)
+    : Geometry2D(res, DrawAttach)
     , lineType_(Solid)
     , beginType_(None)
     , endType_(None)
@@ -73,6 +73,13 @@ Line::Line(Line const & o)
     , beginType_(o.beginType_)
     , endType_(o.endType_)
 {
+}
+
+bool Line::move(int elem, const QPointF &pt)
+{
+    QPointF p(pt);
+    GeometryHelper::attachToLines(points_[1 - elem], p);
+    return Geometry2D::move(elem, p);
 }
 
 QPainterPath Line::path()

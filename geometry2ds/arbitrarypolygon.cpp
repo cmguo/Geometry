@@ -13,7 +13,10 @@ ArbitraryPolygon::ArbitraryPolygon(ArbitraryPolygon const & o)
 
 void ArbitraryPolygon::addPoint(QPointF const & pt)
 {
-    Polygon::addPoint(pt);
+    if (tempValid_)
+        Polygon::addPoint(temp_);
+    else
+        Polygon::addPoint(pt);
     tempValid_ = false;
 }
 
@@ -22,6 +25,9 @@ void ArbitraryPolygon::movePoint(QPointF const & pt)
     qDebug() << "movePoint";
     if (!points_.isEmpty())
         points_.back() = pt;
+    if (points_.size() > 1)
+        GeometryHelper::attachToLines(points_[points_.size() - 2], points_.back());
+    dirty_ = true;
 }
 
 bool ArbitraryPolygon::commitPoint(const QPointF &pt)
@@ -40,6 +46,7 @@ bool ArbitraryPolygon::moveTempPoint(const QPointF &pt)
 {
     qDebug() << "moveTempPoint";
     temp_ = pt;
+    GeometryHelper::attachToLines(points_.back(), temp_);
     tempValid_ = true;
     dirty_ = true;
     return true;
