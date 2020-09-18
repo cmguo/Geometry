@@ -2,7 +2,7 @@
 <svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>01 通用/01 图标/48px/graphic15</title>
     <g id="01-通用/01-图标/48px/graphic15" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <line x1="18" y1="6" x2="40" y2="28" id="路径-37" stroke="#50545E" stroke-width="2"></line>
+        <line x1="18" y1="6" x2="40" y2="28" id="路径-37" stroke="#50545E" stroke-width="2" stroke-dasharray="6,2"></line>
         <polyline id="路径" stroke="#50545E" stroke-width="2" points="18 6.5 10 17 10 36 32 40 40 28"></polyline>
         <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="10" cy="36" r="2"></circle>
         <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="10" cy="17" r="2"></circle>
