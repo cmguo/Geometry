@@ -16,8 +16,8 @@
 
 static char const * const geometry2ds[] = {
     "line", "dotline", "line.so-", "line.so-so", "", "",
-    "circle", "sector", "isoscelestriangle", "righttriangle", "parallelogram", "diamond",
-    "square", "rectangle", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5", "arbitrarypolygon",
+    "arbitrarypolygon", "circle", "sector", "isoscelestriangle", "righttriangle", "parallelogram", "diamond",
+    "square", "rectangle", "isopopetrapezoid", "righttrapezoid", "regularpolygon.5",
 };
 
 static char const * const geometry3ds[] = {

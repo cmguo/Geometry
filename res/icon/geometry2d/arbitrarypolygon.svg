@@ -2,8 +2,12 @@
 <svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>01 通用/01 图标/48px/graphic15</title>
     <g id="01-通用/01-图标/48px/graphic15" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="01-icon/形状工具/浅色/13-不规则" transform="translate(8.000000, 7.000000)" stroke="#50545E" stroke-width="2">
-            <path d="M6.33768855,1.14428876 L30.2916165,5.40169084 L23.6923711,14.942808 L24.2119976,32.3055012 L1.17528561,20.0109801 L6.33768855,1.14428876 Z" id="路径-11"></path>
-        </g>
+        <line x1="18" y1="6" x2="40" y2="28" id="路径-37" stroke="#50545E" stroke-width="2"></line>
+        <polyline id="路径" stroke="#50545E" stroke-width="2" points="18 6.5 10 17 10 36 32 40 40 28"></polyline>
+        <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="10" cy="36" r="2"></circle>
+        <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="10" cy="17" r="2"></circle>
+        <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="18" cy="6" r="2"></circle>
+        <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="32" cy="40" r="2"></circle>
+        <circle id="椭圆形" stroke="#50545E" stroke-width="2" fill="#FFFFFF" cx="40" cy="28" r="2"></circle>
     </g>
 </svg>
