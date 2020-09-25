@@ -27,8 +27,13 @@ void ArbitraryPolygon::movePoint(QPointF const & pt)
         points_.append(pt);
     else if (!points_.isEmpty())
         points_.back() = pt;
-    if (points_.size() > 1)
+    QPointF d = pt - points_.first();
+    if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
+        points_.back() = points_.first();
+    } else {
         GeometryHelper::attachToLines(points_[points_.size() - 2], points_.back());
+        GeometryHelper::attachToLines(points_.first(), points_.back());
+    }
     temp_ = pt;
     dirty_ = true;
 }
@@ -51,7 +56,13 @@ bool ArbitraryPolygon::moveTempPoint(const QPointF &pt)
         return false;
     qDebug() << "moveTempPoint";
     temp_ = pt;
-    GeometryHelper::attachToLines(points_.back(), temp_);
+    QPointF d = pt - points_.first();
+    if (GeometryHelper::length2(d) < GeometryHelper::HIT_DIFF_DIFF) {
+        temp_ = points_.first();
+    } else {
+        GeometryHelper::attachToLines(points_.back(), temp_);
+        GeometryHelper::attachToLines(points_.first(), temp_);
+    }
     tempValid_ = true;
     dirty_ = true;
     return true;
