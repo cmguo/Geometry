@@ -87,3 +87,15 @@ QPointF ArbitraryPolygon::point(int index)
     else
         return temp_;
 }
+
+bool ArbitraryPolygon::move(int elem, const QPointF &pt)
+{
+    QPointF p = pt;
+    if (elem < points_.size()) {
+        GeometryHelper::attachToLines(
+                    elem > 0 ? points_[elem - 1] : points_.last(), p);
+        GeometryHelper::attachToLines(
+                    elem + 1 < points_.size() ? points_[elem + 1] : points_.first(), p);
+    }
+    return Polygon::move(elem, p);
+}
