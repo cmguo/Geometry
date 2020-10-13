@@ -1,7 +1,8 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-#include "core/resourceview.h"
+#include "Geometry_global.h"
+#include <core/resourceview.h>
 
 #include <QtPromise>
 
@@ -11,7 +12,7 @@
 
 class ToolButton;
 
-class Geometry : public ResourceView
+class GEOMETRY_EXPORT Geometry : public ResourceView
 {
 
     Q_OBJECT
