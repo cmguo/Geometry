@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE Circle(Circle const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual QPainterPath graphPath() override;
 
     virtual QVector<QPointF> movePoints() override;
 

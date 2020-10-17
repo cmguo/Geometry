@@ -12,7 +12,9 @@ public:
     Q_INVOKABLE FrustumCone(FrustumCone const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual QPainterPath visualPath() override;
+
+    virtual QPainterPath contour() override;
 
     virtual QVector<QPointF> movePoints() override;
 
@@ -22,8 +24,6 @@ public:
 
 public slots:
     bool contains(QPointF const & pt);
-
-    void draw(QPainter *painter);
 
 protected:
     virtual qreal r2(qreal r);

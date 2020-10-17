@@ -18,7 +18,9 @@ public:
     Polygon(Polygon const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual QPainterPath graphPath() override;
+
+    virtual QPainterPath textPath() override;
 
     virtual QVector<QPointF> movePoints() override;
 
@@ -27,9 +29,6 @@ public:
     virtual bool move(int elem, const QPointF &pt) override;
 
     virtual void sync() override;
-
-public slots:
-    void draw(QPainter *painter);
 
 protected:
     virtual int pointCount();
@@ -53,13 +52,13 @@ protected:
 
     qreal angle(int index);
 
-    void addAngleLabeling(QPainterPath & path, QPainterPath &textPath, int index);
+    void addAngleLabeling(QPainterPath & graphPath, QPainterPath &textPath, int index);
 
 protected:
     using Geometry2D::addAngleLabeling;
 
 private:
-    QPainterPath path_;
+    QPainterPath graphPath_;
     QPainterPath textPath_;
     qreal radius_;
 };

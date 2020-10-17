@@ -1,4 +1,4 @@
-﻿#include "ellipsoid.h"
+#include "ellipsoid.h"
 #include "geometryhelper.h"
 
 #include <QPen>
@@ -67,7 +67,40 @@ bool Ellipsoid::move(int elem, QPointF const & pt)
     return true;
 }
 
-QPainterPath Ellipsoid::path()
+QPainterPath Ellipsoid::visualPath()
+{
+    QPainterPath ph;
+    if (points_.size() < 2)
+        return ph;
+    QPainterPath ph2;
+    QPointF center(points_.front());
+    // XY circle
+    QRectF circle(0, 0, qreal(radius_.x()) * 2, qreal(radius_.y()) * 2);
+    QPointF RX {qreal(radius_.x()), 0};
+    circle.moveCenter(center);
+    addArc(ph, circle, center + RX, 0, 360.0);
+    // XZ cicle
+    {
+        QRectF rect(-qreal(radius_.x()), -qreal(radius_.z()) * CIY,
+                    qreal(radius_.x()) * 2, qreal(radius_.z()) * 2 * CIY);
+        QPointF rx(qreal(radius_.x()), 0);
+        rect.moveCenter(center);
+        addArc(ph, rect, center - rx, 180.0, 180.0);
+        addArc(ph2, rect, center + rx, 0.0, 180.0);
+    }
+    // YZ cicle
+    {
+        QRectF rect(-qreal(radius_.z()) * CIY, -qreal(radius_.y()),
+                    qreal(radius_.z()) * CIY * 2, qreal(radius_.y()) * 2);
+        QPointF ry(0, qreal(radius_.y()));
+        rect.moveCenter(center);
+        addArc(ph, rect, center + ry, 270.0, 180.0);
+        addArc(ph2, rect, center - ry, 90.0, 180.0);
+    }
+    return combine(ph, ph2);
+}
+
+QPainterPath Ellipsoid::contour()
 {
     QPainterPath ph;
     if (points_.size() < 2)
@@ -79,54 +112,3 @@ QPainterPath Ellipsoid::path()
     return ph;
 }
 
-void Ellipsoid::draw(QPainter *painter)
-{
-    if (points_.size() < 2)
-        return;
-    QPen pen1(color_, width_);
-    QPen pen2(color_, width_, Qt::DotLine);
-    QPointF center(points_.front());
-    // XY circle
-    QRectF circle(0, 0, qreal(radius_.x()) * 2, qreal(radius_.y()) * 2);
-    circle.moveCenter(center);
-    painter->setPen(pen1);
-    painter->drawEllipse(circle);
-    // XZ cicle
-    {
-        QRectF rect(-qreal(radius_.x()), -qreal(radius_.z()) * CIY,
-                    qreal(radius_.x()) * 2, qreal(radius_.z()) * 2 * CIY);
-        QPointF rx(qreal(radius_.x()), 0);
-        rect.moveCenter(center);
-        QPainterPath ph;
-        ph.moveTo(center - rx);
-        ph.arcTo(rect, 180.0, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(ph);
-        {
-            QPainterPath ph1;
-            ph1.moveTo(center + rx);
-            ph1.arcTo(rect, 0.0, 180.0);
-            painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
-    // YZ cicle
-    {
-        QRectF rect(-qreal(radius_.z()) * CIY, -qreal(radius_.y()),
-                    qreal(radius_.z()) * CIY * 2, qreal(radius_.y()) * 2);
-        QPointF ry(0, qreal(radius_.y()));
-        rect.moveCenter(center);
-        QPainterPath ph;
-        ph.moveTo(center + ry);
-        ph.arcTo(rect, 270.0, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(ph);
-        {
-            QPainterPath ph1;
-            ph1.moveTo(center - ry);
-            ph1.arcTo(rect, 90.0, 180.0);
-            painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
-}

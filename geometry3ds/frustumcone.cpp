@@ -83,7 +83,74 @@ bool FrustumCone::move(int elem, QPointF const & pt)
 
 #ifndef CIRCLE_OBLIQUE_PROJECTION
 
-QPainterPath FrustumCone::path()
+QPainterPath FrustumCone::visualPath()
+{
+    QPainterPath ph;
+    if (points_.size() < 2)
+        return ph;
+    QPainterPath ph2;
+    QPointF pt1(points_[0]);
+    QPointF pt2(points_[1]);
+    qreal r = qAbs(pt2.x() - pt1.x());
+    qreal r2 = this->r2(r);
+    QPointF center(pt1.x(), pt2.y());
+    QPointF RX(r, 0);
+    QPointF RY(0, r * CIXY);
+    // draw circle, two halfs, one solid line, one dash line
+    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
+    rect.moveCenter(center);
+    {
+        addArc(ph, rect, center - RX, 180.0, 180.0);
+        if (pt2.y() > pt1.y())
+            addArc(ph2, rect, center + RX, 0.0, 180.0);
+        else
+            addArc(ph, rect, center + RX, 0.0, 180.0);
+    }
+    // top cirle
+    QPointF RX2(r2, 0);
+    if (!qFuzzyIsNull(r2)) {
+        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
+        rect2.moveCenter(pt1);
+        addArc(ph, rect2, pt1 - RX2, 180.0, 180.0);
+        if (pt2.y() < pt1.y())
+            addArc(ph2, rect2, pt1 + RX2, 0.0, 180.0);
+        else
+            addArc(ph, rect2, pt1 + RX2, 0.0, 180.0);
+    }
+    QPointF px1 = pt1;
+    QPointF px2 = pt1;
+    QPointF py1 = pt1;
+    QPointF py2 = pt1;
+    if (!qFuzzyIsNull(r2)) {
+        QPointF RY2(0, r2 * CIXY);
+        px1 += RX2;
+        px2 -= RX2;
+        py1 += RY2;
+        py2 -= RY2;
+    }
+    // solid lines
+    addLine(ph, px1, center + RX);
+    addLine(ph, px2, center - RX);
+    if (!qFuzzyIsNull(r2)) {
+        if (pt2.y() > pt1.y())
+            addLine(ph, px1, px2);
+        //addLine(ph, py1, py2);
+    }
+    //addLine(ph, py1, center + RY);
+    // dash lines
+    addLine(ph2, pt1, center);
+    if (pt2.y() > pt1.y())
+        addLine(ph2, center - RX, center + RX);
+    //addLine(ph2, center - RY, center + RY);
+    if (!qFuzzyIsNull(r2)) {
+        if (pt2.y() < pt1.y())
+            addLine(ph2, px1, px2);
+        //addLine(ph2, py1, py2);
+    }
+    return combine(ph, ph2);
+}
+
+QPainterPath FrustumCone::contour()
 {
     QPainterPath ph;
     if (points_.size() < 2)
@@ -160,95 +227,9 @@ bool FrustumCone::contains(const QPointF &pt)
             || ps.createStroke(ph).contains(pt);
 }
 
-void FrustumCone::draw(QPainter *painter)
-{
-    if (points_.size() < 2)
-        return;
-    QPen pen1(color_, width_);
-    QPen pen2(color_, width_, Qt::DotLine);
-    QPointF pt1(points_[0]);
-    QPointF pt2(points_[1]);
-    qreal r = qAbs(pt2.x() - pt1.x());
-    qreal r2 = this->r2(r);
-    QPointF center(pt1.x(), pt2.y());
-    QPointF RX(r, 0);
-    QPointF RY(0, r * CIXY);
-    // draw circle, two halfs, one solid line, one dash line
-    QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
-    rect.moveCenter(center);
-    {
-        QPainterPath ph2;
-        ph2.moveTo(center - RX);
-        ph2.arcTo(rect, 180.0, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(ph2);
-        {
-            QPainterPath ph1;
-            ph1.moveTo(center + RX);
-            ph1.arcTo(rect, 0.0, 180.0);
-            if (pt2.y() > pt1.y())
-                painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
-    // top cirle
-    QPointF RX2(r2, 0);
-    if (!qFuzzyIsNull(r2)) {
-        QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
-        rect2.moveCenter(pt1);
-        {
-            QPainterPath ph2;
-            ph2.moveTo(pt1 - RX2);
-            ph2.arcTo(rect2, 180.0, 180.0);
-            painter->setPen(pen1);
-            painter->drawPath(ph2);
-        }
-        {
-            QPainterPath ph1;
-            ph1.moveTo(pt1 + RX2);
-            ph1.arcTo(rect2, 0.0, 180.0);
-            if (pt2.y() < pt1.y())
-                painter->setPen(pen2);
-            painter->drawPath(ph1);
-        }
-    }
-    QPointF px1 = pt1;
-    QPointF px2 = pt1;
-    QPointF py1 = pt1;
-    QPointF py2 = pt1;
-    if (!qFuzzyIsNull(r2)) {
-        QPointF RY2(0, r2 * CIXY);
-        px1 += RX2;
-        px2 -= RX2;
-        py1 += RY2;
-        py2 -= RY2;
-    }
-    // solid lines
-    painter->setPen(pen1);
-    painter->drawLine(px1, center + RX);
-    painter->drawLine(px2, center - RX);
-    if (!qFuzzyIsNull(r2)) {
-        if (pt2.y() > pt1.y())
-            painter->drawLine(px1, px2);
-        //painter->drawLine(py1, py2);
-    }
-    //painter->drawLine(py1, center + RY);
-    // dash lines
-    painter->setPen(pen2);
-    painter->drawLine(pt1, center);
-    if (pt2.y() > pt1.y())
-        painter->drawLine(center - RX, center + RX);
-    //painter->drawLine(center - RY, center + RY);
-    if (!qFuzzyIsNull(r2)) {
-        if (pt2.y() < pt1.y())
-            painter->drawLine(px1, px2);
-        //painter->drawLine(py1, py2);
-    }
-}
-
 #else
 
-QPainterPath FrustumCone::path()
+QPainterPath FrustumCone::contour()
 {
     QPainterPath ph;
     if (points_.size() < 2)
@@ -295,12 +276,12 @@ QPainterPath FrustumCone::path()
     return ph;
 }
 
-void FrustumCone::draw(QPainter *painter)
+QPainterPath FrustumCone::visualPath()
 {
+    QPainterPath ph;
     if (points_.size() < 2)
-        return;
-    QPen pen1(color_, width_);
-    QPen pen2(color_, width_, Qt::DashLine);
+        return ph;
+    QPainterPath ph2;
     QPointF pt1(points_[0]);
     QPointF pt2(points_[1]);
     QPointF pt0(pt1.x(), pt2.y());
@@ -312,28 +293,15 @@ void FrustumCone::draw(QPainter *painter)
     QRectF rect(-r, -r, r * 2, r * 2); // circle
     QTransform t(1, 0, CO, -CO, pt1.x(), pt2.y());
     qreal angle = atan(CO);
-    {
-        QPainterPath ph1;
-        ph1.moveTo(rotate);
-        ph1.arcTo(rect, -angle * 180.0 / M_PI, 180.0);
-        painter->setPen(pen1);
-        painter->drawPath(t.map(ph1));
-    }
-    {
-        QPainterPath ph2;
-        ph2.moveTo(-rotate);
-        ph2.arcTo(rect, -angle * 180.0 / M_PI + 180.0, 180.0);
-        painter->setPen(pen2);
-        painter->drawPath(t.map(ph2));
-    }
+    addArc(ph, rect, rotate, -angle * 180.0 / M_PI, 180.0);
+    addArc(ph2, rect, -rotate, -angle * 180.0 / M_PI + 180.0, 180.0);
     // top cirle
     if (!qFuzzyIsNull(r2)) {
         QRectF rect2(-r2, -r2, r2 * 2, r2 * 2); // circle
         QTransform t2(1, 0, CO, -CO, pt1.x(), pt1.y());
         QPainterPath ph3;
         ph3.addEllipse(rect2);
-        painter->setPen(pen1);
-        painter->drawPath(t2.map(ph3));
+        ph |= t2.map(ph3);
     }
     QVector3D RY(0, float(r), 0);
     QPointF pt4 = PO.map(origin_ - RY).toPointF();
@@ -360,20 +328,19 @@ void FrustumCone::draw(QPainter *painter)
         pt17 = PO.map(origin2 - RO2).toPoint();
     }
     // solid lines
-    painter->setPen(pen1);
-    painter->drawLine(pt16, pt6);
-    painter->drawLine(pt17, pt7);
-    painter->drawLine(pt14, pt4);
+    addLine(ph, pt16, pt6);
+    addLine(ph, pt17, pt7);
+    addLine(ph, pt14, pt4);
     if (!qFuzzyIsNull(r2)) {
-        painter->drawLine(pt12, pt13);
-        painter->drawLine(pt14, pt15);
+        addLine(ph, pt12, pt13);
+        addLine(ph, pt14, pt15);
     }
     // dash lines
-    painter->setPen(pen2);
-    painter->drawLine(pt2, pt3);
-    painter->drawLine(pt4, pt5);
-    painter->drawLine(pt15, pt5);
-    painter->drawLine(pt1, pt0);
+    addLine(ph2, pt2, pt3);
+    addLine(ph2, pt4, pt5);
+    addLine(ph2, pt15, pt5);
+    addLine(ph2, pt1, pt0);
+    return combine(ph, ph2);
 }
 
 #endif

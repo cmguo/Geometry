@@ -15,7 +15,7 @@ Sector::Sector(Resource * res)
 
 Sector::Sector(Sector const & o)
     : Geometry2D(o),angle_(o.angle_)
-    , path_(o.path_)
+    , graphPath_(o.graphPath_)
     , textPath_(o.textPath_)
 {
     angle_ = o.angle_;
@@ -66,19 +66,14 @@ void Sector::setAngle(qreal angle)
     points_[1] = points_[0] + d;
 }
 
-void Sector::draw(QPainter *painter)
+QPainterPath Sector::graphPath()
 {
-    painter->setPen(QPen(color_, width_));
-    painter->drawPath(path_);
-    painter->save();
-    painter->setPen(QPen(color_));
-    painter->drawPath(textPath_);
-    painter->restore();
+    return graphPath_;
 }
 
-QPainterPath Sector::path()
+QPainterPath Sector::textPath()
 {
-    return path_ | textPath_;
+    return textPath_;
 }
 
 QVector<QPointF> Sector::movePoints()
@@ -241,6 +236,6 @@ void Sector::sync()
         addAngleLabeling(ph, tph, pt3, pt1, pt2, -angle_);
     else
         addAngleLabeling(ph, tph, pt2, pt1, pt3, angle_);
-    path_ = ph;
+    graphPath_ = ph;
     textPath_ = tph;
 }

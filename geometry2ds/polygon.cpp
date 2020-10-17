@@ -16,15 +16,20 @@ Polygon::Polygon(Resource * res, Flags flags)
 
 Polygon::Polygon(Polygon const & o)
     : Geometry2D(o)
-    , path_(o.path_)
+    , graphPath_(o.graphPath_)
     , textPath_(o.textPath_)
     , radius_(o.radius_)
 {
 }
 
-QPainterPath Polygon::path()
+QPainterPath Polygon::graphPath()
 {
-    return path_ | textPath_;
+    return graphPath_;
+}
+
+QPainterPath Polygon::textPath()
+{
+    return textPath_;
 }
 
 QVector<QPointF> Polygon::movePoints()
@@ -119,19 +124,8 @@ void Polygon::sync()
         }
         addAngleLabeling(ph, tph, lpt, cpt, first);
     }
-    path_ = ph;
+    graphPath_ = ph;
     textPath_ = tph;
-}
-
-void Polygon::draw(QPainter *painter)
-{
-    painter->setPen(QPen(color_, width_));
-    painter->drawPath(path_);
-    painter->save();
-    painter->setPen(QPen(color_));
-    painter->setBrush(color_);
-    painter->drawPath(textPath_);
-    painter->restore();
 }
 
 bool Polygon::moveKeepAngle(int elem, const QPointF &pt)

@@ -14,16 +14,15 @@ public:
 public:
     virtual void sync() override;
 
-    virtual QPainterPath path() override;
+    virtual QPainterPath visualPath() override;
+
+    virtual QPainterPath contour() override;
 
     virtual QVector<QPointF> movePoints() override;
 
     virtual int hit(QPointF & pt) override;
 
     virtual bool move(int elem, QPointF const & pt) override;
-
-public slots:
-    void draw(QPainter *painter);
 
 protected:
     QVector3D radius_;

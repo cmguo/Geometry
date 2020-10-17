@@ -35,7 +35,36 @@ bool Polyhedron::canFinish()
     return pointCount() > 2;
 }
 
-QPainterPath Polyhedron::path()
+QPainterPath Polyhedron::visualPath()
+{
+    QPainterPath ph;
+    if (pointCount() < 4)
+        return ph;
+    QVector<QPointF> points(pointCount());
+    QVector<bool> hidden(pointCount());
+    collect(points, hidden);
+#ifdef POLYHEDRON_DEBUG
+    for (int i = 0; i < pointCount(); ++i) {
+        ph.addText(points[i] + QPointF(10, -5), QString("%1").arg(i));
+    }
+#endif
+    QPainterPath ph2;
+    for (int l : lines_) {
+        int s = l & 0xff;
+        int e = (l >> 8) & 0xff;
+        bool h = hidden[s] || hidden[e] || (l >> 16);
+        if (h) {
+            ph2.moveTo(points[s]);
+            ph2.lineTo(points[e]);
+        } else {
+            ph.moveTo(points[s]);
+            ph.lineTo(points[e]);
+        }
+    }
+    return combine(ph, ph2);
+}
+
+QPainterPath Polyhedron::contour()
 {
     QPainterPath ph;
     if (pointCount() < 4)
@@ -63,29 +92,6 @@ QPainterPath Polyhedron::path()
     }
 #endif
     return ph;
-}
-
-void Polyhedron::draw(QPainter *painter)
-{
-    if (pointCount() < 4)
-        return;
-    QPen pen1(color_, width_);
-    QPen pen2(color_, width_, Qt::DotLine);
-    QVector<QPointF> points(pointCount());
-    QVector<bool> hidden(pointCount());
-    collect(points, hidden);
-#ifdef POLYHEDRON_DEBUG
-    for (int i = 0; i < pointCount(); ++i) {
-        painter->drawText(points[i] + QPointF(10, -5), QString("%1").arg(i));
-    }
-#endif
-    for (int l : lines_) {
-        int s = l & 0xff;
-        int e = (l >> 8) & 0xff;
-        bool h = hidden[s] || hidden[e] || (l >> 16);
-        painter->setPen(h ? pen2 : pen1);
-        painter->drawLine(points[s], points[e]);
-    }
 }
 
 int Polyhedron::pointCount()

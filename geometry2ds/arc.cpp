@@ -13,7 +13,7 @@ Arc::Arc(Arc const & o)
 {
 }
 
-QPainterPath Arc::path()
+QPainterPath Arc::graphPath()
 {
     QPainterPath ph;
     if (points_.size() > 1)

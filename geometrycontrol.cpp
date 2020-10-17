@@ -51,7 +51,7 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
 ControlView *GeometryControl::create(ControlView *parent)
 {
     (void) parent;
-    GeometryItem * item = new GeometryItem(res_);
+    GeometryItem * item = new GeometryItem(qobject_cast<Geometry*>(res_));
     //item->setBrush(QColor(0, 0, 255, 20));
     item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
     return item;
@@ -200,8 +200,7 @@ void GeometryControl::updateGeometry()
     Geometry * geometry = qobject_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     geometry->sync();
-    QPainterPath ph(geometry->path());
-    item->setPath(ph);
+    item->setPath(geometry->contour());
     if (editing_) {
         editPoints_ = geometry->movePoints();
         item->setEditPoints(editPoints_);
@@ -214,7 +213,7 @@ void GeometryControl::finishGeometry(bool valid)
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     geometry->sync();
     if (!valid) {
-        item->setPath(geometry->path());
+        item->setPath(geometry->contour());
     }
     bool hasFinished = geometry->finished();
     geometry->finish(item->boundingRect().center());

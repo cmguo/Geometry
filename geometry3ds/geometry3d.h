@@ -46,6 +46,18 @@ protected:
 
     static void adjustToLength(QVector3D const & start, QVector3D & end, qreal length);
 
+    static void addLine(QPainterPath & ph, QPointF const & start, QPointF const & end);
+
+    static void addArc(QPainterPath & ph, QRectF const & rect, QPointF const & start, qreal startAngle, qreal arcLength);
+
+    static void addDotLine(QPainterPath & ph, QPointF const & start, QPointF const & end, qreal width);
+
+    static void addDotArc(QPainterPath & ph, QRectF const & rect, QPointF const & start, qreal startAngle, qreal arcLength, qreal width);
+
+protected:
+    // ph1: solid, ph2: dash
+    QPainterPath combine(QPainterPath const & ph1, QPainterPath const & ph2);
+
 protected:
     QVector3D origin_;
     QVector3D size_;

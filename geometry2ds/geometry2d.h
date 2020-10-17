@@ -22,10 +22,10 @@ protected:
     static void moveLine(QPointF const & llpt, QPointF & lpt, QPointF const & pt,
                     QPointF & npt, QPointF const & nnpt);
 
-    static void addAngleLabeling(QPainterPath & path, QPainterPath &textPath, QPointF const & lpt, QPointF const & pt,
+    static void addAngleLabeling(QPainterPath & graphPath, QPainterPath &textPath, QPointF const & lpt, QPointF const & pt,
                           QPointF const & npt);
 
-    static void addAngleLabeling(QPainterPath & path, QPainterPath &textPath, QPointF const & lpt, QPointF const & pt,
+    static void addAngleLabeling(QPainterPath & graphPath, QPainterPath &textPath, QPointF const & lpt, QPointF const & pt,
                           QPointF const & npt, qreal angle);
 };
 

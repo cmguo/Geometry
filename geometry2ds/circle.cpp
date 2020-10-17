@@ -13,7 +13,7 @@ Circle::Circle(Circle const & o)
 {
 }
 
-QPainterPath Circle::path()
+QPainterPath Circle::graphPath()
 {
     QPainterPath ph;
     if (points_.size() > 1)
@@ -61,6 +61,6 @@ int Circle::hit(QPointF &pt)
 bool Circle::move(int elem, QPointF const & pt)
 {
     if (elem < 4)
-        return  Geometry2D::move(1, pt);
+        return Geometry2D::move(points_.size() - 1, pt);
     return false;
 }

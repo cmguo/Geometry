@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE Ellipse(Ellipse const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual QPainterPath graphPath() override;
 
     virtual QVector<QPointF> movePoints() override;
 

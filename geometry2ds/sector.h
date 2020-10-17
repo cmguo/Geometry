@@ -17,7 +17,9 @@ public:
     Q_INVOKABLE Sector(Sector const & o);
 
 public:
-    virtual QPainterPath path() override;
+    virtual QPainterPath graphPath() override;
+
+    virtual QPainterPath textPath() override;
 
     virtual QVector<QPointF> movePoints() override;
 
@@ -27,16 +29,14 @@ public:
 
     virtual void sync() override;
 
-public slots:
+public:
     qreal angle();
 
     void setAngle(qreal angle);
 
-    void draw(QPainter *painter);
-
 private:
     qreal angle_ = 0.0;
-    QPainterPath path_;
+    QPainterPath graphPath_;
     QPainterPath textPath_;
 };
 

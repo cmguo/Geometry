@@ -79,7 +79,7 @@ void ArbitraryPolygon::finish(const QPointF &c)
         tempValid_ = false;
         dirty_ = true;
         sync();
-        QPointF c1 = path().boundingRect().center();
+        QPointF c1 = graphPath().boundingRect().center();
         Polygon::finish(c1);
     } else {
         Polygon::finish(c);

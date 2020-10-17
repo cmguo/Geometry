@@ -51,7 +51,7 @@ void GeometryHelper::init()
         return;
     inited = true;
     qMetaTypeId<GeometryHelper*>();
-    TEXT_FONT = QFont();
+    TEXT_FONT = QFont("Microsoft YaHei", 12);
     QSize sz  = QApplication::primaryScreen()->size();
     if (sz.width() > 1920) {
         HIT_DIFF = 20.0;

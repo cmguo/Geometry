@@ -51,10 +51,9 @@ public:
 public:
     virtual bool move(int elem, QPointF const & pt) override;
 
-    virtual QPainterPath path() override;
+    virtual QPainterPath visualPath() override;
 
-public slots:
-    void draw(QPainter *painter);
+    virtual QPainterPath contour() override;
 
 private:
     static QPen linePen(LineType type, QColor color, qreal width);

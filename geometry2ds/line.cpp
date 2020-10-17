@@ -82,56 +82,54 @@ bool Line::move(int elem, const QPointF &pt)
     return Geometry2D::move(elem, p);
 }
 
-QPainterPath Line::path()
+QPainterPath Line::visualPath()
 {
     QPainterPath ph;
     if (points_.size() < 2)
         return ph;
     QPointF pt1 = points_[0];
     QPointF pt2 = points_[1];
-    bool solid;
+    QPainterPathStroker ps;
+    ps.setCapStyle(Qt::RoundCap);
+    ps.setWidth(width_);
+    if (beginType_ != None) {
+        QPainterPath ph2;
+        bool solid = false;
+        fillEndian(ph2, beginType_, width_, pt1, pt1 - pt2, solid);
+        ph |= solid ? ph2 : ps.createStroke(ph2);
+    }
+    if (endType_ != None) {
+        QPainterPath ph2;
+        bool solid = false;
+        fillEndian(ph2, endType_, width_, pt2, pt2 - pt1, solid);
+        ph |= solid ? ph2 : ps.createStroke(ph2);
+    }
+    QPainterPath ph2;
+    ph2.moveTo(pt1);
+    ph2.lineTo(pt2);
+    ph |= ps.createStroke(ph2);
+    return ph;
+}
+
+QPainterPath Line::contour()
+{
+    QPainterPath ph;
+    if (points_.size() < 2)
+        return ph;
+    QPointF pt1 = points_[0];
+    QPointF pt2 = points_[1];
+    bool solid = true;
     fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
     fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
     QPointF dir(pt2 - pt1);
     QPointF udir = dir / GeometryHelper::length(dir);
-    udir = QPointF(-udir.y(), udir.x()) * GeometryHelper::HIT_DIFF / 2;
+    udir = QPointF(-udir.y(), udir.x()) * (GeometryHelper::HIT_DIFF + width_) * 0.5;
     ph.moveTo(pt1 - udir);
     ph.lineTo(pt2 - udir);
     ph.lineTo(pt2 + udir);
     ph.lineTo(pt1 + udir);
     ph.closeSubpath();
     return ph;
-}
-
-void Line::draw(QPainter *painter)
-{
-    if (points_.size() < 2)
-        return;
-    QPointF pt1 = points_[0];
-    QPointF pt2 = points_[1];
-    painter->setPen(QPen(color_, width_));
-    {
-        QPainterPath ph;
-        bool solid = false;
-        fillEndian(ph, beginType_, width_, pt1, pt1 - pt2, solid);
-        if (solid)
-            painter->setBrush(color_);
-        else
-            painter->setBrush(QBrush());
-        painter->drawPath(ph);
-    }
-    {
-        QPainterPath ph;
-        bool solid = false;
-        fillEndian(ph, endType_, width_, pt2, pt2 - pt1, solid);
-        if (solid)
-            painter->setBrush(color_);
-        else
-            painter->setBrush(QBrush());
-        painter->drawPath(ph);
-    }
-    painter->setPen(linePen(lineType_, color_, width_));
-    painter->drawLine(pt1, pt2);
 }
 
 QPen Line::linePen(Line::LineType type, QColor color, qreal width)
@@ -169,11 +167,17 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         break;
     case Ball:
     case SolidBall:
+        if (solid) {
+            pt = t.map(QPointF(rect.right(), 0));
+            break;
+        }
         ph.addEllipse(rect.adjusted(pt.x() + 1, pt.y() + 1, pt.x() - 1, pt.y() - 1));
         pt = t.map(QPointF(rect.left(), 0));
         solid = type == SolidBall;
         break;
     case Arrow:
+        if (solid)
+            break;
         ph.addPolygon(t.map(QPolygonF({
                                           QPointF(rect.left() * 2, rect.top()),
                                           QPointF(0, 0),
@@ -182,6 +186,8 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         break;
     case SolidArrow:
     case HollowArrow:
+        if (solid)
+            break;
         ph.addPolygon(t.map(QPolygonF({
                                           QPointF(rect.left() * 2, rect.top()),
                                           QPointF(0, 0),
@@ -192,6 +198,8 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         solid = type == SolidArrow;
         break;
     case SharpArrow:
+        if (solid)
+            break;
         ph.addPolygon(t.map(QPolygonF({
                                           QPointF(rect.left() * 2, rect.top()),
                                           QPointF(0, 0),
@@ -203,6 +211,10 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         break;
     case Diamond:
     case SolidDiamod:
+        if (solid) {
+            pt = t.map(QPointF(rect.right() * 2, 0));
+            break;
+        }
         ph.addPolygon(t.map(QPolygonF({
                                           QPointF(0, rect.top()),
                                           QPointF(rect.right() * 2, 0),
@@ -215,6 +227,10 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
         break;
     case Box:
     case SolidBox:
+        if (solid) {
+            pt = t.map(QPointF(rect.right(), 0));
+            break;
+        }
         ph.addPolygon(t.map(rect.adjusted(1, 1, -1, -1)));
         pt = t.map(QPointF(rect.left(), 0));
         solid = type == SolidBox;

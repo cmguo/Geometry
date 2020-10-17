@@ -1,5 +1,6 @@
 #include "geometryitem.h"
 #include "geometryhelper.h"
+#include "geometry.h"
 
 #include <core/resourceview.h>
 #include <core/control.h>
@@ -61,20 +62,17 @@ private:
     QPainterPath shape_;
 };
 
-GeometryItem::GeometryItem(QObject * res, QGraphicsItem * parent)
+GeometryItem::GeometryItem(Geometry * geometry, QGraphicsItem * parent)
     : QGraphicsPathItem(parent)
-    , res_(res)
+    , geometry_(geometry)
 {
     editItem_ = new GeometryEditItem(this);
     setFiltersChildEvents(true);
     setAcceptTouchEvents(true);
-    QMetaObject const * meta = res->metaObject();
+    QMetaObject const * meta = geometry->metaObject();
     int index = meta->indexOfMethod("contains(QPointF)");
     if (index >= 0)
         methodContains_ = meta->method(index);
-    index = meta->indexOfMethod("draw(QPainter*)");
-    if (index >= 0)
-        methodDraw_ = meta->method(index);
 }
 
 void GeometryItem::setEditPoints(const QVector<QPointF> &points)
@@ -98,22 +96,20 @@ bool GeometryItem::contains(const QPointF &point) const
 {
     if (methodContains_.isValid()) {
         bool result;
-        methodContains_.invoke(res_, Q_RETURN_ARG(bool, result), Q_ARG(QPointF, point));
+        methodContains_.invoke(geometry_, Q_RETURN_ARG(bool, result), Q_ARG(QPointF, point));
         return result;
     }
     return QGraphicsPathItem::contains(point);
 }
 
-void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
+void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                   QWidget *)
 {
-    if (methodDraw_.isValid()) {
-        painter->save();
-        methodDraw_.invoke(res_, Q_ARG(QPainter*, painter));
-        painter->restore();
-        return;
-    }
-    QGraphicsPathItem::paint(painter, option, widget);
+    painter->save();
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(geometry_->color());
+    painter->drawPath(geometry_->visualPath());
+    painter->restore();
 }
 
 bool GeometryItem::sceneEvent(QEvent * event)

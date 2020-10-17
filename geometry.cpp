@@ -177,3 +177,28 @@ bool Geometry::move(int elem, const QPointF &pt)
     return false;
 }
 
+QPainterPath Geometry::graphPath()
+{
+    return QPainterPath();
+}
+
+QPainterPath Geometry::textPath()
+{
+    return QPainterPath();
+}
+
+QPainterPath Geometry::contour()
+{
+    return graphPath();
+}
+
+QPainterPath Geometry::visualPath()
+{
+    QPainterPathStroker ps;
+    ps.setCapStyle(Qt::RoundCap);
+    ps.setWidth(width_);
+    QPainterPath ph = ps.createStroke(graphPath());
+    ph |= textPath();
+    return ph;
+}
+

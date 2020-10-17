@@ -13,7 +13,7 @@ Ellipse::Ellipse(Ellipse const & o)
 {
 }
 
-QPainterPath Ellipse::path()
+QPainterPath Ellipse::graphPath()
 {
     QPainterPath ph;
     if (points_.size() > 1)

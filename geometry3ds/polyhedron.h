@@ -18,16 +18,15 @@ public:
 
     virtual bool canFinish() override;
 
-    virtual QPainterPath path() override;
+    virtual QPainterPath visualPath() override;
+
+    virtual QPainterPath contour() override;
 
     virtual QVector<QPointF> movePoints() override;
 
     virtual int hit(QPointF &pt) override;
 
     virtual bool move(int elem, const QPointF &pt) override;
-
-public slots:
-    void draw(QPainter *painter);
 
 protected:
     virtual int pointCount();

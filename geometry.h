@@ -21,6 +21,9 @@ class GEOMETRY_EXPORT Geometry : public ResourceView
     Q_PROPERTY(qreal width READ width WRITE setWidth)
 
 public:
+    static constexpr Flag DrawAttach = CustomFlag;
+
+public:
     virtual bool empty() const;
 
     virtual bool finished() const;
@@ -77,7 +80,14 @@ public:
     virtual bool move(int elem, QPointF const & pt);
 
 public:
-    virtual QPainterPath path() = 0;
+    virtual QPainterPath graphPath();
+
+    virtual QPainterPath textPath();
+
+    virtual QPainterPath contour();
+
+    // include graphPath & textPath
+    virtual QPainterPath visualPath();
 
     virtual QVector<QPointF> movePoints();
 
