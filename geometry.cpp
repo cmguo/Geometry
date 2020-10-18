@@ -6,6 +6,8 @@
 #include <core/resourcetransform.h>
 #include <core/toolbutton.h>
 
+#include <quick/quickhelper.h>
+
 using namespace QtPromise;
 
 Geometry::Geometry(Resource * res, Flags flags, Flags clearFlags)
@@ -156,6 +158,16 @@ QVector<QPointF> Geometry::movePoints()
     return points_;
 }
 
+QObject *Geometry::toQuickPath(QObject * context)
+{
+    QObject * shape = QuickHelper::createObject(context, "ShapePath", "QtQuick.Shapes");
+    shape->setProperty("strokeColor", QColor(Qt::transparent));
+    shape->setProperty("strokeWidth", 0);
+    shape->setProperty("fillColor", color_);
+    fillQuickPath(shape, visualPath());
+    return shape;
+}
+
 int Geometry::hit(QPointF & pt)
 {
     for (int i = 0; i < points_.size(); ++i) {
@@ -205,5 +217,41 @@ QPainterPath Geometry::visualPath()
     QPainterPath ph = ps.createStroke(graphPath());
     ph |= textPath();
     return ph;
+}
+
+void Geometry::fillQuickPath(QObject *path, const QPainterPath &ph)
+{
+    QObject * seg = nullptr;
+    bool ready = true;
+    constexpr char const * classNames[] = {"PathMove", "PathLine", "PathCubic"};
+    for (int i = 0; i < ph.elementCount(); ++i) {
+        QPainterPath::Element e = ph.elementAt(i);
+        switch (e.type) {
+        case QPainterPath::MoveToElement:
+        case QPainterPath::LineToElement:
+        case QPainterPath::CurveToElement:
+            seg = QuickHelper::createObject(path, classNames[e.type], "QtQuick", "2.12");
+            seg->setProperty("x", e.x);
+            seg->setProperty("y", e.y);
+            seg->setProperty("step", 1);
+            ready = e.type != QPainterPath::CurveToElement;
+            break;
+        case QPainterPath::CurveToDataElement:
+            if (seg->property("step").isValid()) {
+                seg->setProperty("control1X", e.x);
+                seg->setProperty("control1Y", e.y);
+                seg->setProperty("step", QVariant());
+            } else {
+                seg->setProperty("control2X", e.x);
+                seg->setProperty("control2Y", e.y);
+                ready = true;
+            }
+            break;
+        }
+        if (ready) {
+            QuickHelper::appendChild(path, seg);
+            seg = nullptr;
+        }
+    }
 }
 

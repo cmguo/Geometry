@@ -1,4 +1,4 @@
-QT += gui widgets quick qml
+QT += gui widgets quick qml quickwidgets
 
 TEMPLATE = lib
 DEFINES += GEOMETRY_LIBRARY

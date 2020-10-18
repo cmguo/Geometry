@@ -91,6 +91,9 @@ public:
 
     virtual QVector<QPointF> movePoints();
 
+    // return QQuickShapePath (Qml ShapePath)
+    virtual QObject * toQuickPath(QObject * context);
+
 public:
     virtual QtPromise::QPromise<void> load();
 
@@ -100,6 +103,8 @@ protected:
     Geometry(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
     Geometry(Geometry const & o);
+
+    static void fillQuickPath(QObject * path, QPainterPath const & ph);
 
 protected:
     QVector<QPointF> points_;

@@ -21,6 +21,8 @@ public:
 public slots:
     void edit();
 
+    void test();
+
 protected:
     virtual ControlView * create(ControlView * parent) override;
 

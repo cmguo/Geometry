@@ -22,5 +22,6 @@
         <file>icon/geometry2d/sector.svg</file>
         <file>icon/geometry2d/diamond.svg</file>
         <file>icon/geometry2d/rectangle.svg</file>
+        <file>qml/GeometryShape.qml</file>
     </qresource>
 </RCC>

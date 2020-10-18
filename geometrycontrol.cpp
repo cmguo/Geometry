@@ -11,12 +11,15 @@
 #include <core/optiontoolbuttons.h>
 #include <views/whitecanvas.h>
 #include <views/itemselector.h>
+#include <quick/quickhelper.h>
 
 #include <QFile>
 #include <QGraphicsItem>
 #include <QGraphicsSceneEvent>
 #include <QTouchEvent>
 #include <QPen>
+#include <QQuickWidget>
+#include <QQuickItem>
 
 #include <float.h>
 
@@ -26,6 +29,7 @@ static char const * toolstr =
         "color|颜色|Popup,OptionsGroup,NeedUpdate|;"
         #ifdef QT_DEBUG
         "width|线宽|Popup,OptionsGroup,NeedUpdate|;"
+        "test()|测试|;"
         #endif
         ;
 
@@ -154,6 +158,25 @@ void GeometryControl::edit()
     editPoints_ = geometry->movePoints();
     item->setEditPoints(editPoints_);
     item->showEditor(true);
+}
+
+void GeometryControl::test()
+{
+    QQuickWidget * widget = new QQuickWidget();
+    QSurfaceFormat fmt;
+    fmt.setSamples(4);
+    widget->setFormat(fmt);
+    widget->setSource(QUrl("qrc:/geometry/qml/GeometryShape.qml"));
+    widget->setClearColor(Qt::transparent);
+    Geometry * geometry = qobject_cast<Geometry *>(res_);
+    QQuickItem * root = widget->rootObject();
+    QuickHelper::appendChild(root, geometry->toQuickPath(root));
+    QRectF rect = item_->boundingRect();
+    root->setProperty("width", rect.width());
+    root->setProperty("height", rect.height());
+    root->setProperty("x", -rect.left());
+    root->setProperty("y", -rect.top());
+    widget->show();
 }
 
 void GeometryControl::updateSettings()
