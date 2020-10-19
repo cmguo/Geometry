@@ -13,9 +13,10 @@ RulerGaugeControl::RulerGaugeControl(ResourceView * res)
 {
 }
 
-QGraphicsItem *RulerGaugeControl::create(ResourceView *res)
-{   QString path = res->url().path();
-    QString type = res->url().path().split("/")[1];
+ControlView * RulerGaugeControl::create(ControlView * parent)
+{
+    QString path = res_->url().path();
+    QString type = res_->url().path().split("/")[1];
     QGraphicsItem *item = nullptr;
     if(type == "ruler"){
         item =new Lineruler(600,150,nullptr);

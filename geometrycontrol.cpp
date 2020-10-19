@@ -48,10 +48,10 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     setMinSize({0.02, 0.02});
 }
 
-QGraphicsItem * GeometryControl::create(ResourceView * res)
+ControlView *GeometryControl::create(ControlView *parent)
 {
-    (void) res;
-    GeometryItem * item = new GeometryItem(res);
+    (void) parent;
+    GeometryItem * item = new GeometryItem(res_);
     //item->setBrush(QColor(0, 0, 255, 20));
     item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
     return item;
