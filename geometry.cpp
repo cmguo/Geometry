@@ -119,7 +119,8 @@ void Geometry::finish(const QPointF &c)
         QPointF & pt = points_[i];
         pt -= c;
     }
-    transform_->translate(transform_->scaleRotate().map(c));
+    // ignore scale transform
+    transform_->translate(transform_->rotate().map(c));
     flags_ |= DrawFinised;
     dirty_ = true;
 }
