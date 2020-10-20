@@ -190,7 +190,11 @@ QPainterPath Geometry::textPath()
 
 QPainterPath Geometry::contour()
 {
-    return graphPath();
+    QPainterPath ph = graphPath();
+    QPainterPath ph2 = textPath();
+    if (!ph2.isEmpty() || !ph.contains(ph2))
+        ph |= ph2;
+    return ph;
 }
 
 QPainterPath Geometry::visualPath()

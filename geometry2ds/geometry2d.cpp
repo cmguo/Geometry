@@ -64,11 +64,13 @@ void Geometry2D::addAngleLabeling(QPainterPath &path, QPainterPath &textPath, QP
                   || qFuzzyCompare(angle, 135.0) || qFuzzyCompare(angle, 150.0))
                   : (qFuzzyCompare(angle, 180.0)
                      || qFuzzyCompare(angle, 270.0) || qFuzzyCompare(angle, 360.0)))) {
-        GeometryHelper::adjustToLength(pt, rpt, GeometryHelper::HIT_DIFF * 3);
+        qreal txtDis = GeometryHelper::HIT_DIFF * 1.5 / sin(angle * M_PI / 360);
+        if (angle > 90) txtDis += GeometryHelper::HIT_DIFF * 1.5;
+        GeometryHelper::adjustToLength(pt, rpt, txtDis);
         QString text = QString("%1°").arg(qRound(angle));
         QPointF txtOff = GeometryHelper::textOffset(text, Qt::AlignCenter);
         QPointF txtPos = rpt + txtOff;
-        QRectF bound = QRectF(QPointF(), QSizeF(2, 2) * (GeometryHelper::HIT_DIFF * 1.414));
+        QRectF bound = QRectF(QPointF(), QSizeF(2, 2) * GeometryHelper::HIT_DIFF * 1.5);
         bound.moveCenter(pt);
         qreal a1 = GeometryHelper::angle(lpt - pt);
         qreal a2 = GeometryHelper::angle(npt - pt);
