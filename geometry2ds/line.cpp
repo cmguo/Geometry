@@ -82,6 +82,14 @@ bool Line::move(int elem, const QPointF &pt)
     return Geometry2D::move(elem, p);
 }
 
+static QVector<qreal> penStyles[] = {
+    {},
+    {4, 2}, // Dash
+    {1, 2}, // Dot
+    {4, 2, 1, 2}, // DashDot
+    {4, 2, 1, 2, 1, 2}, // DashDotDot
+};
+
 QPainterPath Line::visualPath()
 {
     QPainterPath ph;
@@ -90,7 +98,7 @@ QPainterPath Line::visualPath()
     QPointF pt1 = points_[0];
     QPointF pt2 = points_[1];
     QPainterPathStroker ps;
-    ps.setCapStyle(Qt::RoundCap);
+    ps.setCapStyle(Qt::FlatCap);
     ps.setWidth(width_);
     if (beginType_ != None) {
         QPainterPath ph2;
@@ -107,6 +115,7 @@ QPainterPath Line::visualPath()
     QPainterPath ph2;
     ph2.moveTo(pt1);
     ph2.lineTo(pt2);
+    ps.setDashPattern(penStyles[lineType_]);
     ph |= ps.createStroke(ph2);
     return ph;
 }
@@ -130,29 +139,6 @@ QPainterPath Line::contour()
     ph.lineTo(pt1 + udir);
     ph.closeSubpath();
     return ph;
-}
-
-QPen Line::linePen(Line::LineType type, QColor color, qreal width)
-{
-    QPen pen(color, width);
-    pen.setCapStyle(Qt::FlatCap);
-    switch (type) {
-    case Solid:
-        break;
-    case Dash:
-        pen.setStyle(Qt::DashLine);
-        break;
-    case Dot:
-        pen.setStyle(Qt::DotLine);
-        break;
-    case DashDot:
-        pen.setStyle(Qt::DashDotLine);
-        break;
-    case DashDotDot:
-        pen.setStyle(Qt::DashDotDotLine);
-        break;
-    }
-    return pen;
 }
 
 void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
@@ -207,6 +193,7 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
                                           QPointF(rect.left(), 0),
                                           QPointF(rect.left() * 2, rect.top())
                                       })));
+        pt = t.map(QPointF(rect.left(), 0));
         solid = true;
         break;
     case Diamond:
@@ -260,8 +247,11 @@ private:
         border->setPen(Qt::NoPen);
         border->setBrush(QColor("#343434"));
         QGraphicsLineItem* item = new QGraphicsLineItem(border);
-        item->setLine(QLine(2, 16, 30, 16));
-        item->setPen(linePen(t, Qt::white, 2));
+        item->setLine(QLine(4, 16, 28, 16));
+        QPen pen(Qt::white, 2);
+        pen.setCapStyle(Qt::FlatCap);
+        pen.setDashPattern(penStyles[t]);
+        item->setPen(pen);
         return border;
     }
 };

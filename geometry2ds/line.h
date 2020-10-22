@@ -56,8 +56,6 @@ public:
     virtual QPainterPath contour() override;
 
 private:
-    static QPen linePen(LineType type, QColor color, qreal width);
-
     static void fillEndian(QPainterPath & ph, EndianType type, qreal width,
                            QPointF & pt, QPointF const & dir, bool & solid);
 

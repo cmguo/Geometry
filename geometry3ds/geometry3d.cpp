@@ -158,7 +158,8 @@ QPainterPath Geometry3D::combine(QPainterPath const & ph1, QPainterPath const & 
     ps.setWidth(width_);
     QPainterPath ph = ps.createStroke(ph1);
     QVector<qreal> solid;
-    ps.setDashPattern(QVector<qreal>{1.0, 3.0});
+    ps.setCapStyle(Qt::FlatCap);
+    ps.setDashPattern(QVector<qreal>{2.0, 2.0});
     ph |= ps.createStroke(ph2);
     return ph;
 }
