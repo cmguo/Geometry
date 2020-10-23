@@ -49,17 +49,21 @@ QPainterPath Polyhedron::visualPath()
     }
 #endif
     QPainterPath ph2;
+    int last = -1;
     for (int l : lines_) {
         int s = l & 0xff;
         int e = (l >> 8) & 0xff;
         bool h = hidden[s] || hidden[e] || (l >> 16);
         if (h) {
-            ph2.moveTo(points[s]);
+            if (s != last)
+                ph2.moveTo(points[s]);
             ph2.lineTo(points[e]);
         } else {
-            ph.moveTo(points[s]);
+            if (s != last)
+                ph.moveTo(points[s]);
             ph.lineTo(points[e]);
         }
+        last = e;
     }
     return combine(ph, ph2);
 }

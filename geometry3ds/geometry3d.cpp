@@ -69,9 +69,9 @@ void Geometry3D::addLine(QPainterPath &ph, const QPointF &start, const QPointF &
     ph.lineTo(end);
 }
 
-void Geometry3D::addArc(QPainterPath &ph, const QRectF &rect, const QPointF &start, qreal startAngle, qreal arcLength)
+void Geometry3D::addArc(QPainterPath &ph, const QRectF &rect, qreal startAngle, qreal arcLength)
 {
-    ph.moveTo(start);
+    ph.arcMoveTo(rect, startAngle);
     ph.arcTo(rect, startAngle, arcLength);
 }
 
@@ -116,23 +116,22 @@ static qreal dashArc(qreal a, qreal b, qreal t, qreal w)
     return qMin(w / (a + d * 0.5), (sqrt(l) - s) / d);
 }
 
-void Geometry3D::addDotArc(QPainterPath &ph, const QRectF &rect, QPointF const & start, qreal startAngle, qreal arcLength, qreal width)
+void Geometry3D::addDotArc(QPainterPath &ph, const QRectF &rect, qreal startAngle, qreal arcLength, qreal width)
 {
     qreal a = rect.width() * 0.5;
     qreal b = rect.height() * 0.5;
-    QPointF c = rect.center();
+    //QPointF c = rect.center();
     if (arcLength < 0) width = -width;
-    ph.moveTo(start); // TODO:
     while (true) {
         qreal r = startAngle * M_PI / 180;
-        QPointF p = {a * cos(r), -b * sin(r)};
+        //QPointF p = {a * cos(r), -b * sin(r)};
         //qreal d = sqrt(QPointF::dotProduct(p, p));
         //r = atan(width / d) * 180 / M_PI;
         r = dashArc(a, b, r, width) * 180 / M_PI;
         //qDebug() << startAngle << r;
         if (qAbs(r) > qAbs(arcLength))
             r = arcLength;
-        ph.moveTo(c + p);
+        ph.arcMoveTo(rect, startAngle);
         ph.arcTo(rect, startAngle, r);
         if (qAbs(r) >= qAbs(arcLength))
             break;

@@ -94,34 +94,32 @@ QPainterPath FrustumCone::visualPath()
     qreal r = qAbs(pt2.x() - pt1.x());
     qreal r2 = this->r2(r);
     QPointF center(pt1.x(), pt2.y());
-    QPointF RX(r, 0);
-    QPointF RY(0, r * CIXY);
     // draw circle, two halfs, one solid line, one dash line
     QRectF rect(-r, -r * CIXY, r * 2, r * 2 * CIXY);
     rect.moveCenter(center);
     {
-        addArc(ph, rect, center - RX, 180.0, 180.0);
+        addArc(ph, rect, 180.0, 180.0);
         if (pt2.y() > pt1.y())
-            addArc(ph2, rect, center + RX, 0.0, 180.0);
+            addArc(ph2, rect, 0.0, 180.0);
         else
-            addArc(ph, rect, center + RX, 0.0, 180.0);
+            addArc(ph, rect, 0.0, 180.0);
     }
     // top cirle
-    QPointF RX2(r2, 0);
     if (!qFuzzyIsNull(r2)) {
         QRectF rect2(-r2, -r2 * CIXY, r2 * 2, r2 * 2 * CIXY);
         rect2.moveCenter(pt1);
-        addArc(ph, rect2, pt1 - RX2, 180.0, 180.0);
+        addArc(ph, rect2, 180.0, 180.0);
         if (pt2.y() < pt1.y())
-            addArc(ph2, rect2, pt1 + RX2, 0.0, 180.0);
+            addArc(ph2, rect2, 0.0, 180.0);
         else
-            addArc(ph, rect2, pt1 + RX2, 0.0, 180.0);
+            addArc(ph, rect2, 0.0, 180.0);
     }
     QPointF px1 = pt1;
     QPointF px2 = pt1;
     QPointF py1 = pt1;
     QPointF py2 = pt1;
     if (!qFuzzyIsNull(r2)) {
+        QPointF RX2(r2, 0);
         QPointF RY2(0, r2 * CIXY);
         px1 += RX2;
         px2 -= RX2;
@@ -129,6 +127,8 @@ QPainterPath FrustumCone::visualPath()
         py2 -= RY2;
     }
     // solid lines
+    QPointF RX(r, 0);
+    //QPointF RY(0, r * CIXY);
     addLine(ph, px1, center + RX);
     addLine(ph, px2, center - RX);
     if (!qFuzzyIsNull(r2)) {
@@ -293,8 +293,8 @@ QPainterPath FrustumCone::visualPath()
     QRectF rect(-r, -r, r * 2, r * 2); // circle
     QTransform t(1, 0, CO, -CO, pt1.x(), pt2.y());
     qreal angle = atan(CO);
-    addArc(ph, rect, rotate, -angle * 180.0 / M_PI, 180.0);
-    addArc(ph2, rect, -rotate, -angle * 180.0 / M_PI + 180.0, 180.0);
+    addArc(ph, rect, -angle * 180.0 / M_PI, 180.0);
+    addArc(ph2, rect, -angle * 180.0 / M_PI + 180.0, 180.0);
     // top cirle
     if (!qFuzzyIsNull(r2)) {
         QRectF rect2(-r2, -r2, r2 * 2, r2 * 2); // circle

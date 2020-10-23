@@ -48,11 +48,11 @@ protected:
 
     static void addLine(QPainterPath & ph, QPointF const & start, QPointF const & end);
 
-    static void addArc(QPainterPath & ph, QRectF const & rect, QPointF const & start, qreal startAngle, qreal arcLength);
+    static void addArc(QPainterPath & ph, QRectF const & rect, qreal startAngle, qreal arcLength);
 
     static void addDotLine(QPainterPath & ph, QPointF const & start, QPointF const & end, qreal width);
 
-    static void addDotArc(QPainterPath & ph, QRectF const & rect, QPointF const & start, qreal startAngle, qreal arcLength, qreal width);
+    static void addDotArc(QPainterPath & ph, QRectF const & rect, qreal startAngle, qreal arcLength, qreal width);
 
 protected:
     // ph1: solid, ph2: dash

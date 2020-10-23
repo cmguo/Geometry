@@ -76,26 +76,23 @@ QPainterPath Ellipsoid::visualPath()
     QPointF center(points_.front());
     // XY circle
     QRectF circle(0, 0, qreal(radius_.x()) * 2, qreal(radius_.y()) * 2);
-    QPointF RX {qreal(radius_.x()), 0};
     circle.moveCenter(center);
-    addArc(ph, circle, center + RX, 0, 360.0);
+    addArc(ph, circle, 0, 360.0);
     // XZ cicle
     {
         QRectF rect(-qreal(radius_.x()), -qreal(radius_.z()) * CIY,
                     qreal(radius_.x()) * 2, qreal(radius_.z()) * 2 * CIY);
-        QPointF rx(qreal(radius_.x()), 0);
         rect.moveCenter(center);
-        addArc(ph, rect, center - rx, 180.0, 180.0);
-        addArc(ph2, rect, center + rx, 0.0, 180.0);
+        addArc(ph, rect, 180.0, 180.0);
+        addArc(ph2, rect, 0.0, 180.0);
     }
     // YZ cicle
     {
         QRectF rect(-qreal(radius_.z()) * CIY, -qreal(radius_.y()),
                     qreal(radius_.z()) * CIY * 2, qreal(radius_.y()) * 2);
-        QPointF ry(0, qreal(radius_.y()));
         rect.moveCenter(center);
-        addArc(ph, rect, center + ry, 270.0, 180.0);
-        addArc(ph2, rect, center - ry, 90.0, 180.0);
+        addArc(ph, rect, 270.0, 180.0);
+        addArc(ph2, rect, 90.0, 180.0);
     }
     return combine(ph, ph2);
 }
