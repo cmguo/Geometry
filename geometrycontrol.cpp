@@ -239,14 +239,17 @@ void GeometryControl::finishGeometry(bool valid)
         item->setPath(geometry->contour());
     }
     bool hasFinished = geometry->finished();
-    geometry->finish(item->boundingRect().center());
+    QRectF bound = item->boundingRect();
+    geometry->finish(bound.center());
     updateGeometry();
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
         flags_ |= CanSelect;
         selector->selectImplied(this);
+        res_->setProperty("originSize", bound.size());
         edit();
     } else {
+        res_->setProperty("originSize", bound.size() / res_->transform().zoom());
         selector->updateSelect(this);
     }
 }
