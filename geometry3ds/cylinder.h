@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE Cylinder(Cylinder const & o);
 
 public:
-    virtual bool move(int elem, QPointF const & pt) override;
+    virtual bool moveElememt(int elem, QPointF const & pt) override;
 
 protected:
     virtual qreal r2(qreal r) override;

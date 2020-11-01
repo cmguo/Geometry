@@ -22,7 +22,7 @@ public:
 
     virtual int hit(QPointF & pt) override;
 
-    virtual bool move(int elem, QPointF const & pt) override;
+    virtual bool moveElememt(int elem, QPointF const & pt) override;
 
 protected:
     QVector3D radius_;

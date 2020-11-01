@@ -53,9 +53,9 @@ int Sphere::hit(QPointF &pt)
     return -1;
 }
 
-bool Sphere::move(int elem, QPointF const & pt)
+bool Sphere::moveElememt(int elem, QPointF const & pt)
 {
     if (elem < 4)
-        return Geometry3D::move(1, pt);
+        return Geometry3D::moveElememt(1, pt);
     return false;
 }

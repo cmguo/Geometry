@@ -37,9 +37,9 @@ QPointF Rectangle::point(int index)
     }
 }
 
-bool Rectangle::move(int elem, const QPointF &pt)
+bool Rectangle::moveElememt(int elem, const QPointF &pt)
 {
     if (elem < 4)
         return moveKeepAngle(elem, pt);
-    return Polygon::move(elem, pt);
+    return Polygon::moveElememt(elem, pt);
 }

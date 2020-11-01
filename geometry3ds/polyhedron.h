@@ -26,7 +26,7 @@ public:
 
     virtual int hit(QPointF &pt) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
 protected:
     virtual int pointCount();

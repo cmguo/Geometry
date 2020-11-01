@@ -141,7 +141,7 @@ int Sector::hit(QPointF &pt)
     return -1;
 }
 
-bool Sector::move(int elem, const QPointF &pt)
+bool Sector::moveElememt(int elem, const QPointF &pt)
 {
     if (elem == 0) {
         if (points_.size() == 2)

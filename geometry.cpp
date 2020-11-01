@@ -3,6 +3,7 @@
 
 #include <core/resource.h>
 #include <core/resourcepage.h>
+#include <core/resourcerecord.h>
 #include <core/resourcetransform.h>
 #include <core/toolbutton.h>
 
@@ -49,10 +50,21 @@ QPromise<void> Geometry::load()
 
 bool Geometry::setOption(const QByteArray &key, QVariant value)
 {
+    QVariant old = getOption(key);
     if (!ResourceView::setOption(key, value))
         return false;
-    dirty_ = true;
-    emit changed();
+    QVariant crt = getOption(key);
+    if (old != crt) {
+        RecordMergeScope rs(this);
+        if (rs)
+            rs.add(MakeFunctionRecord([this, key, old]() {
+                setOption(key, old);
+            }, [this, key, crt]() {
+                setOption(key, crt);
+            }));
+        dirty_ = true;
+        emit changed(key);
+    }
     return true;
 }
 
@@ -84,7 +96,7 @@ void Geometry::movePoint(const QPointF &pt)
     } else {
         points_.back() = pt;
         if (flags_ & DrawAttach)
-            move(points_.size() - 1, pt);
+            moveElememt(points_.size() - 1, pt);
     }
     dirty_ = true;
 }
@@ -180,7 +192,13 @@ int Geometry::hit(QPointF & pt)
     return -1;
 }
 
-bool Geometry::move(int elem, const QPointF &pt)
+void Geometry::beginMove(int)
+{
+    setProperty("editStartPoints", QVariant::fromValue(points_));
+    setProperty("editStartOffset", transform().offset());
+}
+
+bool Geometry::moveElememt(int elem, const QPointF &pt)
 {
     if (elem < points_.size()) {
         points_[elem] = pt;
@@ -188,6 +206,27 @@ bool Geometry::move(int elem, const QPointF &pt)
         return true;
     }
     return false;
+}
+
+void Geometry::endMove(int)
+{
+    auto points = property("editStartPoints").value<QVector<QPointF>>();
+    QPointF off = property("editStartOffset").value<QPointF>() - transform().offset();
+    for (auto & p : points)
+        p += off;
+    auto points2 = points_;
+    for (auto & p : points2)
+        p -= off;
+    if (!points.isEmpty()) {
+        RecordMergeScope rs(this);
+        if (rs)
+            rs.add(MakeFunctionRecord([this, points]() {
+                points_ = points; dirty_ = true; emit changed("shape");
+            }, [this, points2]() {
+                points_ = points2; dirty_ = true; emit changed("shape");
+            }));
+        setProperty("editStartPoints", QVariant());
+    }
 }
 
 QPainterPath Geometry::graphPath()

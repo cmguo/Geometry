@@ -49,7 +49,7 @@ public:
     Q_INVOKABLE Line(Line const & o);
 
 public:
-    virtual bool move(int elem, QPointF const & pt) override;
+    virtual bool moveElememt(int elem, QPointF const & pt) override;
 
     virtual QPainterPath visualPath() override;
 

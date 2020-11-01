@@ -15,10 +15,10 @@ void Cube::movePoint(const QPointF &pt)
     if (points_.size() == 1) {
         points_.append(pt);
     }
-    move(1, pt);
+    moveElememt(1, pt);
 }
 
-bool Cube::move(int elem, const QPointF &pt)
+bool Cube::moveElememt(int elem, const QPointF &pt)
 {
     setMoveElem(elem);
     points_[1] = pt;

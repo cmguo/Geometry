@@ -22,7 +22,7 @@ public:
 
     virtual QPointF point(int index) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
 protected:
     virtual QPointF point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3) = 0;

@@ -21,7 +21,7 @@ QPointF IsoscelesTriangle::point(int index)
 
 static const qreal SQRT3 = 1.7320508075688772935274463415059;
 
-bool IsoscelesTriangle::move(int elem, const QPointF &pt)
+bool IsoscelesTriangle::moveElememt(int elem, const QPointF &pt)
 {
     if (elem == 0) {
         QPointF p(pt);
@@ -37,7 +37,7 @@ bool IsoscelesTriangle::move(int elem, const QPointF &pt)
         c.setY(pt1.y() + d / SQRT3); pts.append(c);
         c.setY(pt1.y() - d / SQRT3); pts.append(c);
         GeometryHelper::attachToPoints(pts, p);
-        return Triangle::move(0, p);
+        return Triangle::moveElememt(0, p);
     } else if (elem < 3) {
         QPointF p(pt);
         GeometryHelper::attachToLines(points_[0], p);
@@ -45,8 +45,8 @@ bool IsoscelesTriangle::move(int elem, const QPointF &pt)
             elem = 1;
             p.setX(points_[0].x() * 2 - p.x());
         }
-        return Triangle::move(elem, p);
+        return Triangle::moveElememt(elem, p);
     } else {
-        return Triangle::move(elem, pt);
+        return Triangle::moveElememt(elem, pt);
     }
 }

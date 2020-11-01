@@ -29,7 +29,7 @@ QVector3D Qrthoprism::point(int index)
 }
 
 // @see RegularPrismoid::movePoints()
-bool Qrthoprism::move(int elem, const QPointF &pt)
+bool Qrthoprism::moveElememt(int elem, const QPointF &pt)
 {
     if (elem == 0)
         elem = nEdges_ * 2;
@@ -37,7 +37,7 @@ bool Qrthoprism::move(int elem, const QPointF &pt)
         elem = elem + nEdges_ - 1;
     else
         elem = nEdges_ * 2 + 1;
-    return RegularPrismoid::move(elem, pt);
+    return RegularPrismoid::moveElememt(elem, pt);
 }
 
 void Qrthoprism::makeLines()

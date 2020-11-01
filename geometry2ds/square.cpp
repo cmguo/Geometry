@@ -23,7 +23,7 @@ void Square::movePoint(const QPointF &pt)
     Rectangle::movePoint(p);
 }
 
-bool Square::move(int elem, QPointF const &pt)
+bool Square::moveElememt(int elem, QPointF const &pt)
 {
     QPointF p(pt);
     if (elem < 4) {
@@ -44,5 +44,5 @@ bool Square::move(int elem, QPointF const &pt)
             p.setY(pt.y() >= st.y() ? st.y() + sz.width() : st.y() - sz.width());
         }
     }
-    return Rectangle::move(elem, p);
+    return Rectangle::moveElememt(elem, p);
 }

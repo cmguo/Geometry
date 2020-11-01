@@ -48,7 +48,7 @@ int Ellipsoid::hit(QPointF &)
     return -1;
 }
 
-bool Ellipsoid::move(int elem, QPointF const & pt)
+bool Ellipsoid::moveElememt(int elem, QPointF const & pt)
 {
     if (elem < 2) {
         points_.back().setX(pt.x());

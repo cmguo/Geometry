@@ -14,7 +14,7 @@ public:
 public:
     virtual QPointF point(int index) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 };
 
 #endif // RIGHTTRIANGLE_H

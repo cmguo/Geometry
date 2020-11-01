@@ -64,7 +64,7 @@ public:
     void init();
 
 signals:
-    void changed();
+    void changed(QByteArray const & key);
 
 public:
     /*
@@ -73,11 +73,15 @@ public:
      */
     virtual int hit(QPointF & pt);
 
+    virtual void beginMove(int elem);
+
     /*
      * move element elem to point pt
      *  pt is adjusted with some diff as hit()
      */
-    virtual bool move(int elem, QPointF const & pt);
+    virtual bool moveElememt(int elem, QPointF const & pt);
+
+    virtual void endMove(int elem);
 
 public:
     virtual QPainterPath graphPath();

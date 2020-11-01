@@ -150,7 +150,7 @@ bool RegularPolygon::setPoint(int index, const QPointF &pt)
     return true;
 }
 
-bool RegularPolygon::move(int elem, const QPointF &pt)
+bool RegularPolygon::moveElememt(int elem, const QPointF &pt)
 {
     if (elem < nEdges_) {
         Polygon::setPoint(1, pt);

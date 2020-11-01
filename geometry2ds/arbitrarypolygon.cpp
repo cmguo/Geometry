@@ -99,7 +99,7 @@ QPointF ArbitraryPolygon::point(int index)
         return temp_;
 }
 
-bool ArbitraryPolygon::move(int elem, const QPointF &pt)
+bool ArbitraryPolygon::moveElememt(int elem, const QPointF &pt)
 {
     QPointF p = pt;
     if (elem < points_.size()) {
@@ -108,5 +108,5 @@ bool ArbitraryPolygon::move(int elem, const QPointF &pt)
         GeometryHelper::attachToLines(
                     elem + 1 < points_.size() ? points_[elem + 1] : points_.first(), p);
     }
-    return Polygon::move(elem, p);
+    return Polygon::moveElememt(elem, p);
 }

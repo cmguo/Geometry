@@ -14,7 +14,7 @@ public:
 public:
     virtual void movePoint(const QPointF &pt) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 };
 
 #endif // CUBE_H

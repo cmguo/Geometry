@@ -75,11 +75,11 @@ Line::Line(Line const & o)
 {
 }
 
-bool Line::move(int elem, const QPointF &pt)
+bool Line::moveElememt(int elem, const QPointF &pt)
 {
     QPointF p(pt);
     GeometryHelper::attachToLines(points_[1 - elem], p);
-    return Geometry2D::move(elem, p);
+    return Geometry2D::moveElememt(elem, p);
 }
 
 static QVector<qreal> penStyles[] = {

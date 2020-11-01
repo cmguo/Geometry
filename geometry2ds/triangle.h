@@ -16,7 +16,7 @@ public:
 
     virtual bool setPoint(int index, const QPointF &pt) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
 private:
     qreal angles_[3];

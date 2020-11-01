@@ -120,7 +120,7 @@ QVector<QPointF> RegularPrismoid::movePoints()
     return mpts;
 }
 
-bool RegularPrismoid::move(int elem, const QPointF &pt)
+bool RegularPrismoid::moveElememt(int elem, const QPointF &pt)
 {
     QPointF pt2 = pt;
     if (elem < nEdges_ * 2) {
@@ -171,7 +171,7 @@ bool RegularPrismoid::move(int elem, const QPointF &pt)
         pt2.setY(points_[1].y() + qreal(d));
         elem = 1;
     }
-    Polyhedron::move(elem, pt2);
+    Polyhedron::moveElememt(elem, pt2);
     dirty_ = false;
     return true;
 }

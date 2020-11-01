@@ -33,18 +33,18 @@ bool IsopopeTrapezoid::setPoint(int index, const QPointF &pt)
     return Trapezoid::setPoint(2, QPointF(st.x() + pt1.x() - pt.x(), pt.y()));
 }
 
-bool IsopopeTrapezoid::move(int elem, const QPointF &pt)
+bool IsopopeTrapezoid::moveElememt(int elem, const QPointF &pt)
 {
     if (elem == 0) {
         QPointF p = pt;
         GeometryHelper::attachToLines(point(3), p);
-        return Polygon::move(elem, p);
+        return Polygon::moveElememt(elem, p);
     } else if (elem == 3) {
         QPointF p = pt;
         GeometryHelper::attachToLines(point(0), p);
-        return Polygon::move(elem, p);
+        return Polygon::moveElememt(elem, p);
     } else {
-        return Trapezoid::move(elem, pt);
+        return Trapezoid::moveElememt(elem, pt);
     }
 }
 

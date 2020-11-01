@@ -66,12 +66,12 @@ QPointF Trapezoid::point(int index)
     }
 }
 
-bool Trapezoid::move(int elem, const QPointF &pt)
+bool Trapezoid::moveElememt(int elem, const QPointF &pt)
 {
     if (elem == 1) {
         QPointF p = pt;
         GeometryHelper::attachToLines(points_[1], p);
-        Polygon::move(5, p);
+        Polygon::moveElememt(5, p);
         Polygon::setPoint(2, p);
         return true;
     } else if (elem == 2) {
@@ -81,5 +81,5 @@ bool Trapezoid::move(int elem, const QPointF &pt)
     } else if (elem < 4) {
         return moveKeepAngle(elem, pt);
     }
-    return Polygon::move(elem, pt);
+    return Polygon::moveElememt(elem, pt);
 }

@@ -58,9 +58,9 @@ int Circle::hit(QPointF &pt)
     return -1;
 }
 
-bool Circle::move(int elem, QPointF const & pt)
+bool Circle::moveElememt(int elem, QPointF const & pt)
 {
     if (elem < 4)
-        return Geometry2D::move(points_.size() - 1, pt);
+        return Geometry2D::moveElememt(points_.size() - 1, pt);
     return false;
 }

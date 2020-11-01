@@ -79,10 +79,10 @@ void Cuboid::setMoveElem(int elem)
     }
 }
 
-bool Cuboid::move(int elem, const QPointF &pt)
+bool Cuboid::moveElememt(int elem, const QPointF &pt)
 {
     setMoveElem(elem);
-    return Polyhedron::move(1, pt);
+    return Polyhedron::moveElememt(1, pt);
 }
 
 void Cuboid::sync()

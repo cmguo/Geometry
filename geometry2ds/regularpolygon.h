@@ -29,7 +29,7 @@ public:
 
     virtual bool setPoint(int index, const QPointF &pt) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
 public slots:
     void setEdges(int n);

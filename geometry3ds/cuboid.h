@@ -16,7 +16,7 @@ public:
 
     virtual QVector3D point(int index) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
     virtual void sync() override;
 

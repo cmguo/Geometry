@@ -71,7 +71,7 @@ int Polygon::hit(QPointF & pt)
     return line;
 }
 
-bool Polygon::move(int elem, const QPointF &pt)
+bool Polygon::moveElememt(int elem, const QPointF &pt)
 {
     if (elem < pointCount()) {
         return setPoint(elem, pt);

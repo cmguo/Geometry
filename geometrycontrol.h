@@ -65,7 +65,7 @@ protected:
 private:
     void updateSettings();
 
-    void geometryChanged();
+    void geometryChanged(QByteArray const & key);
 
     bool beginPoint(QPointF const & point, bool fromHandle);
 

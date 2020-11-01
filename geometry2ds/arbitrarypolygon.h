@@ -28,7 +28,7 @@ public:
 
     virtual QPointF point(int index) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 
 private:
     bool tempValid_ = false;

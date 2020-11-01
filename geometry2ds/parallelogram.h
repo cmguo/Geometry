@@ -16,7 +16,7 @@ protected:
 
     virtual QPointF point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3) override;
 
-    virtual bool move(int elem, const QPointF &pt) override;
+    virtual bool moveElememt(int elem, const QPointF &pt) override;
 };
 
 #endif // PARALLELOGRAM_H

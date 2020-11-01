@@ -131,9 +131,9 @@ int Polyhedron::hit(QPointF &pt)
     return GeometryHelper::attachToPoints(points, pt);
 }
 
-bool Polyhedron::move(int elem, const QPointF &pt)
+bool Polyhedron::moveElememt(int elem, const QPointF &pt)
 {
-    return Geometry3D::move(elem, pt);
+    return Geometry3D::moveElememt(elem, pt);
 }
 
 void Polyhedron::clearLines()

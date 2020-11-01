@@ -23,9 +23,9 @@ bool Triangle::setPoint(int index, const QPointF &pt)
     return true;
 }
 
-bool Triangle::move(int elem, const QPointF &pt)
+bool Triangle::moveElememt(int elem, const QPointF &pt)
 {
-    bool result = Polygon::move(elem, pt);
+    bool result = Polygon::moveElememt(elem, pt);
     /*
     if (result && elem < 3) {
         QPointF lpt = points_.back();

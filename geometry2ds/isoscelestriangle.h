@@ -14,6 +14,6 @@ public:
 public:
     virtual QPointF point(int index) override;
 
-    virtual bool move(int elem, QPointF const & pt) override;
+    virtual bool moveElememt(int elem, QPointF const & pt) override;
 };
 #endif // ISOSCELESTRIANGLE_H

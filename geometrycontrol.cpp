@@ -139,10 +139,7 @@ void GeometryControl::getToolButtons(QList<ToolButton *> &buttons, const QList<T
 bool GeometryControl::setOption(const QByteArray &key, QVariant value)
 {
     // set to geometry
-    if (!res_->setOption(key, value))
-        return false;
-    updateSettings();
-    return true;
+    return res_->setOption(key, value);
 }
 
 QVariant GeometryControl::getOption(const QByteArray &key)
@@ -185,9 +182,11 @@ void GeometryControl::updateSettings()
     setPen(QPen(geometry->color(), geometry->width()));
 }
 
-void GeometryControl::geometryChanged()
+void GeometryControl::geometryChanged(const QByteArray &key)
 {
     finishGeometry();
+    if (key == "color" || key == "width")
+        updateSettings();
 }
 
 Control::SelectMode GeometryControl::selectTest(QPointF const & point)
@@ -245,8 +244,8 @@ void GeometryControl::finishGeometry(bool valid)
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
         flags_ |= CanSelect;
-        selector->selectImplied(this);
         res_->setProperty("originSize", bound.size());
+        selector->selectImplied(this);
         edit();
     } else {
         res_->setProperty("originSize", bound.size() / res_->transform().zoom());
@@ -277,6 +276,7 @@ bool GeometryControl::beginPoint(const QPointF &point, bool fromHandle)
             if (hitElem_ >= 0) {
                 qDebug() << "hit handle" << hitElem_;
                 hitOffset_ = editPoints_[mdx] - point;
+                geometry->beginMove(hitElem_);
                 return true;
             }
         } else if (!editing_ && (flags_ & ImpliedEditable)) {
@@ -284,6 +284,7 @@ bool GeometryControl::beginPoint(const QPointF &point, bool fromHandle)
             if (hitElem_ >= 0) {
                 qDebug() << "hit" << hitElem_;
                 hitOffset_ = pt - point;
+                geometry->beginMove(hitElem_);
                 return true;
             }
         }
@@ -306,7 +307,7 @@ void GeometryControl::movePoint(const QPointF &point)
     }
     if (geometry->finished()) {
         QPointF pt = point + hitOffset_;
-        if (geometry->move(hitElem_, pt)) {
+        if (geometry->moveElememt(hitElem_, pt)) {
             updateGeometry();
         }
     } else {
@@ -322,6 +323,7 @@ bool GeometryControl::endPoint(const QPointF &point)
     if (geometry->finished()) {
         if (hitMoved_) {
             finishGeometry(true);
+            geometry->endMove(hitElem_);
         } else {
             whiteCanvas()->selector()->select(this);
         }

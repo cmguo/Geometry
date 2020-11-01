@@ -59,7 +59,7 @@ int FrustumCone::hit(QPointF & pt)
     return -1;
 }
 
-bool FrustumCone::move(int elem, QPointF const & pt)
+bool FrustumCone::moveElememt(int elem, QPointF const & pt)
 {
     QPointF p(pt);
     if (elem == 0)
@@ -69,7 +69,7 @@ bool FrustumCone::move(int elem, QPointF const & pt)
     else if (elem == 3)
         p.setX(points_[elem = 1].x());
     if (elem < 2)
-        return Geometry3D::move(elem, p);
+        return Geometry3D::moveElememt(elem, p);
     if (elem == 4 || elem == 5) {
         points_[0].setY(p.y());
         if (points_.size() == 2)
