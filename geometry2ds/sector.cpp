@@ -238,4 +238,5 @@ void Sector::sync()
         addAngleLabeling(ph, tph, pt2, pt1, pt3, angle_);
     graphPath_ = ph;
     textPath_ = tph;
+    buttonsChanged();
 }
