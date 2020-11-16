@@ -23,19 +23,24 @@ public:
 
     Q_ENUM(LineType)
 
+    static constexpr int SolidShape = 1 << 8;
+    static constexpr int AlignLeft = 1 << 9;
+    static constexpr int AlignRight = 1 << 10;
+    static constexpr int AlignBoth = AlignLeft | AlignRight;
+
     enum EndianType
     {
-        None,
-        Ball,
-        SolidBall,
-        Arrow,
-        SolidArrow,
-        HollowArrow,
-        SharpArrow,
-        Diamond,
-        SolidDiamod,
-        Box,
-        SolidBox,
+        None = 0,
+        Ball = 1,
+        SolidBall = 2 | SolidShape,
+        Arrow = 3 | AlignRight,
+        SolidArrow = 4 | SolidShape | AlignRight,
+        HollowArrow = 5 | AlignRight,
+        SharpArrow = 6 | SolidShape | AlignRight,
+        Diamond = 7 | AlignBoth,
+        SolidDiamod = 8 | SolidShape | AlignBoth,
+        Box = 9,
+        SolidBox = 10 | SolidShape,
     };
 
     Q_ENUM(EndianType)

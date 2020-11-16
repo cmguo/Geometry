@@ -241,6 +241,7 @@ void GeometryControl::finishGeometry(bool valid)
     QRectF bound = item->boundingRect();
     geometry->finish(bound.center());
     updateGeometry();
+    item->update(); // contour may not change
     ItemSelector * selector = whiteCanvas()->selector();
     if (!hasFinished) {
         flags_ |= CanSelect;

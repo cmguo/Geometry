@@ -145,84 +145,75 @@ void Line::fillEndian(QPainterPath &ph, EndianType type, qreal width,
                       QPointF &pt, const QPointF &dir, bool & solid)
 {
     QPointF udir = dir / GeometryHelper::length(dir);
-    QRectF rect(-4, -4, 8, 8);
-    rect.adjust(-width, -width, width, width);
+    QRectF srect(-4, -4, 8, 8);
+    srect.adjust(-width, -width, width, width);
+    if ((type & AlignBoth) == AlignBoth)
+        srect.adjust(srect.left(), 0, srect.right(), 0);
+    else if (type & AlignLeft)
+        srect.translate(srect.right(), 0);
+    else if (type & AlignRight)
+        srect.translate(srect.left(), 0);
+    QRectF rect = srect;
     QTransform t(udir.x(), udir.y(), -udir.y(), udir.x(), pt.x(), pt.y());
+    if ((type & SolidShape) == 0) {
+        qreal hw = width / 2;
+        rect.adjust(hw, hw, -hw, -hw);
+    }
+    if (solid) {
+        pt = t.map(QPointF(srect.right(), 0));
+        return;
+    }
     switch (type) {
     case None:
         break;
     case Ball:
     case SolidBall:
-        if (solid) {
-            pt = t.map(QPointF(rect.right(), 0));
-            break;
-        }
-        ph.addEllipse(rect.adjusted(pt.x() + 1, pt.y() + 1, pt.x() - 1, pt.y() - 1));
-        pt = t.map(QPointF(rect.left(), 0));
-        solid = type == SolidBall;
+        ph.addEllipse(rect.translated(pt));
         break;
     case Arrow:
-        if (solid)
-            break;
         ph.addPolygon(t.map(QPolygonF({
-                                          QPointF(rect.left() * 2, rect.top()),
-                                          QPointF(0, 0),
-                                          QPointF(rect.left() * 2, rect.bottom())
+                                          QPointF(rect.left(), rect.top()),
+                                          QPointF(rect.right(), 0),
+                                          QPointF(rect.left(), rect.bottom())
                                       })));
+        srect.setLeft(-width * 2);
         break;
     case SolidArrow:
     case HollowArrow:
-        if (solid)
-            break;
         ph.addPolygon(t.map(QPolygonF({
-                                          QPointF(rect.left() * 2, rect.top()),
-                                          QPointF(0, 0),
-                                          QPointF(rect.left() * 2, rect.bottom()),
-                                          QPointF(rect.left() * 2, rect.top())
+                                          QPointF(rect.left(), rect.top()),
+                                          QPointF(rect.right(), 0),
+                                          QPointF(rect.left(), rect.bottom()),
+                                          QPointF(rect.left(), rect.top())
                                       })));
-        pt = t.map(QPointF(rect.left() * 2, 0));
-        solid = type == SolidArrow;
         break;
     case SharpArrow:
-        if (solid)
-            break;
         ph.addPolygon(t.map(QPolygonF({
-                                          QPointF(rect.left() * 2, rect.top()),
-                                          QPointF(0, 0),
-                                          QPointF(rect.left() * 2, rect.bottom()),
-                                          QPointF(rect.left(), 0),
-                                          QPointF(rect.left() * 2, rect.top())
+                                          QPointF(rect.left(), rect.top()),
+                                          QPointF(rect.right(), 0),
+                                          QPointF(rect.left(), rect.bottom()),
+                                          rect.center(),
+                                          QPointF(rect.left(), rect.top())
                                       })));
-        pt = t.map(QPointF(rect.left(), 0));
-        solid = true;
+        srect.setLeft(-width * 2);
         break;
     case Diamond:
     case SolidDiamod:
-        if (solid) {
-            pt = t.map(QPointF(rect.right() * 2, 0));
-            break;
-        }
         ph.addPolygon(t.map(QPolygonF({
                                           QPointF(0, rect.top()),
-                                          QPointF(rect.right() * 2, 0),
+                                          QPointF(rect.right(), 0),
                                           QPointF(0, rect.bottom()),
-                                          QPointF(rect.left() * 2, 0),
+                                          QPointF(rect.left(), 0),
                                           QPointF(0, rect.top())
                                       })));
-        pt = t.map(QPointF(rect.left() * 2, 0));
-        solid = type == SolidDiamod;
         break;
     case Box:
     case SolidBox:
-        if (solid) {
-            pt = t.map(QPointF(rect.right(), 0));
-            break;
-        }
-        ph.addPolygon(t.map(rect.adjusted(1, 1, -1, -1)));
-        pt = t.map(QPointF(rect.left(), 0));
-        solid = type == SolidBox;
+        ph.addPolygon(t.map(rect));
         break;
     }
+    pt = t.map(QPointF(srect.left() + width, 0));
+    solid = type & SolidShape;
 }
 
 class Line::LineTypeToolButtons : public OptionToolButtons
@@ -283,25 +274,17 @@ private:
         bool solid = false;
         QPointF pt1(16, 0);
         QPointF pt2(16, 16);
-        switch (t) {
-        case Arrow:
-        case SolidArrow:
-        case HollowArrow:
-        case SharpArrow:
-            pt1 += QPointF(6, 0);
-            pt2 += QPointF(6, 0);
-            break;
-        default:
-            break;
-        }
         fillEndian(ph2, t, 2, pt2, pt1, solid);
+        ph2.translate(QPointF(16, 16) - ph2.boundingRect().center());
         QGraphicsPathItem* item = new QGraphicsPathItem(border);
         item->setPath(ph2);
-        item->setPen(QPen(Qt::white, 2));
-        if (solid)
+        if (solid) {
+            item->setPen(Qt::NoPen);
             item->setBrush(Qt::white);
-        else
+        } else {
+            item->setPen(QPen(Qt::white, 2));
             item->setBrush(QBrush());
+        }
         return border;
     }
 };
