@@ -2,9 +2,8 @@
 #include "geometryitem.h"
 #include "geometry.h"
 #include "geometry2ds/line.h"
-#include "geometry2ds/regularpolygon.h"
-#include "geometry2ds/sector.h"
 #include "geometry2ds/circle.h"
+#include "geometry3ds/geometry3d.h"
 
 #include <core/toolbutton.h>
 #include <core/resourcetransform.h>
@@ -47,7 +46,8 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
 #endif
     if (res_->metaObject() == &Line::staticMetaObject)
         flags_ &= ~(CanScale | CanRotate);
-    if (res->metaObject() == &Circle::staticMetaObject)
+    if (res->metaObject() == &Circle::staticMetaObject
+            || res->metaObject()->inherits(&Geometry3D::staticMetaObject))
         flags_ &= ~CanRotate;
     setMinSize({0.02, 0.02});
 }
