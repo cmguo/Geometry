@@ -36,6 +36,7 @@ Line::Line(Resource * res)
     } else if (type == "dashdotdotline") {
         lineType_ = DashDotDot;
     }
+    QMetaEnum e = QMetaEnum::fromType<EndianType>();
     if (!endtype.isEmpty()) {
         char * p = endtype.data();
         int n = sizeof (endtypes) / sizeof (endtypes[0]);
@@ -43,7 +44,7 @@ Line::Line(Resource * res)
             for (int i = 1; i < n; ++i) {
                 if (p[0] == endtypes[i][0]
                         && (!endtypes[i][1] || p[1] == endtypes[i][1])) {
-                    beginType_ = static_cast<EndianType>(i);
+                    beginType_ = static_cast<EndianType>(e.value(i));
                     p += endtypes[i][1] ? 2 : 1;
                     break;
                 }
@@ -54,7 +55,7 @@ Line::Line(Resource * res)
             for (int i = 1; i < n; ++i) {
                 if (p[0] == endtypes[i][0]
                         && (!endtypes[i][1] || p[1] == endtypes[i][1])) {
-                    endType_ = static_cast<EndianType>(i);
+                    endType_ = static_cast<EndianType>(e.value(i));
                     break;
                 }
             }
