@@ -261,36 +261,34 @@ QPainterPath Geometry::visualPath()
 void Geometry::fillQuickPath(QObject *path, const QPainterPath &ph)
 {
     QObject * seg = nullptr;
-    bool ready = true;
     constexpr char const * classNames[] = {"PathMove", "PathLine", "PathCubic"};
     for (int i = 0; i < ph.elementCount(); ++i) {
         QPainterPath::Element e = ph.elementAt(i);
         switch (e.type) {
         case QPainterPath::MoveToElement:
         case QPainterPath::LineToElement:
-        case QPainterPath::CurveToElement:
             seg = QuickHelper::createObject(path, classNames[e.type], "QtQuick", "2.12");
             seg->setProperty("x", e.x);
             seg->setProperty("y", e.y);
-            seg->setProperty("step", 1);
-            ready = e.type != QPainterPath::CurveToElement;
             break;
-        case QPainterPath::CurveToDataElement:
-            if (seg->property("step").isValid()) {
+        case QPainterPath::CurveToElement:
+            if (i + 2 < ph.elementCount()) {
+                seg = QuickHelper::createObject(path, classNames[e.type], "QtQuick", "2.12");
                 seg->setProperty("control1X", e.x);
-                seg->setProperty("control1Y", e.y);
-                seg->setProperty("step", QVariant());
-            } else {
-                seg->setProperty("control2X", e.x);
-                seg->setProperty("control2Y", e.y);
-                ready = true;
+                seg->setProperty("control1X", e.y);
+                QPainterPath::Element e1 = ph.elementAt(++i);
+                QPainterPath::Element e2 = ph.elementAt(++i);
+                seg->setProperty("control2X", e1.x);
+                seg->setProperty("control2Y", e1.y);
+                seg->setProperty("x", e2.x);
+                seg->setProperty("y", e2.y);
             }
             break;
+        default:
+            break;
         }
-        if (ready) {
-            QuickHelper::appendChild(path, seg);
-            seg = nullptr;
-        }
+        QuickHelper::appendChild(path, seg);
+        seg = nullptr;
     }
 }
 
