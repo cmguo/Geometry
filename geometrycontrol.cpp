@@ -45,7 +45,7 @@ GeometryControl::GeometryControl(ResourceView * res, Flags flags, Flags clearFla
     flags_ |= HalfSelect;
 #endif
     if (res_->metaObject() == &Line::staticMetaObject)
-        flags_ &= ~(CanScale | CanRotate);
+        flags_ &= ~CanScale;
     if (res->metaObject() == &Circle::staticMetaObject
             || res->metaObject()->inherits(&Geometry3D::staticMetaObject))
         flags_ &= ~CanRotate;
@@ -204,9 +204,9 @@ void GeometryControl::select(bool selected)
         editing_ = false;
         GeometryItem * item = static_cast<GeometryItem *>(item_);
         item->showEditor(false);
-    } else if (selected && res_->metaObject() == &Line::staticMetaObject) {
-        whiteCanvas()->selector()->selectImplied(this);
-        edit();
+    //} else if (selected && res_->metaObject() == &Line::staticMetaObject) {
+    //    whiteCanvas()->selector()->selectImplied(this);
+    //    edit();
     }
     Control::select(selected);
 }
