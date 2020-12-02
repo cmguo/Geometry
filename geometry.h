@@ -16,6 +16,7 @@ class GEOMETRY_EXPORT Geometry : public ResourceView
 {
 
     Q_OBJECT
+    Q_CLASSINFO("version", "1.0")
 
     Q_PROPERTY(QColor color READ color WRITE setColor)
     Q_PROPERTY(qreal width READ width WRITE setWidth)

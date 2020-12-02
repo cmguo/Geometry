@@ -2,6 +2,7 @@ QT += gui widgets quick qml quickwidgets
 
 TEMPLATE = lib
 DEFINES += GEOMETRY_LIBRARY
+CONFIG += plugin
 
 CONFIG += c++14
 
@@ -23,6 +24,7 @@ SOURCES += \
     geometrycontrol.cpp \
     geometryhelper.cpp \
     geometryitem.cpp \
+    geometryplugin.cpp \
     geometrytool.cpp
 
 HEADERS += \
@@ -32,10 +34,14 @@ HEADERS += \
     geometrycontrol.h \
     geometryhelper.h \
     geometryitem.h \
+    geometryplugin.h \
     geometrytool.h
 
 RESOURCES += \
     res/Geometry.qrc
+
+DISTFILES += \
+    Geometry.json
 
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)

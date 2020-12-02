@@ -19,6 +19,8 @@
 #include "line.h"
 #include "arc.h"
 
+#include <qexport.h>
+
 REGISTER_RESOURCE_VIEW_FACTORY(Geometry2DFactory, Geometry2D, "geometry2d")
 REGISTER_GEOMETRY_2D(Ellipse, "ellipse")
 REGISTER_GEOMETRY_2D(Circle, "circle")

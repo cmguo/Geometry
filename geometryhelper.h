@@ -1,8 +1,6 @@
 #ifndef GEOMETRYHELPER_H
 #define GEOMETRYHELPER_H
 
-#include "Geometry_global.h"
-
 #include <QPointF>
 #include <QVector>
 #include <QPolygonF>
@@ -12,7 +10,7 @@
 
 class ResourcePage;
 
-class GEOMETRY_EXPORT GeometryHelper : public QObject
+class GeometryHelper : public QObject
 {
     Q_OBJECT
 public:

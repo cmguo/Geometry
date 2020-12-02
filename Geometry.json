@@ -1,0 +1,270 @@
+{
+    "Exports": [
+        {
+            "attrs": {
+                "mineType": "square"
+            },
+            "meta": "Square/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "geometry2d,geometry3d"
+            },
+            "meta": "GeometryControl/1.0",
+            "type": "Control/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "regularprism"
+            },
+            "meta": "RegularPrism/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "frustumcone"
+            },
+            "meta": "FrustumCone/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "geometry2d",
+                "rfactory": "true"
+            },
+            "meta": "Geometry2DFactory/1.0",
+            "type": "ResourceView/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "regularprismoid"
+            },
+            "meta": "RegularPrismoid/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "ellipse"
+            },
+            "meta": "Ellipse/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "cylinder"
+            },
+            "meta": "Cylinder/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "regularpolygon"
+            },
+            "meta": "RegularPolygon/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "sphere"
+            },
+            "meta": "Sphere/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "arbitrarypolygon"
+            },
+            "meta": "ArbitraryPolygon/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "cube"
+            },
+            "meta": "Cube/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "isoscelestriangle"
+            },
+            "meta": "IsoscelesTriangle/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "cone"
+            },
+            "meta": "Cone/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "ellipsoid"
+            },
+            "meta": "Ellipsoid/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "arc"
+            },
+            "meta": "Arc/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "parallelogram"
+            },
+            "meta": "Parallelogram/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "righttrapezoid"
+            },
+            "meta": "RightTrapezoid/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "qrthoprism"
+            },
+            "meta": "Qrthoprism/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "line,dashline,dotline,dashdotline"
+            },
+            "meta": "Line/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "cuboid"
+            },
+            "meta": "Cuboid/1.0",
+            "type": "Geometry3D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "isopopetrapezoid"
+            },
+            "meta": "IsopopeTrapezoid/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "geometry2dtool,geometry3dtool"
+            },
+            "meta": "GeometryTool/1.0",
+            "type": "Control/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "diamond"
+            },
+            "meta": "Diamond/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "righttriangle"
+            },
+            "meta": "RightTriangle/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "sector"
+            },
+            "meta": "Sector/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "geometry3d",
+                "rfactory": "true"
+            },
+            "meta": "Geometry3DFactory/1.0",
+            "type": "ResourceView/1.0"
+        },
+        {
+            "meta": "GeometryHelper",
+            "share": "shared",
+            "type": "GeometryHelper"
+        },
+        {
+            "meta": "GeometryTools",
+            "share": "shared",
+            "type": "GeometryTools"
+        },
+        {
+            "attrs": {
+                "mineType": "circle"
+            },
+            "meta": "Circle/1.0",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "rectangle"
+            },
+            "meta": "Rectangle/1.0",
+            "type": "Geometry2D/1.0"
+        }
+    ],
+    "Imports": [
+        {
+            "count": "many",
+            "lazy": true,
+            "meta": "Geometry2DFactory/1.0",
+            "prop": "resource_types",
+            "share": "nonshared",
+            "type": "Geometry2D/1.0"
+        },
+        {
+            "count": "many",
+            "lazy": true,
+            "meta": "Geometry3DFactory/1.0",
+            "prop": "resource_types",
+            "share": "nonshared",
+            "type": "Geometry3D/1.0"
+        }
+    ],
+    "Keys": [
+        "Square/1.0",
+        "GeometryControl/1.0",
+        "RegularPrism/1.0",
+        "FrustumCone/1.0",
+        "Geometry2DFactory/1.0",
+        "RegularPrismoid/1.0",
+        "Ellipse/1.0",
+        "Cylinder/1.0",
+        "RegularPolygon/1.0",
+        "Sphere/1.0",
+        "ArbitraryPolygon/1.0",
+        "Cube/1.0",
+        "IsoscelesTriangle/1.0",
+        "Cone/1.0",
+        "Ellipsoid/1.0",
+        "Arc/1.0",
+        "Parallelogram/1.0",
+        "RightTrapezoid/1.0",
+        "Qrthoprism/1.0",
+        "Line/1.0",
+        "Cuboid/1.0",
+        "IsopopeTrapezoid/1.0",
+        "GeometryTool/1.0",
+        "Diamond/1.0",
+        "RightTriangle/1.0",
+        "Geometry3DFactory/1.0",
+        "Sector/1.0",
+        "GeometryHelper",
+        "GeometryTools",
+        "Circle/1.0",
+        "Rectangle/1.0"
+    ]
+}

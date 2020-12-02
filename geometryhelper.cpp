@@ -2,8 +2,6 @@
 
 #include <core/resourcepage.h>
 
-#include <qexport.h>
-
 #include <QtMath>
 #include <QApplication>
 #include <QScreen>
@@ -16,8 +14,6 @@ qreal GeometryHelper::DEFAULT_LINE_WIDTH = 4.0;
 QFont GeometryHelper::TEXT_FONT;
 
 static QFontMetrics textMetrics(GeometryHelper::TEXT_FONT);
-
-static QExport<GeometryHelper> export_helper(QPart::shared);
 
 static QColor defaultColor1;
 static QColor defaultColor2;

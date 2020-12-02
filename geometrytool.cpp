@@ -1,5 +1,4 @@
 #include "geometrytool.h"
-#include "exports.h"
 #include "geometryhelper.h"
 
 #include <core/resourcefactory.h>
@@ -26,7 +25,11 @@ static char const * const geometry3ds[] = {
 
 #endif
 
-void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const & type)
+GeometryTools::GeometryTools()
+{
+}
+
+void GeometryTools::getToolButtons(QList<ToolButton*> & result, QByteArray const & type)
 {
     GeometryHelper::init();
     static QMap<QByteArray, QList<ToolButton*>> gButtons;
@@ -56,7 +59,7 @@ void GeometryTool::getToolButtons(QList<ToolButton*> & result, QByteArray const 
     gButtons.insert(type, result);
 }
 
-void GeometryTool::handleToolButton(ToolButton* button, QByteArray const &)
+void GeometryTools::handleToolButton(ToolButton* button, QByteArray const &)
 {
     if (button == &ToolButton::PLACE_HOOLDER)
         return;
@@ -79,7 +82,7 @@ void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *pare
         return;
     QByteArray type = res_->resource()->type();
     type.remove(type.length() - 4, 4); // "tool"
-    getToolButtons(buttons, type);
+    GeometryTools::getToolButtons(buttons, type);
 }
 
 bool GeometryTool::handleToolButton(ToolButton * button, QStringList const &)
@@ -89,3 +92,4 @@ bool GeometryTool::handleToolButton(ToolButton * button, QStringList const &)
     canvas->showToolControl("drawing");
     return true;
 }
+
