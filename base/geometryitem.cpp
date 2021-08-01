@@ -12,6 +12,10 @@
 #include <QTouchEvent>
 #include <QCursor>
 
+#ifdef SHOWBOARD_QUICK
+
+#else
+
 class GeometryEditItem : public QGraphicsPathItem
 {
 public:
@@ -62,12 +66,21 @@ private:
     QPainterPath shape_;
 };
 
-GeometryItem::GeometryItem(Geometry * geometry, QGraphicsItem * parent)
+#endif
+
+GeometryItem::GeometryItem(Geometry * geometry, ControlView * parent)
+#ifdef SHOWBOARD_QUICK
+    : QQuickItem(parent)
+#else
     : QGraphicsPathItem(parent)
+#endif
     , geometry_(geometry)
 {
+#ifdef SHOWBOARD_QUICK
+#else
     editItem_ = new GeometryEditItem(this);
     setFiltersChildEvents(true);
+#endif
     setAcceptTouchEvents(true);
     QMetaObject const * meta = geometry->metaObject();
     int index = meta->indexOfMethod("contains(QPointF)");
@@ -77,7 +90,11 @@ GeometryItem::GeometryItem(Geometry * geometry, QGraphicsItem * parent)
 
 void GeometryItem::setEditPoints(const QVector<QPointF> &points)
 {
+#ifdef SHOWBOARD_QUICK
+    (void) points;
+#else
     static_cast<GeometryEditItem*>(editItem_)->setEditPoints(points);
+#endif
 }
 
 void GeometryItem::showEditor(bool show)
@@ -85,11 +102,25 @@ void GeometryItem::showEditor(bool show)
     editItem_->setVisible(show);
 }
 
-void GeometryItem::setPen(const QPen &pen)
+void GeometryItem::setColor(const QColor & color)
 {
-    QGraphicsPathItem::setPen(pen);
+#ifdef SHOWBOARD_QUICK
+    (void) pen;
+#else
+    QGraphicsPathItem::setBrush(color);
+#endif
     //editItem_->setPen(QPen(Qt::black, pen.width()));
     //editItem_->setBrush(QBrush(pen.color()));
+}
+
+void GeometryItem::setContourPath(const QPainterPath &path)
+{
+#ifdef SHOWBOARD_QUICK
+    (void) path;
+#else
+    setPath(path);
+    update(); // contour may not change
+#endif
 }
 
 bool GeometryItem::contains(const QPointF &point) const
@@ -99,8 +130,15 @@ bool GeometryItem::contains(const QPointF &point) const
         methodContains_.invoke(geometry_, Q_RETURN_ARG(bool, result), Q_ARG(QPointF, point));
         return result;
     }
+#ifdef SHOWBOARD_QUICK
+    return false;
+#else
     return QGraphicsPathItem::contains(point);
+#endif
 }
+
+#ifdef SHOWBOARD_QUICK
+#else
 
 void GeometryItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                    QWidget *)
@@ -154,3 +192,4 @@ bool GeometryItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     }
 }
 
+#endif

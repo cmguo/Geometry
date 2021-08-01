@@ -5,9 +5,9 @@
 #include <core/resourcemanager.h>
 #include <core/toolbutton.h>
 #include <core/resource.h>
-#include <views/toolbarwidget.h>
+#include <widget/toolbarwidget.h>
 #include <views/whitecanvas.h>
-#include <views/whitecanvaswidget.h>
+#include <widget/whitecanvaswidget.h>
 
 #include <QVBoxLayout>
 

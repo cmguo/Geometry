@@ -428,6 +428,7 @@ int GeometryHelper::attachToLines(QPointF const & p1, QPointF const & p2, QVecto
 int GeometryHelper::attachLineToPointsAndLines(const QVector<QPointF> &pts, QVector<int> lines, QPointF &lp1, QPointF &lp2)
 {
     (void) lines;
+    (void) lp2;
     qreal min1 = HIT_DIFF_DIFF,  min2 = HIT_DIFF_DIFF;
     int result1 = -1,  result2 = -1;
     for (int i = 0; i < pts.size(); ++i) {

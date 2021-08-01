@@ -49,7 +49,7 @@ protected:
     virtual void select(bool selected) override;
 
 protected:
-    void setPen(QPen const & pen);
+    void setColor(const QColor & color);
 
     // update new path to item
     //  also update edit points when editing

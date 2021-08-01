@@ -57,7 +57,7 @@ ControlView *GeometryControl::create(ControlView *parent)
     (void) parent;
     GeometryItem * item = new GeometryItem(qobject_cast<Geometry*>(res_));
     //item->setBrush(QColor(0, 0, 255, 20));
-    item->editItem()->setData(1000 /*ITEM_KEY_CONTROL*/, QVariant::fromValue(this));
+    attachToItem(item->editItem(), this);
     return item;
 }
 
@@ -179,13 +179,13 @@ void GeometryControl::test()
 void GeometryControl::updateSettings()
 {
     Geometry * geometry = qobject_cast<Geometry *>(res_);
-    setPen(QPen(geometry->color(), geometry->width()));
+    setColor(geometry->color());
 }
 
 void GeometryControl::geometryChanged(const QByteArray &key)
 {
     finishGeometry();
-    if (key == "color" || key == "width")
+    if (key == "color")
         updateSettings();
 }
 
@@ -211,10 +211,10 @@ void GeometryControl::select(bool selected)
     Control::select(selected);
 }
 
-void GeometryControl::setPen(const QPen &pen)
+void GeometryControl::setColor(const QColor & color)
 {
     GeometryItem * item = static_cast<GeometryItem *>(item_);
-    item->setPen(pen);
+    item->setColor(color);
 }
 
 void GeometryControl::updateGeometry()
@@ -222,8 +222,7 @@ void GeometryControl::updateGeometry()
     Geometry * geometry = qobject_cast<Geometry *>(res_);
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     geometry->sync();
-    item->setPath(geometry->contour());
-    item->update(); // contour may not change
+    item->setContourPath(geometry->contour());
     if (editing_) {
         editPoints_ = geometry->movePoints();
         item->setEditPoints(editPoints_);
@@ -236,7 +235,7 @@ void GeometryControl::finishGeometry(bool valid)
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     geometry->sync();
     if (!valid) {
-        item->setPath(geometry->contour());
+        item->setContourPath(geometry->contour());
     }
     bool hasFinished = geometry->finished();
     QRectF bound = item->boundingRect();
