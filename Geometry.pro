@@ -6,6 +6,9 @@ CONFIG += plugin
 
 CONFIG += c++14
 
+include($$(applyCommonConfig))
+include($$(applyConanPlugin))
+
 include(../config.pri)
 
 # The following define makes your compiler emit warnings if you use
