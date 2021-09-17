@@ -2,9 +2,8 @@
 #define RULERGAUGECONTROL_H
 
 #include <core/control.h>
-#include "Geometry_global.h"
 
-class GEOMETRY_EXPORT RulerGaugeControl: public Control
+class RulerGaugeControl: public Control
 {
     Q_OBJECT
 
