@@ -1,6 +1,8 @@
 #ifndef GEOMETRY3DS_H
 #define GEOMETRY3DS_H
 
+#include <qexport.h>
+
 #include "geometry3d.h"
 #include "cuboid.h"
 #include "cube.h"
