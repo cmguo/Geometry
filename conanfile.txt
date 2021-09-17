@@ -1,6 +1,7 @@
 [requires]
 QtComposition/master@cmguo/stable
 qtpromise/v0.5.0@cmguo/stable
+ShowBoard/develop@cmguo/test
 
 [generators]
 qmake
