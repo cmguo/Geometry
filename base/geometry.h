@@ -109,8 +109,6 @@ protected:
 
     Geometry(Geometry const & o);
 
-    static void fillQuickPath(QObject * path, QPainterPath const & ph);
-
 protected:
     QVector<QPointF> points_;
     bool dirty_;

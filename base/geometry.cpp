@@ -7,6 +7,7 @@
 #include <core/resourcetransform.h>
 #include <core/toolbutton.h>
 
+#include <quick/qquickshapepath.h>
 #include <quick/quickhelper.h>
 
 using namespace QtPromise;
@@ -172,11 +173,11 @@ QVector<QPointF> Geometry::movePoints()
 
 QObject *Geometry::toQuickPath(QObject * context)
 {
-    QObject * shape = QuickHelper::createObject(context, "ShapePath", "QtQuick.Shapes");
-    shape->setProperty("strokeColor", QColor(Qt::transparent));
-    shape->setProperty("strokeWidth", 0);
-    shape->setProperty("fillColor", color_);
-    fillQuickPath(shape, visualPath());
+    QQuickShapePath * shape = QQuickShapePath::create(context);
+    shape->setStrokeColor(QColor(Qt::transparent));
+    shape->setStrokeWidth(0);
+    shape->setFillColor(color_);
+    shape->addPath(visualPath());
     return shape;
 }
 
@@ -257,38 +258,3 @@ QPainterPath Geometry::visualPath()
     ph |= textPath();
     return ph;
 }
-
-void Geometry::fillQuickPath(QObject *path, const QPainterPath &ph)
-{
-    QObject * seg = nullptr;
-    constexpr char const * classNames[] = {"PathMove", "PathLine", "PathCubic"};
-    for (int i = 0; i < ph.elementCount(); ++i) {
-        QPainterPath::Element e = ph.elementAt(i);
-        switch (e.type) {
-        case QPainterPath::MoveToElement:
-        case QPainterPath::LineToElement:
-            seg = QuickHelper::createObject(path, classNames[e.type], "QtQuick", "2.12");
-            seg->setProperty("x", e.x);
-            seg->setProperty("y", e.y);
-            break;
-        case QPainterPath::CurveToElement:
-            if (i + 2 < ph.elementCount()) {
-                seg = QuickHelper::createObject(path, classNames[e.type], "QtQuick", "2.12");
-                seg->setProperty("control1X", e.x);
-                seg->setProperty("control1X", e.y);
-                QPainterPath::Element e1 = ph.elementAt(++i);
-                QPainterPath::Element e2 = ph.elementAt(++i);
-                seg->setProperty("control2X", e1.x);
-                seg->setProperty("control2Y", e1.y);
-                seg->setProperty("x", e2.x);
-                seg->setProperty("y", e2.y);
-            }
-            break;
-        default:
-            break;
-        }
-        QuickHelper::appendChild(path, seg);
-        seg = nullptr;
-    }
-}
-

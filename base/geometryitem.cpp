@@ -105,7 +105,7 @@ void GeometryItem::showEditor(bool show)
 void GeometryItem::setColor(const QColor & color)
 {
 #ifdef SHOWBOARD_QUICK
-    (void) pen;
+    (void) color;
 #else
     QGraphicsPathItem::setBrush(color);
 #endif
