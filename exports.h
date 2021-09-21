@@ -9,7 +9,7 @@
 #include "geometryhelper.h"
 
 REGISTER_CONTROL(GeometryControl, "geometry2d,geometry3d")
-REGISTER_CONTROL(GeometryTool, "geometry2dtool,geometry3dtool");
+REGISTER_CONTROL(GeometryTool, "geometry2dtool,geometry3dtool,rulertooltool");
 
 static QExport<GeometryTools> export_tools(QPart::shared);
 static QExport<GeometryHelper> export_helper(QPart::shared);

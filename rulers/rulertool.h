@@ -1,5 +1,5 @@
-#ifndef RULERGAUGECONTROL_H
-#define RULERGAUGECONTROL_H
+#ifndef RULERTOOL_H
+#define RULERTOOL_H
 
 #include <core/control.h>
 
@@ -21,4 +21,4 @@ protected:
     virtual void attached() override;
 };
 
-#endif // RULERGAUGECONTROL_H
+#endif // RULERTOOL_H

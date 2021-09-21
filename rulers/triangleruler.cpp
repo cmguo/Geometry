@@ -1,31 +1,23 @@
-#include "triangleruleritem.h"
+#include "triangleruler.h"
+
+#include <core/resource.h>
 
 #include <QPainter>
 #include <QtMath>
 
-TriangleRulerItem::TriangleRulerItem(bool isosceles, QGraphicsItem *parent)
-    : TriangleRulerItem(isosceles, 500, parent)
-{
-}
-
-TriangleRulerItem::TriangleRulerItem(bool isosceles, qreal width, QGraphicsItem *parent)
-    : RulerItem(width,
-                isosceles ? (width) : (width / sqrt(3.0)), parent)
-    , isosceles_(isosceles)
-{
-    minWidth_ = isosceles ? 300 : 400;
-    updateShape();
-    adjustControlButtonPos();
-}
-
-TriangleRulerItem::~TriangleRulerItem()
-{
-}
-
 static constexpr qreal SQRT2_2 = 0.70710678118654752440084436210485;
 static constexpr qreal SQRT3_2 = 0.86602540378443864676372317075294;
 
-QPointF TriangleRulerItem::adjustDirection(QRectF &adjust)
+TriangleRuler::TriangleRuler(Resource * res)
+    : Ruler(res)
+{
+    isosceles_ = res->type() == "iso_triangle";
+    width_ = 500;
+    height_ = isosceles_ ? (width_) : (width_ / (SQRT3_2 * 2));
+    minWidth_ = isosceles_ ? 300 : 400;
+}
+
+QPointF TriangleRuler::adjustDirection(QRectF &adjust)
 {
     if (isosceles_) {
         adjust = {0, -SQRT2_2 * 2, SQRT2_2 * 2, SQRT2_2 * 2};
@@ -36,7 +28,7 @@ QPointF TriangleRulerItem::adjustDirection(QRectF &adjust)
     }
 }
 
-QVector<QPointF> TriangleRulerItem::getControlButtonPos()
+QVector<QPointF> TriangleRuler::getControlPositions()
 {
     qreal offset = Unit * 5 + 40;
     qreal ratio1 = isosceles_ ? (SQRT2_2 * 2 + 1.0) : (SQRT3_2 * 2);
@@ -48,7 +40,7 @@ QVector<QPointF> TriangleRulerItem::getControlButtonPos()
     };
 }
 
-void TriangleRulerItem::updateShape()
+void TriangleRuler::updateShape()
 {
     shape_ = QPainterPath();
     QVector<QPointF> vector = {
@@ -67,10 +59,10 @@ void TriangleRulerItem::updateShape()
     };
     shape2_ = QPainterPath();
     shape2_.addPolygon(vector2);
-    RulerItem::updateShape();
+    Ruler::updateShape();
 }
 
-void TriangleRulerItem::onDraw(QPainter *painter)
+void TriangleRuler::onDraw(QPainter *painter)
 {
     drawTickMarks(painter, {0, height_}, {0, 0},
                   CrossLittenEndian | NeedRotate | ClipByShape);

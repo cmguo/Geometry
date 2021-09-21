@@ -1,22 +1,18 @@
 #ifndef COMPASSES_H
 #define COMPASSES_H
 
-#include "ruleritem.h"
+#include "ruler.h"
 
 // 圆规
-class Compasses : public RulerItem
+class Compasses : public Ruler
 {
 public:
-    explicit Compasses(QGraphicsItem *parent = nullptr);
-
-    ~Compasses() override;
+    explicit Compasses(Resource * res);
 
 protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    virtual QPointF adjustDirection(QRectF &adjust) override;
 
-    QPointF adjustDirection(QRectF &adjust) override;
-
-    virtual QVector<QPointF> getControlButtonPos() override;
+    virtual QVector<QPointF> getControlPositions() override;
 
     virtual void updateShape() override;
 };

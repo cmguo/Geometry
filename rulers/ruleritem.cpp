@@ -1,6 +1,7 @@
 #include "ruleritem.h"
 #include "geometryhelper.h"
 #include "rulertool.h"
+#include "ruler.h"
 
 #include <core/control.h>
 #include <core/resourceview.h>
@@ -12,17 +13,11 @@
 #include <QtMath>
 #include <QDebug>
 
-RulerItem::RulerItem(QGraphicsItem *parent)
-    : RulerItem(500, 500, parent)
-{
-}
-
-RulerItem::RulerItem(qreal width, qreal height,QGraphicsItem *parent)
+RulerItem::RulerItem(Ruler * ruler, QGraphicsItem *parent)
     : QGraphicsItem(parent)
-    , width_(width)
-    , height_(height)
 {
     GeometryHelper::init();
+    ruler_ = ruler;
     deleteItem_ = iconItem(":/geometry/icon/ruler/delete.svg");
     adjustItem_ = iconItem(":/geometry/icon/ruler/adjust.svg");
     rotateItem_ = iconItem(":/geometry/icon/ruler/rotate.svg");
@@ -34,12 +29,12 @@ RulerItem::~RulerItem()
 
 QRectF RulerItem::boundingRect() const
 {
-    return QRectF(0, 0, width_, height_);
+    return QRectF(0, 0, ruler_->width_, ruler_->height_);
 }
 
 QPainterPath RulerItem::shape() const
 {
-    return shape_;
+    return ruler_->shape_;
 }
 
 bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
@@ -65,15 +60,15 @@ bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         QPointF mousePos = mouseEvent->scenePos();
         RulerTool *control = qobject_cast<RulerTool*>(RulerTool::fromItem(this));
         if (watched == rotateItem_) {
-            control->rotate(mapToParent(rotateCenter_), lastPoint_, mousePos);
+            control->rotate(mapToParent(ruler_->rotateCenter_), lastPoint_, mousePos);
         } else if (watched == adjustItem_) {
             mousePos = mapFromScene(mousePos);
-            QPointF offset = adjust(mousePos - lastPoint_);
+            QPointF offset = ruler_->adjust(mousePos - lastPoint_);
             offset = control->resource()->transform().rotate().map(offset);
             mousePos -= offset;
             control->move(offset);
             control->sizeChanged();
-            adjustControlButtonPos();
+            adjustControlPositions();
         }
         lastPoint_ = mousePos;
     }
@@ -100,7 +95,7 @@ QVariant RulerItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             adjustItem_->installSceneEventFilter(this);
             rotateItem_->installSceneEventFilter(this);
             updateShape();
-            adjustControlButtonPos();
+            adjustControlPositions();
         }
         break;
     default:
@@ -113,129 +108,24 @@ void RulerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 {
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(250, 250, 250, 100));
-    painter->drawPath(shape1_);
+    painter->drawPath(ruler_->shape1_);
     painter->setBrush(QColor(250, 250, 250, 160));
-    painter->drawPath(shape2_);
+    painter->drawPath(ruler_->shape2_);
     painter->setPen(QPen(Qt::black, 1));
     painter->setRenderHints(QPainter::TextAntialiasing);
     painter->setFont(GeometryHelper::TEXT_FONT);
-    onDraw(painter);
-}
-
-QVector<QPointF> RulerItem::tickMarkPoints(QPointF const & from, QPointF const & to, int flags)
-{
-    qreal length = GeometryHelper::length(to - from);
-    QPointF delta = to - from;
-    GeometryHelper::adjustToLength(delta, Unit);
-    QPointF scale = delta;
-    if (flags & Anticlockwise)
-        GeometryHelper::rotate(scale, QPointF(0, -1));
-    else
-        GeometryHelper::rotate(scale, QPointF(0, 1));
-    QVector<QPointF> points;
-    QPointF cur = from;
-    while (length > 0) {
-        int l = 0;
-        if ((flags & CrossLittenEndian) && points.size() < 10) {
-            l = points.size() / 2;
-        } else if (points.size() % 20 == 0) { // per 10mm
-            l = 4;
-        } else if (points.size() % 10 == 0) { // pre 5mm
-            l = 3;
-        } else {
-            l = 2;
-        }
-        QPointF end = cur + scale * l;
-        if ((flags & ClipByShape) && l > 0 && !shape_.contains(end))
-            break;
-        points.append(cur);
-        points.append(end);
-        length -= Unit;
-        cur = cur + delta;
-    }
-    return points;
-}
-
-void RulerItem::drawTickMarks(QPainter *painter, const QPointF &from, const QPointF &to, int flags)
-{
-    if (flags & NeedRotate) {
-        QPointF d = to - from;
-        if (!qFuzzyIsNull(d.y())) {
-            GeometryHelper::adjustToLength(d, 1.0);
-            QTransform t = QTransform(d.x(), d.y(), -d.y(), d.x(), 0, 0)
-                    * QTransform::fromTranslate(from.x(), from.y());
-            QTransform t2 = t.inverted();
-            QTransform o = painter->transform();
-            painter->setTransform(t, true);
-            if (flags & ClipByShape) {
-                QPainterPath shape = shape_;
-                shape_ = t2.map(shape);
-                drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
-                shape_ = shape;
-            } else {
-                drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
-            }
-            painter->setTransform(o);
-            return;
-        }
-    }
-    auto marks = tickMarkPoints(from, to, flags);
-    painter->drawLines(marks);
-    Qt::Alignment alignment = (flags & Anticlockwise)
-            ? Qt::AlignBottom | Qt::AlignHCenter : Qt::AlignTop | Qt::AlignHCenter;
-    for (int i = 0; i < marks.size(); i += 2) {
-        if (i == 0 && (flags & CrossLittenEndian))
-            continue;
-        if (i % 20 == 0) {
-            QString mark = QString::number(i / 20);
-            QRectF txtRect = GeometryHelper::textRect(
-                        mark, marks[i + 1], alignment);
-            if (!shape_.contains(txtRect))
-                break;
-            painter->drawText(txtRect, mark);
-        }
-    }
-}
-
-QPointF RulerItem::adjust(QPointF const & offset)
-{
-    qDebug() << offset;
-    QRectF adj;
-    QPointF dir = adjustDirection(adj);
-    qreal length = GeometryHelper::dotProduct(offset, dir);
-    if (width_ + adj.width() * length < minWidth_)
-        length = (minWidth_ - width_) / adj.width();
-    QPointF topLeft = adj.topLeft() * length;
-    QSizeF size = adj.size() * length;
-    qDebug() << length << topLeft << size;
-    lastPoint_ += topLeft;
-    width_ += size.width();
-    height_ += size.height();
-    prepareGeometryChange();
-    updateShape();
-    return topLeft;
-}
-
-QPointF RulerItem::adjustDirection(QRectF &adjust)
-{
-    adjust.setRight(1);
-    return QPointF(1, 0);
+    ruler_->onDraw(painter);
 }
 
 void RulerItem::updateShape()
 {
-    shape1_ = shape_ - shape2_;
-    shape2_ = shape_ & shape2_;
+    prepareGeometryChange();
+    ruler_->updateShape();
 }
 
-void RulerItem::onDraw(QPainter *painter)
+void RulerItem::adjustControlPositions()
 {
-    (void) painter;
-}
-
-void RulerItem::adjustControlButtonPos()
-{
-    QVector<QPointF> points = getControlButtonPos();
+    QVector<QPointF> points = ruler_->getControlPositions();
     deleteItem_->setPos(points[0]);
     adjustItem_->setPos(points[1]);
     rotateItem_->setPos(points[2]);

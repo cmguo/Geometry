@@ -1,27 +1,16 @@
 #include "compasses.h"
 
-Compasses::Compasses(QGraphicsItem *parent)
-    : RulerItem(parent)
+Compasses::Compasses(Resource * res)
+    : Ruler(res)
 {
-    adjustControlButtonPos();
 }
 
-Compasses::~Compasses()
-{
-
-}
-
-void Compasses::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *)
-{
-
-}
-
-QPointF Compasses::adjustDirection(QRectF &adjust)
+QPointF Compasses::adjustDirection(QRectF &)
 {
     return {0, 1};
 }
 
-QVector<QPointF> Compasses::getControlButtonPos()
+QVector<QPointF> Compasses::getControlPositions()
 {
     QVector<QPointF> points;
     points.insert(0,QPointF(0,0));
@@ -32,5 +21,4 @@ QVector<QPointF> Compasses::getControlButtonPos()
 
 void Compasses::updateShape()
 {
-
 }

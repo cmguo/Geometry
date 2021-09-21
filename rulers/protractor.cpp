@@ -1,33 +1,24 @@
-#include "protractoritem.h"
+#include "protractor.h"
 
 #include <QPainter>
 #include <QtMath>
 #include <geometryhelper.h>
 
-ProtractorItem::ProtractorItem(QGraphicsItem *parent)
-    : ProtractorItem(500, parent)
+Protractor::Protractor(Resource * res)
+    : Ruler(res)
 {
-}
-
-ProtractorItem::ProtractorItem(qreal width, QGraphicsItem *parent)
-    : RulerItem(width, width / 2 + 20, parent)
-{
+    width_ = 500;
+    height_ = width_ / 2 + 20;
     minWidth_ = 500;
-    updateShape();
-    adjustControlButtonPos();
 }
 
-ProtractorItem::~ProtractorItem()
-{
-}
-
-QPointF ProtractorItem::adjustDirection(QRectF &adjust)
+QPointF Protractor::adjustDirection(QRectF &adjust)
 {
     adjust = {-1, -1, 2, 1};
     return {0, -1};
 }
 
-QVector<QPointF> ProtractorItem::getControlButtonPos()
+QVector<QPointF> Protractor::getControlPositions()
 {
     return QVector<QPointF>{
         {100, height_ - 40},
@@ -36,7 +27,7 @@ QVector<QPointF> ProtractorItem::getControlButtonPos()
     };
 }
 
-void ProtractorItem::updateShape()
+void Protractor::updateShape()
 {
     QRectF cicle{0, 0, width_, width_};
     shape_ = QPainterPath();
@@ -52,14 +43,14 @@ void ProtractorItem::updateShape()
     shape3.addEllipse(cicle);
     shape2_ = shape1 - shape2 + shape3;
     QPainterPath bounds;
-    bounds.addRect(boundingRect());
+    bounds.addRect({0, 0, width_, height_});
     shape_ = shape_ & bounds;
     shape2_ = shape2_ & bounds;
     rotateCenter_ = {width_ / 2, width_ / 2};
-    RulerItem::updateShape();
+    Ruler::updateShape();
 }
 
-void ProtractorItem::onDraw(QPainter *painter)
+void Protractor::onDraw(QPainter *painter)
 {
     qreal r = width_ / 2;
     qreal r2 = width_ / 6;

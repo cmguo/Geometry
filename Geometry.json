@@ -158,7 +158,7 @@
         },
         {
             "attrs": {
-                "mineType": "geometry2dtool,geometry3dtool"
+                "mineType": "geometry2dtool,geometry3dtool,rulertooltool"
             },
             "meta": "GeometryTool/1.0",
             "type": "Control/1.0"
@@ -218,6 +218,35 @@
         },
         {
             "attrs": {
+                "mineType": "rulertool",
+                "rfactory": "true"
+            },
+            "meta": "RulerFactory/1.0",
+            "type": "ResourceView/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "linear"
+            },
+            "meta": "LinearRuler/1.0",
+            "type": "Ruler/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "triangle,iso_triangle"
+            },
+            "meta": "TriangleRuler/1.0",
+            "type": "Ruler/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "protractor"
+            },
+            "meta": "Protractor/1.0",
+            "type": "Ruler/1.0"
+        },
+        {
+            "attrs": {
                 "mineType": "rulertool"
             },
             "meta": "RulerTool/1.0",
@@ -240,6 +269,14 @@
             "prop": "resource_types",
             "share": "nonshared",
             "type": "Geometry3D/1.0"
+        },
+        {
+            "count": "many",
+            "lazy": true,
+            "meta": "RulerFactory/1.0",
+            "prop": "resource_types",
+            "share": "nonshared",
+            "type": "Ruler/1.0"
         }
     ],
     "Keys": [
@@ -274,6 +311,11 @@
         "GeometryTools",
         "Circle/1.0",
         "Rectangle/1.0",
+        "RulerFactory/1.0",
+        "Ruler/1.0",
+        "LinearRuler/1.0",
+        "TriangleRuler/1.0",
+        "Protractor/1.0",
         "RulerTool/1.0"
     ]
 }

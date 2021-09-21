@@ -2,6 +2,128 @@
 
 #include <core/resource.h>
 
+#include <QPainter>
+#include <geometryhelper.h>
+
+Ruler::Ruler(Resource * res, Flags flags, Flags clearFlags)
+    : ResourceView(res, flags, clearFlags)
+{
+    width_ = height_ = 500;
+}
+
+QPointF Ruler::adjustDirection(QRectF &adjust)
+{
+    adjust.setRight(1);
+    return QPointF(1, 0);
+}
+
+void Ruler::updateShape()
+{
+    shape1_ = shape_ - shape2_;
+    shape2_ = shape_ & shape2_;
+}
+
+void Ruler::onDraw(QPainter *painter)
+{
+    (void) painter;
+}
+
+QPointF Ruler::adjust(QPointF const & offset)
+{
+    qDebug() << offset;
+    QRectF adj;
+    QPointF dir = adjustDirection(adj);
+    qreal length = GeometryHelper::dotProduct(offset, dir);
+    if (width_ + adj.width() * length < width_)
+        length = (minWidth_ - width_) / adj.width();
+    QPointF topLeft = adj.topLeft() * length;
+    QSizeF size = adj.size() * length;
+    qDebug() << length << topLeft << size;
+    width_ += size.width();
+    height_ += size.height();
+    updateShape();
+    return topLeft;
+}
+
+QVector<QPointF> Ruler::tickMarkPoints(QPointF const & from, QPointF const & to, int flags)
+{
+    qreal length = GeometryHelper::length(to - from);
+    QPointF delta = to - from;
+    GeometryHelper::adjustToLength(delta, Unit);
+    QPointF scale = delta;
+    if (flags & Anticlockwise)
+        GeometryHelper::rotate(scale, QPointF(0, -1));
+    else
+        GeometryHelper::rotate(scale, QPointF(0, 1));
+    QVector<QPointF> points;
+    QPointF cur = from;
+    while (length > 0) {
+        int l = 0;
+        if ((flags & CrossLittenEndian) && points.size() < 10) {
+            l = points.size() / 2;
+        } else if (points.size() % 20 == 0) { // per 10mm
+            l = 4;
+        } else if (points.size() % 10 == 0) { // pre 5mm
+            l = 3;
+        } else {
+            l = 2;
+        }
+        QPointF end = cur + scale * l;
+        if ((flags & ClipByShape) && l > 0 && !shape_.contains(end))
+            break;
+        points.append(cur);
+        points.append(end);
+        length -= Unit;
+        cur = cur + delta;
+    }
+    return points;
+}
+
+void Ruler::drawTickMarks(QPainter *painter, const QPointF &from, const QPointF &to, int flags)
+{
+    if (flags & NeedRotate) {
+        QPointF d = to - from;
+        if (!qFuzzyIsNull(d.y())) {
+            GeometryHelper::adjustToLength(d, 1.0);
+            QTransform t = QTransform(d.x(), d.y(), -d.y(), d.x(), 0, 0)
+                    * QTransform::fromTranslate(from.x(), from.y());
+            QTransform t2 = t.inverted();
+            QTransform o = painter->transform();
+            painter->setTransform(t, true);
+            if (flags & ClipByShape) {
+                QPainterPath shape = shape_;
+                shape_ = t2.map(shape);
+                drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
+                shape_ = shape;
+            } else {
+                drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
+            }
+            painter->setTransform(o);
+            return;
+        }
+    }
+    auto marks = tickMarkPoints(from, to, flags);
+    painter->drawLines(marks);
+    Qt::Alignment alignment = (flags & Anticlockwise)
+            ? Qt::AlignBottom | Qt::AlignHCenter : Qt::AlignTop | Qt::AlignHCenter;
+    for (int i = 0; i < marks.size(); i += 2) {
+        if (i == 0 && (flags & CrossLittenEndian))
+            continue;
+        if (i % 20 == 0) {
+            QString mark = QString::number(i / 20);
+            QRectF txtRect = GeometryHelper::textRect(
+                        mark, marks[i + 1], alignment);
+            if (!shape_.contains(txtRect))
+                break;
+            painter->drawText(txtRect, mark);
+        }
+    }
+}
+
+/*
+ * RulerFactory
+ */
+
 RulerFactory::RulerFactory()
 {
 }
@@ -17,5 +139,6 @@ ResourceView *RulerFactory::create(Resource *res)
 
 QUrl RulerFactory::newUrl(const QByteArray &type) const
 {
-    return QUrl("ruler:" + type);
+    return QUrl("rulertool:" + type);
 }
+

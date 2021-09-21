@@ -3,14 +3,13 @@
 
 #include <QGraphicsItem>
 
+class Ruler;
 class RulerItem : public QGraphicsItem
 {
 public:
-    explicit RulerItem(QGraphicsItem *parent = nullptr);
+    explicit RulerItem(Ruler * ruler, QGraphicsItem *parent = nullptr);
 
-    RulerItem(qreal width, qreal height, QGraphicsItem *parent = nullptr);
-
-    ~RulerItem() override;
+    virtual ~RulerItem() override;
 
 protected:
     virtual QRectF boundingRect()const override;
@@ -23,46 +22,15 @@ protected:
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-protected:
-    enum TickFlags {
-        Anticlockwise = 1,
-        CrossLittenEndian = 2,
-        NeedRotate = 4,
-        ClipByShape = 8
-    };
+private:
+    void updateShape();
 
-    // 刻度线，
-    QVector<QPointF> tickMarkPoints(QPointF const & from, QPointF const & to, int flags);
-
-    void drawTickMarks(QPainter * painter, QPointF const & from, QPointF const & to, int flags);
-
-protected:
-    virtual QPointF adjust(QPointF const & offset);
-
-    // Unit length vector
-    virtual QPointF adjustDirection(QRectF & adjust);
-
-    virtual void updateShape();
-
-    virtual QVector<QPointF> getControlButtonPos() = 0;
-
-    virtual void onDraw(QPainter * painter);
-
-protected:
-    static constexpr qreal Unit = 5; // 每毫米px
-
-    void adjustControlButtonPos();
+    void adjustControlPositions();
 
     QGraphicsItem * iconItem(QString const & url);
 
 protected:
-    qreal width_;
-    qreal height_;
-    qreal minWidth_ = 300;
-    QPointF rotateCenter_;
-    QPainterPath shape_;
-    QPainterPath shape1_;
-    QPainterPath shape2_;
+    Ruler * ruler_;
 
 private:
     QGraphicsItem * deleteItem_ = nullptr;

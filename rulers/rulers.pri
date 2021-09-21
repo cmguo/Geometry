@@ -1,18 +1,18 @@
 HEADERS += \
     $$PWD/compasses.h \
-    $$PWD/linearruleritem.h \
-    $$PWD/protractoritem.h \
+    $$PWD/linearruler.h \
+    $$PWD/protractor.h \
     $$PWD/ruler.h \
     $$PWD/ruleritem.h \
     $$PWD/rulers.h \
     $$PWD/rulertool.h \
-    $$PWD/triangleruleritem.h
+    $$PWD/triangleruler.h
 
 SOURCES += \
     $$PWD/compasses.cpp \
-    $$PWD/linearruleritem.cpp \
-    $$PWD/protractoritem.cpp \
+    $$PWD/linearruler.cpp \
+    $$PWD/protractor.cpp \
     $$PWD/ruler.cpp \
     $$PWD/ruleritem.cpp \
     $$PWD/rulertool.cpp \
-    $$PWD/triangleruleritem.cpp
+    $$PWD/triangleruler.cpp
