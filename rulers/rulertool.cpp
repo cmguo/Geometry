@@ -9,7 +9,7 @@
 #include <cmath>
 
 RulerTool::RulerTool(ResourceView * res)
-    : Control(res, {KeepAspectRatio})
+    : Control(res, {KeepAspectRatio}, {CanSelect, CanRotate, CanScale})
 {
 }
 
@@ -21,13 +21,13 @@ ControlView * RulerTool::create(ControlView * parent)
 
 void RulerTool::attaching()
 {
+    if (!flags_.testFlag(RestoreSession)) {
+        qobject_cast<Ruler*>(res_)->updateShape();
+    }
 }
 
 void RulerTool::attached()
 {
-    if (!flags_.testFlag(RestoreSession)) {
-        qobject_cast<Ruler*>(res_)->updateShape();
-    }
     loadFinished(true);
 }
 

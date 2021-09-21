@@ -92,8 +92,9 @@ void GeometryTool::getToolButtons(QList<ToolButton *> &buttons, ToolButton *pare
 bool GeometryTool::handleToolButton(ToolButton * button, QStringList const &)
 {
     WhiteCanvas * canvas = static_cast<WhiteCanvas*>(item_->parentItem()->parentItem());
-    if (button->name().startsWith("ruler")) {
-        canvas->addResource(QUrl(button->name()));
+    if (button->name().startsWith("rulertool:")) {
+        Control * control = canvas->addResource(QUrl(button->name()));
+        canvas->showToolControl(control);
         return true;
     }
     canvas->getToolControl("drawing")->setOption("newUrl", button->name());

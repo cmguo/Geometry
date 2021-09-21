@@ -6,7 +6,7 @@
 #include <geometryhelper.h>
 
 Ruler::Ruler(Resource * res, Flags flags, Flags clearFlags)
-    : ResourceView(res, flags, clearFlags)
+    : ResourceView(res, flags, clearFlags | CanCopy | CanDelete)
 {
     width_ = height_ = 500;
 }
@@ -30,15 +30,13 @@ void Ruler::onDraw(QPainter *painter)
 
 QPointF Ruler::adjust(QPointF const & offset)
 {
-    qDebug() << offset;
     QRectF adj;
     QPointF dir = adjustDirection(adj);
     qreal length = GeometryHelper::dotProduct(offset, dir);
-    if (width_ + adj.width() * length < width_)
+    if (width_ + adj.width() * length < minWidth_)
         length = (minWidth_ - width_) / adj.width();
     QPointF topLeft = adj.topLeft() * length;
     QSizeF size = adj.size() * length;
-    qDebug() << length << topLeft << size;
     width_ += size.width();
     height_ += size.height();
     updateShape();
