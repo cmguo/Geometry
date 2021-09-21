@@ -59,6 +59,7 @@ protected:
     qreal width_;
     qreal height_;
     qreal minWidth_ = 300;
+    QPointF rotateCenter_;
     QPainterPath shape_;
     QPainterPath shape1_;
     QPainterPath shape2_;

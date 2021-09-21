@@ -20,11 +20,11 @@ ControlView * RulerTool::create(ControlView * parent)
     QString type = res_->url().path().split("/")[0];
     QGraphicsItem *item = nullptr;
     if (type == "linear") {
-        item = new LinearRulerItem(nullptr);
+        item = new LinearRulerItem;
     }else if(type == "triangle") {
         item = new TriangleRulerItem(false);
     }else if(type == "protractor") {
-        item = new ProtractorItem(500,250,nullptr);
+        item = new ProtractorItem;
     } else if(type == "iso_triangle") {
         item = new TriangleRulerItem(true);
     }

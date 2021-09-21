@@ -65,7 +65,7 @@ bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         QPointF mousePos = mouseEvent->scenePos();
         RulerTool *control = qobject_cast<RulerTool*>(RulerTool::fromItem(this));
         if (watched == rotateItem_) {
-            control->rotate(mapToParent({0,0}), lastPoint_, mousePos);
+            control->rotate(mapToParent(rotateCenter_), lastPoint_, mousePos);
         } else if (watched == adjustItem_) {
             mousePos = mapFromScene(mousePos);
             QPointF offset = adjust(mousePos - lastPoint_);
@@ -112,11 +112,13 @@ QVariant RulerItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
 void RulerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(Qt::NoPen);
-    painter->setBrush(QColor(80, 80, 80, 80));
+    painter->setBrush(QColor(250, 250, 250, 100));
     painter->drawPath(shape1_);
-    painter->setBrush(QColor(250, 250, 250, 80));
+    painter->setBrush(QColor(250, 250, 250, 160));
     painter->drawPath(shape2_);
-    painter->setPen(QPen(Qt::black, 2));
+    painter->setPen(QPen(Qt::black, 1));
+    painter->setRenderHints(QPainter::TextAntialiasing);
+    painter->setFont(GeometryHelper::TEXT_FONT);
     onDraw(painter);
 }
 
@@ -179,8 +181,6 @@ void RulerItem::drawTickMarks(QPainter *painter, const QPointF &from, const QPoi
     }
     auto marks = tickMarkPoints(from, to, flags);
     painter->drawLines(marks);
-    painter->setRenderHints(QPainter::TextAntialiasing);
-    painter->setFont(GeometryHelper::TEXT_FONT);
     Qt::Alignment alignment = (flags & Anticlockwise)
             ? Qt::AlignBottom | Qt::AlignHCenter : Qt::AlignTop | Qt::AlignHCenter;
     for (int i = 0; i < marks.size(); i += 2) {

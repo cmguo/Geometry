@@ -23,6 +23,10 @@ static char const * const geometry3ds[] = {
     "cube", "cuboid", "cylinder", "cone", "sphere",
 };
 
+static char const * const rulers[] = {
+    "linear", "triangle", "iso_triangle", "protractor", "compasses",
+};
+
 #endif
 
 GeometryTools::GeometryTools()
