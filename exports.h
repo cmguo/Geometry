@@ -3,6 +3,7 @@
 
 #include "geometry2ds/geometry2ds.h"
 #include "geometry3ds/geometry3ds.h"
+#include "rulers/rulers.h"
 #include "geometrycontrol.h"
 #include "geometrytool.h"
 #include "geometryhelper.h"

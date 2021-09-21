@@ -1,24 +1,24 @@
-#include "protractor.h"
+#include "protractoritem.h"
 
 #include <QPainter>
 
-Protractor::Protractor(QGraphicsItem *parent):RulerGaugeBase(parent)
+ProtractorItem::ProtractorItem(QGraphicsItem *parent)
+    : ProtractorItem(500, 250, parent)
 {
-
 }
 
-Protractor::Protractor(int width, int height, QGraphicsItem *parent):RulerGaugeBase(width,height,parent)
+ProtractorItem::ProtractorItem(qreal width, qreal height, QGraphicsItem *parent)
+    : RulerItem(width, height, parent)
 {
     updateShape();
     adjustControlButtonPos();
 }
 
-Protractor::~Protractor()
+ProtractorItem::~ProtractorItem()
 {
-
 }
 
-void Protractor::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void ProtractorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     //绘制扇形背景
     QPen p = QPen(Qt::black,2);
@@ -31,10 +31,10 @@ void Protractor::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     font.setPixelSize(10);
     painter->setFont(font);
     painter->setPen(p);
-    QPoint point(boundingRect().width()/2,0);
+    QPointF point(boundingRect().width() / 2, 0);
     int linelen = 10;
-    for(int i=0;i<=180;i++)
-    {
+    QVector<QPointF> lines;
+    for(int i = 0; i <= 180; ++i) {
         painter->save();
         painter->translate(boundingRect().width()/2,boundingRect().height());
         painter->rotate(180+i);
@@ -60,12 +60,13 @@ void Protractor::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 }
 
-QPointF Protractor::adjustSize(QPointF from,QPointF to)
+QPointF ProtractorItem::adjustDirection(QRectF &adjust)
 {
-    return QPointF(0,0);
+    static constexpr qreal SQRT2 = 0.70710678118654752440084436210485;
+    return {SQRT2, SQRT2 / 2};
 }
 
-QVector<QPointF> Protractor::getControlButtonPos()
+QVector<QPointF> ProtractorItem::getControlButtonPos()
 {
     QVector<QPointF> points;
     points.insert(0,QPointF(0,0));
@@ -74,7 +75,7 @@ QVector<QPointF> Protractor::getControlButtonPos()
     return points;
 }
 
-void Protractor::updateShape()
+void ProtractorItem::updateShape()
 {
     shape_ =QPainterPath();
     QRect rect = QRect(0,0,boundingRect().width(),boundingRect().height()*2);

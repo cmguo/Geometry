@@ -1,6 +1,7 @@
 #include "compasses.h"
 
-Compasses::Compasses(QGraphicsItem *parent):RulerGaugeBase(parent)
+Compasses::Compasses(QGraphicsItem *parent)
+    : RulerItem(parent)
 {
     adjustControlButtonPos();
 }
@@ -15,9 +16,9 @@ void Compasses::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *)
 
 }
 
-QPointF Compasses::adjustSize(QPointF ,QPointF )
+QPointF Compasses::adjustDirection(QRectF &adjust)
 {
-    return QPointF(0,0);
+    return {0, 1};
 }
 
 QVector<QPointF> Compasses::getControlButtonPos()

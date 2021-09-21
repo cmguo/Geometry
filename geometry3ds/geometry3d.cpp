@@ -49,7 +49,7 @@ Geometry3D::Geometry3D(Geometry3D const & o)
 
 bool Geometry3D::empty() const
 {
-    return Geometry::empty() && res_->url().path().lastIndexOf('/') == 0
+    return Geometry::empty() && res_->url().path().lastIndexOf('/') == -1
             && res_->url().query().length() == 0;
 }
 
@@ -170,7 +170,7 @@ Geometry3DFactory::Geometry3DFactory()
 
 ResourceView * Geometry3DFactory::create(Resource *res)
 {
-    QString type = res->url().path().mid(1);
+    QString type = res->url().path();
     int n = type.indexOf('/');
     if (n > 0)
         type = type.left(n);
@@ -179,5 +179,5 @@ ResourceView * Geometry3DFactory::create(Resource *res)
 
 QUrl Geometry3DFactory::newUrl(const QByteArray &type) const
 {
-    return QUrl("geometry3d:///" + type);
+    return QUrl("geometry3d:" + type);
 }

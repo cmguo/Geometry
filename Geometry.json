@@ -215,6 +215,13 @@
             },
             "meta": "Rectangle/1.0",
             "type": "Geometry2D/1.0"
+        },
+        {
+            "attrs": {
+                "mineType": "rulertool"
+            },
+            "meta": "RulerTool/1.0",
+            "type": "Control/1.0"
         }
     ],
     "Imports": [
@@ -266,6 +273,7 @@
         "GeometryHelper",
         "GeometryTools",
         "Circle/1.0",
-        "Rectangle/1.0"
+        "Rectangle/1.0",
+        "RulerTool/1.0"
     ]
 }

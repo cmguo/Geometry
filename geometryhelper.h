@@ -34,6 +34,8 @@ public slots:
 
     static QPointF textOffset(QString const & text, Qt::Alignment alignment);
 
+    static QRectF textRect(QString const & text, QPointF const & alignTo, Qt::Alignment alignment);
+
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, qreal radius);
 
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, QVector<qreal> const & radiuses);

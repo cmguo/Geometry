@@ -3,12 +3,11 @@
 
 #include <core/control.h>
 
-class RulerGaugeControl: public Control
+class RulerTool: public Control
 {
     Q_OBJECT
-
 public:
-    Q_INVOKABLE RulerGaugeControl(ResourceView *res);
+    Q_INVOKABLE RulerTool(ResourceView *res);
 
     virtual QString toolsString(QByteArray const & parent) const override;
 

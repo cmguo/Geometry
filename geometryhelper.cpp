@@ -72,11 +72,31 @@ QPointF GeometryHelper::textOffset(const QString &text, Qt::Alignment alignment)
         off.setX(rect.right());
     if (alignment & Qt::AlignTop)
         off.setY(rect.top());
-    else if (alignment & Qt::AlignHCenter)
+    else if (alignment & Qt::AlignVCenter)
         off.setY(rect.top() + rect.height() / 2);
     else
         off.setY(rect.bottom());
     return -off;
+}
+
+QRectF GeometryHelper::textRect(const QString &text, const QPointF &alignTo, Qt::Alignment alignment)
+{
+    QRectF rect = textMetrics.boundingRect(text);
+    QPointF off;
+    if (alignment & Qt::AlignLeft)
+        off.setX(rect.left());
+    else if (alignment & Qt::AlignHCenter)
+        off.setX(rect.left() + rect.width() / 2);
+    else
+        off.setX(rect.right());
+    if (alignment & Qt::AlignTop)
+        off.setY(rect.top());
+    else if (alignment & Qt::AlignVCenter)
+        off.setY(rect.top() + rect.height() / 2);
+    else
+        off.setY(rect.bottom());
+    rect.translate(alignTo - off);
+    return rect;
 }
 
 QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, qreal radius)

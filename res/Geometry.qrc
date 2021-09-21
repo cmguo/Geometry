@@ -23,5 +23,8 @@
         <file>icon/geometry2d/diamond.svg</file>
         <file>icon/geometry2d/rectangle.svg</file>
         <file>qml/GeometryShape.qml</file>
+        <file>icon/ruler/adjust.svg</file>
+        <file>icon/ruler/rotate.svg</file>
+        <file>icon/ruler/delete.svg</file>
     </qresource>
 </RCC>

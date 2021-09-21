@@ -1,15 +1,18 @@
-#ifndef COMPASSES_H
-#define COMPASSES_H
+
+#ifndef PROTRACTOR_H
+#define PROTRACTOR_H
 
 #include "ruleritem.h"
 
-// 圆规
-class Compasses : public RulerItem
+// 量角器
+class ProtractorItem : public RulerItem
 {
 public:
-    explicit Compasses(QGraphicsItem *parent = nullptr);
+    explicit ProtractorItem(QGraphicsItem *parent = nullptr);
 
-    ~Compasses() override;
+    ProtractorItem(qreal width, qreal height, QGraphicsItem *parent = nullptr);
+
+    ~ProtractorItem() override;
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -21,4 +24,5 @@ protected:
     virtual void updateShape() override;
 };
 
-#endif // COMPASSES_H
+
+#endif // PROTRACTOR_H
