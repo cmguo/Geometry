@@ -4,8 +4,10 @@ HEADERS += \
     $$PWD/protractor.h \
     $$PWD/ruler.h \
     $$PWD/ruleritem.h \
+    $$PWD/rulerline.h \
     $$PWD/rulers.h \
     $$PWD/rulertool.h \
+    $$PWD/rulertriangle.h \
     $$PWD/triangleruler.h
 
 SOURCES += \
@@ -14,5 +16,7 @@ SOURCES += \
     $$PWD/protractor.cpp \
     $$PWD/ruler.cpp \
     $$PWD/ruleritem.cpp \
+    $$PWD/rulerline.cpp \
     $$PWD/rulertool.cpp \
+    $$PWD/rulertriangle.cpp \
     $$PWD/triangleruler.cpp

@@ -19,13 +19,16 @@ QPointF Ruler::adjustDirection(QRectF &adjust)
 
 void Ruler::updateShape()
 {
-    shape1_ = shape_ - shape2_;
-    shape2_ = shape_ & shape2_;
 }
 
 void Ruler::onDraw(QPainter *painter)
 {
     (void) painter;
+}
+
+bool Ruler::hitTestTickMark(const QPointF &pos)
+{
+    return !shape2_.contains(pos);
 }
 
 QPointF Ruler::adjust(QPointF const & offset)

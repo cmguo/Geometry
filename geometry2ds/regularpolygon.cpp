@@ -36,6 +36,11 @@ RegularPolygon::RegularPolygon(RegularPolygon const & o)
     setSpan(o.nSpan_);
 }
 
+bool RegularPolygon::canClose()
+{
+    return true;
+}
+
 class EdgeToolButtons : public OptionToolButtons
 {
 public:

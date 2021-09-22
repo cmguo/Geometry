@@ -19,6 +19,8 @@ protected:
     virtual void updateShape() override;
 
     virtual void onDraw(QPainter *painter) override;
+
+    virtual Geometry * createGeometry() override;
 };
 
 

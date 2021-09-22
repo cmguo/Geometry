@@ -2,6 +2,8 @@
 #include "geometryhelper.h"
 #include "rulertool.h"
 #include "ruler.h"
+#include "geometrycontrol.h"
+#include "geometry2ds/geometry2d.h"
 
 #include <core/control.h>
 #include <core/resourceview.h>
@@ -21,6 +23,8 @@ RulerItem::RulerItem(Ruler * ruler, QGraphicsItem *parent)
     deleteItem_ = iconItem(":/geometry/icon/ruler/delete.svg");
     adjustItem_ = iconItem(":/geometry/icon/ruler/adjust.svg");
     rotateItem_ = iconItem(":/geometry/icon/ruler/rotate.svg");
+    setFiltersChildEvents(true);
+    adjustControlPositions();
 }
 
 RulerItem::~RulerItem()
@@ -35,6 +39,40 @@ QRectF RulerItem::boundingRect() const
 QPainterPath RulerItem::shape() const
 {
     return ruler_->shape_;
+}
+
+bool RulerItem::sceneEvent(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::GraphicsSceneMousePress: {
+        Geometry * geometry = ruler_->createGeometry();
+        if (geometry_ == nullptr)
+            break;
+        geometry->transform() *= ruler_->transform().rotate();
+        geometry->transform().translate(scenePos());
+        RulerTool *control = qobject_cast<RulerTool*>(RulerTool::fromItem(this));
+        geometry_ = control->addGeometry(geometry);
+        geometry_->event(event);
+        break;
+    }
+    case QEvent::GraphicsSceneMouseMove:
+        if (geometry_ != nullptr) {
+            geometry_->event(event);
+        }
+        break;
+    case QEvent::GraphicsSceneMouseRelease:
+        if (geometry_ != nullptr) {
+            geometry_->event(event);
+            RulerTool *control = qobject_cast<RulerTool*>(RulerTool::fromItem(this));
+            control->finishGeometry(geometry_);
+        }
+        geometry_ = nullptr;
+        break;
+    default:
+        return QGraphicsItem::sceneEvent(event);
+        break;
+    }
+    return true;
 }
 
 bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
@@ -87,24 +125,6 @@ bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         break;
     }
     return true;
-}
-
-QVariant RulerItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    switch (change) {
-    case ItemSceneHasChanged:
-        if (!value.isNull()) {
-            deleteItem_->installSceneEventFilter(this);
-            adjustItem_->installSceneEventFilter(this);
-            rotateItem_->installSceneEventFilter(this);
-            updateShape();
-            adjustControlPositions();
-        }
-        break;
-    default:
-        break;
-    }
-    return value;
 }
 
 void RulerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

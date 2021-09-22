@@ -20,7 +20,7 @@ QPainterPath Arc::graphPath()
     {
         ph.moveTo(points_[1]);
         ph.lineTo(points_[0]);
-        arcTo(ph, points_[1], QSizeF(400, 200), 45, false, false);
+        arcTo(ph, points_[1], radius_, 45, false, false);
     }
     return ph;
 }

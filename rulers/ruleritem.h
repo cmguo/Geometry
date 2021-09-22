@@ -4,6 +4,8 @@
 #include <QGraphicsItem>
 
 class Ruler;
+class Control;
+
 class RulerItem : public QGraphicsItem
 {
 public:
@@ -16,9 +18,9 @@ protected:
 
     virtual QPainterPath shape() const override;
 
-    virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) override;
+    virtual bool sceneEvent(QEvent *event) override;
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) override;
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
@@ -31,6 +33,8 @@ private:
 
 protected:
     Ruler * ruler_;
+    // drawing
+    Control * geometry_ = nullptr;
 
 private:
     QGraphicsItem * deleteItem_ = nullptr;

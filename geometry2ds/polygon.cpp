@@ -1,6 +1,7 @@
 #include "polygon.h"
-#include "arbitrarypolygon.h"
 #include "geometryhelper.h"
+#include "regularpolygon.h"
+
 #include <core/optiontoolbuttons.h>
 
 #include <QPainter>
@@ -45,7 +46,10 @@ QVector<QPointF> Polygon::movePoints()
         points[pointCount() + i] = (pt0 + pt) / 2.0;
         pt0 = pt;
     }
-    points[pointCount()] = (pt0 + first) / 2.0;
+    if (pointCount() > 2)
+        points[pointCount()] = (pt0 + first) / 2.0;
+    else
+        points.resize(pointCount());
     return points;
 }
 
@@ -105,8 +109,7 @@ void Polygon::sync()
     polygon.append(first);
     for (int i = 1; i < pointCount(); ++i)
         polygon.append(nextPoint(i, hint));
-    if (metaObject() != &ArbitraryPolygon::staticMetaObject
-            || (flags_ & DrawFinised)) {
+    if (canClose()) {
         polygon.append(first);
     }
     if (qFuzzyIsNull(radius_))
@@ -126,6 +129,11 @@ void Polygon::sync()
     }
     graphPath_ = ph;
     textPath_ = tph;
+}
+
+bool Polygon::canClose()
+{
+    return flags_.testFlag(DrawFinised);
 }
 
 bool Polygon::moveKeepAngle(int elem, const QPointF &pt)

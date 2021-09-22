@@ -46,8 +46,8 @@ void Protractor::updateShape()
     bounds.addRect({0, 0, width_, height_});
     shape_ = shape_ & bounds;
     shape2_ = shape2_ & bounds;
+    shape1_ = shape_ - shape2_;
     rotateCenter_ = {width_ / 2, width_ / 2};
-    Ruler::updateShape();
 }
 
 void Protractor::onDraw(QPainter *painter)
@@ -93,5 +93,10 @@ void Protractor::onDraw(QPainter *painter)
     }
     QRectF cicle{-r2, -r2, r2 * 2, r2 * 2};
     painter->drawArc(cicle, 90 * 16, 180 * 16);
+}
+
+Geometry *Protractor::createGeometry()
+{
+    return nullptr;
 }
 

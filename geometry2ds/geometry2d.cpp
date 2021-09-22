@@ -18,7 +18,7 @@ Geometry2D::Geometry2D(Geometry2D const & o)
 
 bool Geometry2D::empty() const
 {
-    return Geometry::empty() && res_->url().path().lastIndexOf('/') == 0
+    return Geometry::empty() && res_->url().path().lastIndexOf('/') == -1
             && res_->url().query().length() == 0;
 }
 
@@ -110,7 +110,7 @@ Geometry2DFactory::Geometry2DFactory()
 
 ResourceView * Geometry2DFactory::create(Resource *res)
 {
-    QString type = res->url().path().mid(1);
+    QString type = res->url().path();
     int n = type.indexOf('/');
     if (n > 0)
         type = type.left(n);
@@ -119,5 +119,5 @@ ResourceView * Geometry2DFactory::create(Resource *res)
 
 QUrl Geometry2DFactory::newUrl(const QByteArray &type) const
 {
-    return QUrl("geometry2d:///" + type);
+    return QUrl("geometry2d:" + type);
 }

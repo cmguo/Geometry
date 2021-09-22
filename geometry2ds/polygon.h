@@ -31,6 +31,8 @@ public:
     virtual void sync() override;
 
 protected:
+    virtual bool canClose();
+
     virtual int pointCount();
 
     virtual QPointF point(int index);

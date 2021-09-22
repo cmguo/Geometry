@@ -14,7 +14,9 @@ protected:
 
     virtual void updateShape() override;
 
-    void onDraw(QPainter *painter) override;
+    virtual void onDraw(QPainter *painter) override;
+
+    virtual Geometry * createGeometry() override;
 };
 
 #endif // LINEARRULER_H

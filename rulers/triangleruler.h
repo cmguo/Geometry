@@ -18,6 +18,8 @@ protected:
 
     virtual void onDraw(QPainter *painter) override;
 
+    virtual  Geometry * createGeometry() override;
+
 private:
     bool isosceles_; //是否等腰三角尺
 };

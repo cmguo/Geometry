@@ -6,6 +6,8 @@
 
 #include <QPainterPath>
 
+class Geometry;
+
 class Ruler : public ResourceView
 {
     Q_OBJECT
@@ -23,6 +25,10 @@ public:
     virtual QVector<QPointF> getControlPositions() = 0;
 
     virtual void onDraw(QPainter * painter);
+
+    virtual bool hitTestTickMark(QPointF const & pos);
+
+    virtual Geometry * createGeometry() = 0;
 
 protected:
     enum TickFlags {
@@ -49,9 +55,9 @@ protected:
     qreal height_;
     qreal minWidth_ = 300;
     QPointF rotateCenter_;
-    QPainterPath shape_;
-    QPainterPath shape1_;
-    QPainterPath shape2_;
+    QPainterPath shape_; // whole shape, input area
+    QPainterPath shape1_; // tick area (dark background)
+    QPainterPath shape2_; // white background area
 };
 
 class RulerFactory : ResourceFactory
