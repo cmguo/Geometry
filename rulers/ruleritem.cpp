@@ -75,6 +75,9 @@ bool RulerItem::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         break;
     case QEvent::GraphicsSceneMouseRelease:
         static_cast<QGraphicsPathItem*>(watched)->setBrush(QBrush());
+        if (watched == deleteItem_) {
+            ruler_->removeFromPage();
+        }
         isPressed = false;
         break;
     case QEvent::GraphicsSceneHoverLeave:

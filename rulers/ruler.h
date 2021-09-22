@@ -4,6 +4,8 @@
 #include <core/resourceview.h>
 #include <core/resourcefactory.h>
 
+#include <QPainterPath>
+
 class Ruler : public ResourceView
 {
     Q_OBJECT

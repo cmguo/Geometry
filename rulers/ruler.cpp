@@ -6,7 +6,7 @@
 #include <geometryhelper.h>
 
 Ruler::Ruler(Resource * res, Flags flags, Flags clearFlags)
-    : ResourceView(res, flags, clearFlags | CanCopy | CanDelete)
+    : ResourceView(res, flags, clearFlags | CanCopy)
 {
     width_ = height_ = 500;
 }
