@@ -1,6 +1,7 @@
 #include "rulertriangle.h"
-#include "core/resource.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
+
+#include <core/resource.h>
 
 #include <QUrl>
 #include <QDebug>

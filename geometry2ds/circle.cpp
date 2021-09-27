@@ -1,5 +1,5 @@
 #include "circle.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <cmath>
 

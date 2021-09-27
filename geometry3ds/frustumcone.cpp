@@ -1,8 +1,8 @@
 #include "frustumcone.h"
+#include "base/geometryhelper.h"
 
 #include <QPainter>
 #include <QtMath>
-#include <geometryhelper.h>
 
 //#define CIRCLE_OBLIQUE_PROJECTION
 

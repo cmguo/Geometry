@@ -1,5 +1,5 @@
 #include "regularprismoid.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <core/optiontoolbuttons.h>
 #include <core/resource.h>

@@ -1,6 +1,5 @@
 #include "sphere.h"
-
-#include <geometryhelper.h>
+#include "base/geometryhelper.h"
 
 Sphere::Sphere(Resource * res)
     : Ellipsoid(res)

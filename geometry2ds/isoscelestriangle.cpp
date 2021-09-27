@@ -1,5 +1,5 @@
 #include "isoscelestriangle.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 IsoscelesTriangle::IsoscelesTriangle(Resource * res)
     : Triangle(res)

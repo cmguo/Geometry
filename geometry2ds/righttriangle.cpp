@@ -1,5 +1,5 @@
 #include "righttriangle.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 RightTriangle::RightTriangle(Resource * res)
     : Triangle(res)

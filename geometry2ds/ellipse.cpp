@@ -1,5 +1,5 @@
 #include "ellipse.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <cmath>
 

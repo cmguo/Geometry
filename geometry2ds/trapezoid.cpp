@@ -1,5 +1,5 @@
 #include "trapezoid.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 Trapezoid::Trapezoid(Resource * res)
     : Polygon(res)

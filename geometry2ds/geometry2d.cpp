@@ -1,5 +1,5 @@
 #include "geometry2d.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <core/resource.h>
 

@@ -1,5 +1,5 @@
 #include "ellipsoid.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <QPen>
 #include <QPainter>

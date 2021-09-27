@@ -1,5 +1,5 @@
 #include "isopopetrapezoid.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 IsopopeTrapezoid::IsopopeTrapezoid(Resource * res)
     : Trapezoid(res)

@@ -1,7 +1,7 @@
 #include "rulertool.h"
 #include "ruleritem.h"
 #include "ruler.h"
-#include "geometry.h"
+#include "base/geometry.h"
 
 #include <core/resourceview.h>
 #include <views/whitecanvas.h>
@@ -34,7 +34,7 @@ void RulerTool::attached()
     loadFinished(true);
 }
 
-Control::SelectMode RulerTool::selectTest(ControlView *child, ControlView *parent, const QPointF &point, bool)
+Control::SelectMode RulerTool::selectTest(ControlView *child, ControlView *, const QPointF &point, bool)
 {
     return (child != item_ || qobject_cast<Ruler*>(res_)->hitTestTickMark(point)) ? SelectMode::NotSelect : SelectMode::Select;
 }

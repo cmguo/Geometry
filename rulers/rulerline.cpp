@@ -1,6 +1,7 @@
 #include "rulerline.h"
-#include "core/resource.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
+
+#include <core/resource.h>
 
 RulerLine::RulerLine(const QLineF &line)
     : Line(new Resource("geometry2d", QUrl("geometry2d:line")))

@@ -1,8 +1,8 @@
 #include "protractor.h"
+#include "base/geometryhelper.h"
 
 #include <QPainter>
 #include <QtMath>
-#include <geometryhelper.h>
 
 Protractor::Protractor(Resource * res)
     : Ruler(res)

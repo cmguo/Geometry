@@ -1,9 +1,9 @@
 #include "ruleritem.h"
-#include "geometryhelper.h"
 #include "rulertool.h"
 #include "ruler.h"
-#include "geometrycontrol.h"
-#include "geometry2ds/geometry2d.h"
+#include "base/geometryhelper.h"
+#include "base/geometrycontrol.h"
+#include "base/geometry.h"
 
 #include <core/control.h>
 #include <core/resourceview.h>

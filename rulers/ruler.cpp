@@ -1,9 +1,9 @@
 #include "ruler.h"
+#include "base/geometryhelper.h"
 
 #include <core/resource.h>
 
 #include <QPainter>
-#include <geometryhelper.h>
 
 Ruler::Ruler(Resource * res, Flags flags, Flags clearFlags)
     : ResourceView(res, flags, clearFlags | CanCopy)

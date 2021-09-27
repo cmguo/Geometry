@@ -1,5 +1,5 @@
 #include "arbitrarypolygon.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 ArbitraryPolygon::ArbitraryPolygon(Resource * res)
     : Polygon(res)

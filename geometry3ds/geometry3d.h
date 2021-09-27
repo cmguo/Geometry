@@ -1,7 +1,7 @@
 #ifndef GEOMETRY3D_H
 #define GEOMETRY3D_H
 
-#include "geometry.h"
+#include "base/geometry.h"
 
 #include <core/resourcefactory.h>
 

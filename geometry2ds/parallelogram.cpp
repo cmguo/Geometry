@@ -1,5 +1,5 @@
 #include "parallelogram.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 Parallelogram::Parallelogram(Resource * res)
     : Trapezoid(res)

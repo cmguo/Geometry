@@ -1,5 +1,5 @@
 #include "polygon.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 #include "regularpolygon.h"
 
 #include <core/optiontoolbuttons.h>

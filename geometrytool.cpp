@@ -1,5 +1,5 @@
 #include "geometrytool.h"
-#include "geometryhelper.h"
+#include "base/geometryhelper.h"
 
 #include <core/resourcefactory.h>
 #include <core/resourcemanager.h>

@@ -23,20 +23,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    geometry.cpp \
-    geometrycontrol.cpp \
-    geometryhelper.cpp \
-    geometryitem.cpp \
     geometryplugin.cpp \
     geometrytool.cpp
 
 HEADERS += \
     Geometry_global.h \
     exports.h \
-    geometry.h \
-    geometrycontrol.h \
-    geometryhelper.h \
-    geometryitem.h \
     geometryplugin.h \
     geometrytool.h
 
@@ -46,6 +38,7 @@ RESOURCES += \
 DISTFILES += \
     Geometry.json
 
+include(base/base.pri)
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)
 include(rulers/rulers.pri)
