@@ -46,7 +46,7 @@ bool RulerItem::sceneEvent(QEvent *event)
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
         Geometry * geometry = ruler_->createGeometry();
-        if (geometry_ == nullptr)
+        if (geometry == nullptr)
             break;
         geometry->transform() *= ruler_->transform().rotate();
         geometry->transform().translate(scenePos());
