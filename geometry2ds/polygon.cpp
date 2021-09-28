@@ -133,7 +133,7 @@ void Polygon::sync()
 
 bool Polygon::canClose()
 {
-    return flags_.testFlag(DrawFinised);
+    return true;
 }
 
 bool Polygon::moveKeepAngle(int elem, const QPointF &pt)

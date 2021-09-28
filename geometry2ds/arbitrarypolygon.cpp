@@ -11,6 +11,11 @@ ArbitraryPolygon::ArbitraryPolygon(ArbitraryPolygon const & o)
 {
 }
 
+bool ArbitraryPolygon::canClose()
+{
+    return flags_.testFlag(DrawFinised);
+}
+
 void ArbitraryPolygon::addPoint(QPointF const & pt)
 {
     if (tempValid_)

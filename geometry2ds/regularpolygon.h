@@ -19,8 +19,6 @@ public:
     Q_INVOKABLE RegularPolygon(RegularPolygon const & o);
 
 public:
-    virtual bool canClose() override;
-
     virtual int pointCount() override;
 
     virtual QPointF iterPoint(int index, QPointF & hint) override;

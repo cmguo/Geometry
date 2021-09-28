@@ -12,6 +12,8 @@ public:
     Q_INVOKABLE ArbitraryPolygon(ArbitraryPolygon const & o);
 
 public:
+    virtual bool canClose() override;
+
     virtual void addPoint(QPointF const & pt) override;
 
     virtual void movePoint(QPointF const & pt) override;
