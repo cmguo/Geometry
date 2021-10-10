@@ -223,6 +223,7 @@ void GeometryControl::updateGeometry()
     GeometryItem * item = static_cast<GeometryItem *>(item_);
     geometry->sync();
     item->setPath(geometry->contour());
+    item->update(); // contour may not change
     if (editing_) {
         editPoints_ = geometry->movePoints();
         item->setEditPoints(editPoints_);
