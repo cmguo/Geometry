@@ -138,7 +138,7 @@ void Polygon::sync()
         ph.addPolygon(polygon);
     else
         ph = GeometryHelper::toRoundPolygon(polygon, radius_);
-    if (pointCount > 2) {
+    if (pointCount > 2 && qFuzzyIsNull(radius_)) {
         QPointF lpt = lastPoint(hint);
         QPointF cpt = nextPoint(0, hint);
         int i = 0;

@@ -101,7 +101,12 @@ QRectF GeometryHelper::textRect(const QString &text, const QPointF &alignTo, Qt:
 
 QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, qreal radius)
 {
-    return toRoundPolygon(polygon, QVector<qreal>(polygon.size() - 1, radius));
+    if (polygon.isClosed())
+        return toRoundPolygon(polygon, QVector<qreal>(polygon.size() - 1, radius));
+    QVector<qreal> radiuses(polygon.size(), radius);
+    radiuses.front() = 0;
+    radiuses.back() = 0;
+    return  toRoundPolygon(polygon, radiuses);
 }
 
 QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, QVector<qreal> const & radiuses)
@@ -145,7 +150,10 @@ QPainterPath GeometryHelper::toRoundPolygon(const QPolygonF &polygon, QVector<qr
             path.moveTo(l);
         path.arcTo(r, a1, a2 - a1);
     }
-    path.closeSubpath();
+    if (polygon.isClosed())
+        path.closeSubpath();
+    else
+        path.lineTo(polygon.back());
     return path;
 }
 
