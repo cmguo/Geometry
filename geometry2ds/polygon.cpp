@@ -46,10 +46,15 @@ QVector<QPointF> Polygon::movePoints()
         points[pointCount() + i] = (pt0 + pt) / 2.0;
         pt0 = pt;
     }
-    if (pointCount() > 2)
-        points[pointCount()] = (pt0 + first) / 2.0;
-    else
+    if (pointCount() > 2) {
+        if (canClose()) {
+            points[pointCount()] = (pt0 + first) / 2.0;
+        } else {
+            points.removeAt(pointCount());
+        }
+    } else {
         points.resize(pointCount());
+    }
     return points;
 }
 
@@ -72,6 +77,12 @@ int Polygon::hit(QPointF & pt)
         }
         lpt = cpt;
     }
+    if (!canClose()) {
+        if (line == pointCount())
+            line = -1;
+        else
+            line -= 1;
+    }
     return line;
 }
 
@@ -83,11 +94,20 @@ bool Polygon::moveElememt(int elem, const QPointF &pt)
     elem -= pointCount();
     if (elem >= pointCount())
         return false;
+    if (!canClose())
+        elem += 1;
     QPointF hint;
     QPointF llpt = iterPoint((pointCount() + elem - 2) % pointCount(), hint);
     QPointF lpt = nextPoint((pointCount() + elem - 1) % pointCount(), hint);
     QPointF npt = nextPoint(elem, hint);
     QPointF nnpt = nextPoint((elem + 1) % pointCount(), hint);
+    if (!canClose()) {
+        if (elem == 1) {
+            llpt = lpt + nnpt - npt;
+        } else if (elem == pointCount() - 1) {
+            nnpt = npt + llpt - lpt;
+        }
+    }
     moveLine(llpt, lpt, pt, npt, nnpt);
     setPoint((pointCount() + elem - 1) % pointCount(), lpt);
     setPoint(elem, npt);
