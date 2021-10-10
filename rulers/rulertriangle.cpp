@@ -38,72 +38,90 @@ void RulerTriangle::addPoint(const QPointF &pt)
 
 void RulerTriangle::movePoint(const QPointF &pt)
 {
+    if (canClose())
+        return;
     QPointF pt2 = attachToLine(pt);
-    // line: -2 ~ 0, [2] (1)
-    // line: -1 ~ 0, (2)
-    // line: -1 ~ 1, (2)
-    // line: 0 ~ 0
-    // line: 0 ~ 1
-    // line: 0 ~ 2
-    // line: 1 ~ 1
-    // line: 1 ~ 2
-    // line: 2 ~ 2
     if (curLine_ < 0)
         return;
+    int diff = (curLine_ - lastLine_ + 4) % 3 - 1;
+    curLine_ = lastLine_ + diff;
     if (curLine_ > startLine_ && curLine_ < endLine_)
         return;
-    if (curLine_ == 2 && startLine_ == -2 && endLine_ == 0)
+    if (curLine_ + 3 < endLine_ || startLine_ + 3 < curLine_) {
+        startLine_ = 0;
+        endLine_ = -1;
+        points_ = stuns_;
+        dirty_ = true;
         return;
-    if (curLine_ == lastLine_) {
-        int curLine = (curLine_ > endLine_) ? curLine_ - 3 : curLine_;
-        if (points_.size() > 1) {
-            QPointF s = startLine_ < curLine ? stuns_[curLine_] : points_.front();
-            QPointF e = curLine < endLine_ ? stuns_[(curLine_ + 1) % 3] : points_.back();
-            qreal d = GeometryHelper::dotProduct(pt2 - s, e - pt2);
-            if (d < 0) {
-                qreal d2 = GeometryHelper::dotProduct(pt2 - s, e - s);
-                if (d2 < 0) {
-                    if ((curLine_ - startLine_) % 3 == 0)
-                        points_.front() = pt2;
-                    else
-                        return;
+    }
+    if (diff == 1) {
+        qDebug() << "RulerTriangle::movePoint inc line" << curLine_;
+        if (curLine_ > endLine_) {
+            points_.back() = stuns_[(curLine_ + 3) % 3];
+            points_.append(pt2);
+            endLine_ = lastLine_ = curLine_;
+            dirty_ = true;
+            qDebug() << "RulerTriangle::movePoint line range" << startLine_ << endLine_;
+            return;
+        }
+        lastLine_ = curLine_;
+    } else if (diff == -1) {
+        qDebug() << "RulerTriangle::movePoint dec line" << curLine_;
+        if (curLine_ < startLine_) {
+            points_.front() = stuns_[(lastLine_ + 3) % 3];
+            points_.prepend(pt2);
+            startLine_ = lastLine_ = curLine_;
+            dirty_ = true;
+            qDebug() << "RulerTriangle::movePoint line range" << startLine_ << endLine_;
+            return;
+        }
+        lastLine_ = curLine_;
+    }
+    // qDebug() << "RulerTriangle::movePoint" << curLine_ << diff << pt;
+    if (points_.size() > 1) {
+        QPointF s = startLine_ < curLine_ ? stuns_[(curLine_ + 3) % 3] : points_.front();
+        QPointF e = curLine_ < endLine_ ? stuns_[(curLine_ + 4) % 3] : points_.back();
+        qreal d = GeometryHelper::dotProduct(pt2 - s, e - pt2);
+        if (d < 0) {
+            qreal d2 = GeometryHelper::dotProduct(pt2 - s, e - s);
+            if (d2 < 0) {
+                if (curLine_ == startLine_) {
+                    points_.front() = pt2;
                 } else {
-                    if (curLine_ == endLine_)
-                        points_.back() = pt2;
-                    else
-                        return;
+                    return;
                 }
             } else {
-                return;
+                if (curLine_ == endLine_) {
+                    points_.back() = pt2;
+                } else {
+                    return;
+                }
+            }
+            if (startLine_ + 3 == endLine_) {
+                s = stuns_[(curLine_ + 3) % 3];
+                e = stuns_[(curLine_ + 4) % 3];
+                qreal d3 = GeometryHelper::dotProduct(points_.front() - points_.back(), e - s);
+                if (d3 < 0) {
+                    startLine_ = 0;
+                    endLine_ = -1;
+                    points_ = stuns_;
+                }
             }
         } else {
-            QPointF s = stuns_[curLine_];
-            QPointF e = stuns_[(curLine_ + 1) % 3];
-            qreal d2 = GeometryHelper::dotProduct(e - s, pt2 - points_.front());
-            if (d2 < 0) {
-                points_.prepend(pt2);
-            } else {
-                points_.append(pt2);
-            }
-        }
-    } else if ((curLine_ - lastLine_ + 3) % 3 == 1) {
-        points_.back() = stuns_[curLine_];
-        points_.append(pt2);
-        endLine_ = curLine_;
-        if (endLine_ < startLine_) {
-            startLine_ -= 3;
+            return;
         }
     } else {
-        points_.front() = stuns_[lastLine_];
-        points_.prepend(pt2);
-        startLine_ = curLine_;
-        if (endLine_ < startLine_) {
-            startLine_ -= 3;
+        QPointF s = stuns_[(curLine_ + 3) % 3];
+        QPointF e = stuns_[(curLine_ + 4) % 3];
+        qreal d2 = GeometryHelper::dotProduct(e - s, pt2 - points_.front());
+        if (d2 < 0) {
+            points_.prepend(pt2);
+        } else {
+            points_.append(pt2);
         }
     }
-    qDebug() << "RulerTriangle::movePoint" << startLine_ << endLine_ << points_;
-    lastLine_ = curLine_;
     dirty_ = true;
+    qDebug() << "RulerTriangle::movePoint" << startLine_ << curLine_ << endLine_ << points_;
 }
 
 bool RulerTriangle::commitPoint(const QPointF &pt)
@@ -114,7 +132,7 @@ bool RulerTriangle::commitPoint(const QPointF &pt)
 
 bool RulerTriangle::canClose()
 {
-    return false;
+    return endLine_ < startLine_;
 }
 
 QPointF RulerTriangle::attachToLine(const QPointF &pt)
@@ -146,6 +164,6 @@ QPointF RulerTriangle::attachToLine(const QPointF &pt)
         curLine_ = -1;
         return pt;
     }
-    qDebug() << "RulerTriangle::attachToLine" << pt << curLine_ << pts[curLine_];
+//    qDebug() << "RulerTriangle::attachToLine" << pt << curLine_ << pts[curLine_];
     return p;
 }
