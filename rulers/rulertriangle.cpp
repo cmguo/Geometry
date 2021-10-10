@@ -45,13 +45,16 @@ void RulerTriangle::movePoint(const QPointF &pt)
         return;
     int diff = (curLine_ - lastLine_ + 4) % 3 - 1;
     curLine_ = lastLine_ + diff;
-    if (curLine_ > startLine_ && curLine_ < endLine_)
+    if (curLine_ > startLine_ && curLine_ < endLine_) {
+        lastLine_ = curLine_;
         return;
+    }
     if (curLine_ + 3 < endLine_ || startLine_ + 3 < curLine_) {
         startLine_ = 0;
         endLine_ = -1;
         points_ = stuns_;
         dirty_ = true;
+        qDebug() << "RulerTriangle::movePoint complete" << curLine_;
         return;
     }
     if (diff == 1) {
@@ -105,6 +108,7 @@ void RulerTriangle::movePoint(const QPointF &pt)
                     startLine_ = 0;
                     endLine_ = -1;
                     points_ = stuns_;
+                    qDebug() << "RulerTriangle::movePoint complete" << curLine_;
                 }
             }
         } else {
@@ -121,7 +125,7 @@ void RulerTriangle::movePoint(const QPointF &pt)
         }
     }
     dirty_ = true;
-    qDebug() << "RulerTriangle::movePoint" << startLine_ << curLine_ << endLine_ << points_;
+    // qDebug() << "RulerTriangle::movePoint" << startLine_ << curLine_ << endLine_ << points_;
 }
 
 bool RulerTriangle::commitPoint(const QPointF &pt)
