@@ -99,33 +99,41 @@ void Polygon::sync()
     if (!dirty_)
         return;
     dirty_ = false;
-    if (pointCount() < 2)
+    int pointCount = this->pointCount();
+    if (pointCount < 2)
         return;
+    bool canClose = this->canClose();
     QPainterPath ph;
     QPainterPath tph;
     QPolygonF polygon;
     QPointF hint;
     QPointF first = firstPoint(hint);
     polygon.append(first);
-    for (int i = 1; i < pointCount(); ++i)
+    for (int i = 1; i < pointCount; ++i)
         polygon.append(nextPoint(i, hint));
-    if (canClose()) {
+    if (canClose) {
         polygon.append(first);
     }
     if (qFuzzyIsNull(radius_))
         ph.addPolygon(polygon);
     else
         ph = GeometryHelper::toRoundPolygon(polygon, radius_);
-    if (pointCount() > 2) {
+    if (pointCount > 2) {
         QPointF lpt = lastPoint(hint);
         QPointF cpt = nextPoint(0, hint);
-        for (int i = 0; i < pointCount() - 1; ++i) {
+        int i = 0;
+        if (!canClose) {
+            lpt = cpt;
+            cpt = nextPoint(++i, hint);
+        }
+        for (; i < pointCount - 1; ++i) {
             QPointF npt = nextPoint(i + 1, hint);
             addAngleLabeling(ph, tph, lpt, cpt, npt);
             lpt = cpt;
             cpt = npt;
         }
-        addAngleLabeling(ph, tph, lpt, cpt, first);
+        if (canClose)
+            addAngleLabeling(ph, tph, lpt, cpt, first);
     }
     graphPath_ = ph;
     textPath_ = tph;
