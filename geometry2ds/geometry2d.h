@@ -10,10 +10,12 @@
 class Geometry2D : public Geometry
 {
     Q_OBJECT
-public:
+protected:
     Geometry2D(Resource * res, Flags flags = {}, Flags clearFlags = {});
 
     Geometry2D(Geometry2D const & o);
+
+    Geometry2D(QVector<QPointF> const & points);
 
 public:
     virtual bool empty() const override;

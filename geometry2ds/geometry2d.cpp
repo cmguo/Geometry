@@ -16,6 +16,11 @@ Geometry2D::Geometry2D(Geometry2D const & o)
 {
 }
 
+Geometry2D::Geometry2D(const QVector<QPointF> &points)
+    : Geometry("geometry2d", points)
+{
+}
+
 bool Geometry2D::empty() const
 {
     return Geometry::empty() && res_->url().path().lastIndexOf('/') == -1

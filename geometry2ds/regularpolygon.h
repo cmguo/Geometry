@@ -18,6 +18,8 @@ public:
 
     Q_INVOKABLE RegularPolygon(RegularPolygon const & o);
 
+    Q_INVOKABLE RegularPolygon(QPointF & center, QPointF const & point, int edges);
+
 public:
     virtual int pointCount() override;
 

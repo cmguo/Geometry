@@ -23,6 +23,18 @@ Polygon::Polygon(Polygon const & o)
 {
 }
 
+Polygon::Polygon(const QPolygonF &polygon)
+    : Geometry2D(polygon.mid(0, polygon.size() - 1))
+    , radius_(0)
+{
+}
+
+Polygon::Polygon(const QVector<QPointF> &points)
+    : Geometry2D(points)
+    , radius_(0)
+{
+}
+
 QPainterPath Polygon::graphPath()
 {
     return graphPath_;
@@ -244,4 +256,3 @@ QPointF Polygon::nextPoint(int index, QPointF & hint)
     (void) hint;
     return point(index);
 }
-

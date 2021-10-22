@@ -11,6 +11,8 @@ public:
 
     Triangle(Triangle const & o);
 
+    Triangle(QPointF const & vec1, QPointF const & vec2);
+
 public:
     virtual int pointCount() override;
 

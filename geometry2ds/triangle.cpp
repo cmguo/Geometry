@@ -10,6 +10,11 @@ Triangle::Triangle(Triangle const & o)
 {
 }
 
+Triangle::Triangle(const QPointF &vec1, const QPointF &vec2)
+    : Polygon({vec1, vec2})
+{
+}
+
 int Triangle::pointCount()
 {
     return points_.size() == 2 ? 3 : 1;

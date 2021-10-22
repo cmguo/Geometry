@@ -29,6 +29,13 @@ Geometry::Geometry(Geometry const & o)
 {
 }
 
+Geometry::Geometry(QByteArray const & type, const QVector<QPointF> &points)
+    : Geometry(new Resource(type, QUrl(type + ":")))
+{
+    points_ = points;
+    dirty_ = true;
+}
+
 QPromise<void> Geometry::load()
 {
     if (!Geometry::empty())

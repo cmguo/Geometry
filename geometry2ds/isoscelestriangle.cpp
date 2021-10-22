@@ -11,6 +11,11 @@ IsoscelesTriangle::IsoscelesTriangle(IsoscelesTriangle const & o)
 {
 }
 
+IsoscelesTriangle::IsoscelesTriangle(const QPointF &vec1, const QPointF &vec2)
+    : Triangle(vec1, vec2)
+{
+}
+
 QPointF IsoscelesTriangle::point(int index)
 {
     if (index < 2) {

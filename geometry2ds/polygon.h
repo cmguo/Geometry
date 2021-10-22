@@ -17,6 +17,10 @@ public:
 
     Polygon(Polygon const & o);
 
+    Polygon(QPolygonF const &  polygon);
+
+    Polygon(QVector<QPointF> const & points);
+
 public:
     virtual QPainterPath graphPath() override;
 

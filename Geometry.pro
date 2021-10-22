@@ -4,7 +4,7 @@ TEMPLATE = lib
 DEFINES += GEOMETRY_LIBRARY
 CONFIG += plugin
 
-CONFIG += c++14
+CONFIG += c14
 
 include($$(applyCommonConfig))
 include($$(applyConanPlugin))
@@ -41,7 +41,7 @@ DISTFILES += \
 include(base/base.pri)
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)
-# include(rulers/rulers.pri)
+include(rulers/rulers.pri)
 
 includes.files = $$PWD/*.h
 win32 {
@@ -55,3 +55,13 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+exists($$PWD/../OpenCV/opencv/build) {
+    DEFINES += HAS_OPENCV
+    win32: {
+        LIBS += -L$$PWD/../OpenCV/opencv/build/lib
+        CONFIG(debug, debug|release): -lopencv_world454d
+        CONFIG(release, debug|release): -lopencv_world454
+    }
+    INCLUDEPATH += $$PWD/../OpenCV/opencv/build/include
+}

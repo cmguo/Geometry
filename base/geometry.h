@@ -109,6 +109,8 @@ protected:
 
     Geometry(Geometry const & o);
 
+    Geometry(QByteArray const & type, QVector<QPointF> const & points);
+
 protected:
     QVector<QPointF> points_;
     bool dirty_;

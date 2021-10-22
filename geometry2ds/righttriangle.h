@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE RightTriangle(RightTriangle const & o);
 
+    RightTriangle(QPointF const & vec1, QPointF const & vec2);
+
 public:
     virtual QPointF point(int index) override;
 

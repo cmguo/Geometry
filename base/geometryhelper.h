@@ -9,6 +9,7 @@
 #include <QColor>
 
 class ResourcePage;
+class Geometry;
 
 class GeometryHelper : public QObject
 {
@@ -39,6 +40,12 @@ public slots:
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, qreal radius);
 
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, QVector<qreal> const & radiuses);
+
+    static void * approxGeometryBegin(qreal epsilon);
+
+    static bool approxGeometryAddPoints(void * context, QVector<QPointF> pts);
+
+    static QObject * approxGeometryFinish(void * context, QPointF const & offset);
 
 public slots:
     static qreal angle(QPointF const & vec);

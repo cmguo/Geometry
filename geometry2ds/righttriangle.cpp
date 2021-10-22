@@ -11,6 +11,11 @@ RightTriangle::RightTriangle(RightTriangle const & o)
 {
 }
 
+RightTriangle::RightTriangle(const QPointF &vec1, const QPointF &vec2)
+    : Triangle(vec1, vec2)
+{
+}
+
 QPointF RightTriangle::point(int index)
 {
     if (index < 2) {
