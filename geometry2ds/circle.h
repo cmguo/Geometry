@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE Circle(Circle const & o);
 
+    Circle(QPointF const & center, qreal radius);
+
 public:
     virtual QPainterPath graphPath() override;
 

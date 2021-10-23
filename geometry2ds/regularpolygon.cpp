@@ -36,13 +36,12 @@ RegularPolygon::RegularPolygon(RegularPolygon const & o)
     setSpan(o.nSpan_);
 }
 
-RegularPolygon::RegularPolygon(QPointF &center, const QPointF &point, int edges)
+RegularPolygon::RegularPolygon(QPointF &center, const QPointF &point, int edges, int span)
     : Polygon({center, point})
     , nEdges_(0)
     , nSpan_(0)
 {
-    setEdges(edges);
-    setSpan(1);
+    setEdges(span == 1 ? edges : (edges << 8 | span));
 }
 
 class EdgeToolButtons : public OptionToolButtons

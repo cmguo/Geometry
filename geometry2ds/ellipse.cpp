@@ -13,6 +13,11 @@ Ellipse::Ellipse(Ellipse const & o)
 {
 }
 
+Ellipse::Ellipse(const QPointF &center, const QSizeF &radius)
+    : Geometry2D({center, center + QPointF(radius.width(), radius.height()) / sqrt(2.0)})
+{
+}
+
 QPainterPath Ellipse::graphPath()
 {
     QPainterPath ph;

@@ -13,6 +13,11 @@ Circle::Circle(Circle const & o)
 {
 }
 
+Circle::Circle(const QPointF &center, qreal radius)
+    : Ellipse(center, {radius, radius})
+{
+}
+
 QPainterPath Circle::graphPath()
 {
     QPainterPath ph;

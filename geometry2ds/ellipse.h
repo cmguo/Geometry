@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE Ellipse(Ellipse const & o);
 
+    Ellipse(QPointF const & center, QSizeF const & radius);
+
 public:
     virtual QPainterPath graphPath() override;
 

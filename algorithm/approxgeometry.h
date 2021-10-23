@@ -20,8 +20,16 @@ private:
 
     Geometry * approxGeometry4();
 
+    Geometry * approxGeometryRegular();
+
+    Geometry * approxGeometryEllipse();
+
 private:
     static void RamerDouglasPeucker(const QVector<QPointF> &pointList, qreal epsilon, QVector<QPointF> &out);
+
+    static QVector<qreal> edgeLengths(QVector<QPointF> const & points);
+
+    static QVector<qreal> edgeAngles(QVector<QPointF> const & points, QVector<qreal> const & lengths);
 
 private:
     qreal epsilon_;
