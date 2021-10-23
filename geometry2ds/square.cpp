@@ -10,6 +10,11 @@ Square::Square(Square const & o)
 {
 }
 
+Square::Square(const QPointF &vec1, const QPointF &vec2)
+    : Rectangle(vec1, vec2)
+{
+}
+
 void Square::movePoint(const QPointF &pt)
 {
     QPointF st = points_.first();

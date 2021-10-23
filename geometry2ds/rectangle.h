@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE Rectangle(Rectangle const & o);
 
+    Rectangle(QPointF const & vec1, QPointF const & vec2);
+
 public:
     virtual int pointCount() override;
 

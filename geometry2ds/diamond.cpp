@@ -10,6 +10,11 @@ Diamond::Diamond(Diamond const & o)
 {
 }
 
+Diamond::Diamond(const QPointF &vec1, const QPointF &vec2)
+    : Polygon({{vec1.x() * 2 - vec2.x(), vec1.y()}, {vec2.x(), vec2.y() * 2 - vec1.y()}})
+{
+}
+
 int Diamond::pointCount()
 {
     return points_.size() >= 2 ? 4 : 1;

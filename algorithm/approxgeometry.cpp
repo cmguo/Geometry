@@ -2,9 +2,15 @@
 
 #include <base/geometryhelper.h>
 
+#include <geometry2ds/diamond.h>
+#include <geometry2ds/isopopetrapezoid.h>
 #include <geometry2ds/isoscelestriangle.h>
+#include <geometry2ds/parallelogram.h>
+#include <geometry2ds/rectangle.h>
 #include <geometry2ds/regularpolygon.h>
+#include <geometry2ds/righttrapezoid.h>
 #include <geometry2ds/righttriangle.h>
+#include <geometry2ds/square.h>
 
 #include <core/resource.h>
 #include <core/resourcetransform.h>
@@ -76,6 +82,8 @@ QObject *ApproxGeometry::finish(const QPointF &offset)
         Geometry * geometry = nullptr;
         if (points_.size() == 3) {
             geometry = approxGeometry3();
+        } else if (points_.size() == 4) {
+            geometry = approxGeometry4();
         }
         if (geometry == nullptr)
             geometry = new Polygon(points_);
@@ -103,36 +111,39 @@ static qreal smallRatio(qreal l, qreal r)
 
 Geometry *ApproxGeometry::approxGeometry3()
 {
+    // length of each edges
     qreal l1 = GeometryHelper::length(points_[1] - points_[0]);
     qreal l2 = GeometryHelper::length(points_[2] - points_[1]);
     qreal l3 = GeometryHelper::length(points_[0] - points_[2]);
-    qDebug() << "approxGeometry3" << l1 << l2 << l3;
+    // approx ratio with edges (always <= 1)
     qreal e12 = smallRatio(l1, l2);
     qreal e23 = smallRatio(l2, l3);
     qreal e31 = smallRatio(l3, l1);
-    qDebug() << "approxGeometry3" << e12 << e23 << e31;
+    // center point
     QPointF center = std::accumulate(points_.begin(), points_.end(), QPointF{0, 0}) / 3;
+    // all ratio > 0.9, regular triangle
     if (e12 > 0.9 && e23 > 0.9 && e31 > 0.9) {
         return new RegularPolygon(center, points_[0], 3);
     }
-    // RightTriangle
+    // cos() of each angle
     qreal a12 = qAbs(GeometryHelper::dotProduct(points_[1] - points_[0], points_[2] - points_[1])) / l1 / l2;
     qreal a23 = qAbs(GeometryHelper::dotProduct(points_[2] - points_[1], points_[0] - points_[2])) / l2 / l3;
     qreal a31 = qAbs(GeometryHelper::dotProduct(points_[0] - points_[2], points_[1] - points_[0])) / l3 / l1;
-    qDebug() << "approxGeometry3" << a12 << a23 << a31;
+    // most close to 90° of each angle
     qreal amin = std::min(a12, a23);
     int imin = a12 > a23 ? 2 : 1;
     if (a31 < amin) {
         imin = 0;
         amin = a31;
     }
-    // IsoscelesTriangle
+    // maximun length ratio, length ratio of two approx equal edge
     qreal emax = std::max(e12, e23);
     int imax = e12 < e23 ? 2 : 1;
     if (e31 > emax) {
         imax = 0;
         emax = e31;
     }
+    // IsoscelesTriangle
     if (emax > 0.9) {
         QPointF point = points_[imax];
         QPointF middle = (center * 3 - point) / 2; // botton middle
@@ -150,6 +161,7 @@ Geometry *ApproxGeometry::approxGeometry3()
         rotate_ = -angle;
         return new IsoscelesTriangle(point2 + center, middle2 + center);
     }
+    // RightTriangle
     if (amin < 0.15) { // 8.6°
         QPointF point = points_[imin];
         QPointF pointa = imin == 0 ? points_[1] : points_[0];
@@ -165,6 +177,133 @@ Geometry *ApproxGeometry::approxGeometry3()
         qDebug() << "approxGeometry3" << pointa << pointb << point3;
         point2 = (pointa + pointb) / 2;
         return new RightTriangle(point2 - point3 / 2, point2 + point3 / 2);
+    }
+    return nullptr;
+}
+
+static qreal maximun(qreal l, qreal r)
+{
+    return std::max(l, r);
+}
+
+static qreal minimun(qreal l, qreal r)
+{
+    return std::min(l, r);
+}
+
+Geometry *ApproxGeometry::approxGeometry4()
+{
+    // length of each edges
+    std::array<qreal, 4> lengths = {
+        GeometryHelper::length(points_[1] - points_[0]),
+        GeometryHelper::length(points_[2] - points_[1]),
+        GeometryHelper::length(points_[3] - points_[2]),
+        GeometryHelper::length(points_[0] - points_[3])
+    };
+    qDebug() << "approxGeometry4 length of each edges" << QVector<qreal>(lengths.begin(), lengths.end());
+    // cos() of each angle
+    std::array<qreal, 4> angles = {
+        qAbs(GeometryHelper::dotProduct(points_[1] - points_[0], points_[2] - points_[1])) / lengths[0] / lengths[1],
+        qAbs(GeometryHelper::dotProduct(points_[2] - points_[1], points_[3] - points_[2])) / lengths[1] / lengths[2],
+        qAbs(GeometryHelper::dotProduct(points_[3] - points_[2], points_[0] - points_[3])) / lengths[2] / lengths[3],
+        qAbs(GeometryHelper::dotProduct(points_[0] - points_[3], points_[1] - points_[0])) / lengths[3] / lengths[0]
+    };
+    qDebug() << "approxGeometry4 cos() of each angle" << QVector<qreal>(angles.begin(), angles.end());
+    // angles of both side edges (cos())
+    qreal a13 = GeometryHelper::dotProduct(points_[1] - points_[0], points_[3] - points_[2]) / lengths[0] / lengths[2];
+    qreal a24 = GeometryHelper::dotProduct(points_[2] - points_[1], points_[0] - points_[3]) / lengths[3] / lengths[1];
+    qDebug() << "approxGeometry4 angles of both side edges (cos())" << a13 << a24;
+    if (a13 < -0.9 && a24 < -0.9) { // 5.7°
+        // Parallelogram
+        QPointF middle = (points_[0] + points_[2]) / 2;
+        QPointF v01 = points_[1] - points_[0];
+        qreal cos = GeometryHelper::dotProduct(v01, QPointF(1, 0)) / lengths[0];
+        qreal sin = GeometryHelper::dotProduct(v01, QPointF(0, 1)) / lengths[0];
+        QTransform tr(cos, -sin, sin, cos, 0, 0);
+        QPointF p0 = tr.map(points_[0] - middle) + middle;
+        QPointF p2 = middle * 2 - p0;
+        rotate_ = -GeometryHelper::angle(v01);
+        if (std::accumulate(angles.begin(), angles.end(), 0.0, maximun) < 0.15) { // 8.6°
+            // Rectangle
+            if (smallRatio(lengths[0] + lengths[2], lengths[1] + lengths[3]) > 0.9) {
+                return new Square(p0, p2);
+            }
+            return new Rectangle(p0, p2);
+        } else {
+            if (smallRatio(lengths[0], lengths[1]) > 0.9) {
+                QPointF v31 = points_[1] - points_[3];
+                qreal length = GeometryHelper::length(v31);
+                qreal cos = GeometryHelper::dotProduct(v31, QPointF(1, 0)) / length;
+                qreal sin = GeometryHelper::dotProduct(v31, QPointF(0, 1)) / length;
+                QTransform tr(cos, -sin, sin, cos, 0, 0);
+                QPointF p0 = tr.map(points_[0] - middle) + middle;
+                QPointF p1 = tr.map(points_[1] - middle) + middle;
+                rotate_ = -GeometryHelper::angle(v31);
+                return new Diamond(p0, p1);
+            }
+            QPointF p1 = tr.map(points_[1] - middle) + middle;
+            return new Parallelogram(p0, p1, p2);
+        }
+    } else if (a13 < -0.9 || a24 < -0.9) { // 5.7°
+        // Trapezoid
+        QPointF v = (a13 < -0.9) ? points_[1] - points_[0] : points_[2] - points_[1];
+        qreal length = (a13 < -0.9) ? lengths[0] : lengths[1];
+        qreal cos = GeometryHelper::dotProduct(v, QPointF(1, 0)) / length;
+        qreal sin = GeometryHelper::dotProduct(v, QPointF(0, 1)) / length;
+        QTransform tr(cos, -sin, sin, cos, 0, 0);
+        rotate_ = -GeometryHelper::angle(v);
+        qreal const * amin = nullptr;
+        amin = std::accumulate(angles.begin(), angles.end(), amin, [](auto min, qreal const & a) {
+            return (min == nullptr || a < *min) ? &a : min;
+        });
+        int idx = amin - &angles.front();
+        int idx2 = (a13 < -0.9) ? (idx ^ 1) : 3 - idx;
+        // RightTrapezoid
+        if (*amin < 0.1 && angles[idx2] < 0.1) { // 5.7°
+            qreal l13 = GeometryHelper::length(points_[2] - points_[0]);
+            qreal l24 = GeometryHelper::length(points_[3] - points_[1]);
+            QPointF middle = l13 < l24 ? (points_[3] + points_[1]) / 2 : (points_[2] + points_[0]) / 2;
+            if (idx == 3 || idx2 == 3) {
+                QPointF p1 = tr.map(points_[1] - middle) + middle;
+                QPointF p2 = tr.map(points_[2] - middle) + middle;
+                if (a13 < -0.9) {
+                    QPointF p0 = tr.map(points_[0] - middle) + middle;
+                    p1.setY(p0.y());
+                    return new RightTrapezoid(p0, p1, p2);
+                } else {
+                    p2.setY(p1.y());
+                    QPointF p3 = tr.map(points_[3] - middle) + middle;
+                    return new RightTrapezoid(p1, p2, p3);
+                }
+            } else {
+                QPointF p3 = tr.map(points_[3] - middle) + middle;
+                QPointF p0 = tr.map(points_[0] - middle) + middle;
+                if (a13 < -0.9) {
+                    QPointF p2 = tr.map(points_[2] - middle) + middle;
+                    p3.setY(p2.y());
+                    return new RightTrapezoid(p2, p3, p0);
+                } else {
+                    p0.setY(p3.y());
+                    QPointF p1 = tr.map(points_[1] - middle) + middle;
+                    return new RightTrapezoid(p3, p0, p1);
+                }
+            }
+        }
+        qreal ratio = (a13 < -0.9) ? smallRatio(lengths[1], lengths[3]) : smallRatio(lengths[0], lengths[2]);
+        // IsopopeTrapezoid
+        if (ratio > 0.9) {
+            QPointF middle = std::accumulate(points_.begin(), points_.end(), QPointF{0, 0}) / 4;
+            QPointF p1 = tr.map(points_[1] - middle) + middle;
+            QPointF p2 = tr.map(points_[2] - middle) + middle;
+            if (a13 < -0.9) {
+                QPointF p0 = tr.map(points_[0] - middle) + middle;
+                return new IsopopeTrapezoid(p0, p1, p2);
+            } else {
+                QPointF p3 = tr.map(points_[3] - middle) + middle;
+                return new IsopopeTrapezoid(p1, p2, p3);
+            }
+        }
+        rotate_ = 0;
     }
     return nullptr;
 }

@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE Diamond(Diamond const & o);
 
+    Diamond(QPointF const & vec1, QPointF const & vec2);
+
 public:
     virtual int pointCount() override;
 

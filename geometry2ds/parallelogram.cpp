@@ -11,9 +11,14 @@ Parallelogram::Parallelogram(Parallelogram const & o)
 {
 }
 
+Parallelogram::Parallelogram(const QPointF &vec1, const QPointF &vec2, const QPointF &vec3)
+    : Trapezoid(vec1, vec2, vec3)
+{
+}
+
 QPointF Parallelogram::point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3)
 {
-    return QPointF(pt1.x() + pt3.x() - pt2.x(), pt3.y());
+    return pt1 + pt3 - pt2;
 }
 
 bool Parallelogram::setPoint(int index, const QPointF &pt)

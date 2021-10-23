@@ -11,6 +11,16 @@ Trapezoid::Trapezoid(Trapezoid const & o)
 {
 }
 
+Trapezoid::Trapezoid(const QPointF &vec1, const QPointF &vec2)
+    : Polygon({vec1, vec2})
+{
+}
+
+Trapezoid::Trapezoid(const QPointF &vec1, const QPointF &vec2, const QPointF &vec3)
+    : Polygon({vec1, vec3, vec2})
+{
+}
+
 static const qreal SQRT3W = 173.20508075688772935274463415059;
 
 static QVector<QPointF> dirs = {

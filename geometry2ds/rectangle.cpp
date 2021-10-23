@@ -10,6 +10,11 @@ Rectangle::Rectangle(Rectangle const & o)
 {
 }
 
+Rectangle::Rectangle(const QPointF &vec1, const QPointF &vec2)
+    : Polygon({vec1, vec2})
+{
+}
+
 int Rectangle::pointCount()
 {
     return points_.size() == 2 ? 4 : 1;

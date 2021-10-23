@@ -11,6 +11,11 @@ IsopopeTrapezoid::IsopopeTrapezoid(IsopopeTrapezoid const & o)
 {
 }
 
+IsopopeTrapezoid::IsopopeTrapezoid(const QPointF &vec1, const QPointF &vec2, const QPointF &vec3)
+    : Trapezoid(vec1, vec2, vec3)
+{
+}
+
 QPointF IsopopeTrapezoid::point4(QPointF const & pt1, QPointF const & pt2, QPointF const & pt3)
 {
     return QPointF(pt1.x() + pt2.x() - pt3.x(), pt3.y());

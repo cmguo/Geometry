@@ -18,6 +18,8 @@ public:
 private:
     Geometry * approxGeometry3();
 
+    Geometry * approxGeometry4();
+
 private:
     static void RamerDouglasPeucker(const QVector<QPointF> &pointList, qreal epsilon, QVector<QPointF> &out);
 

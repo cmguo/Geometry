@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE Square(Square const & o);
 
+    Square(QPointF const & vec1, QPointF const & vec2);
+
 public:
     virtual void movePoint(QPointF const & pt) override;
 

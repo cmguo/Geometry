@@ -11,6 +11,10 @@ public:
 
     Trapezoid(Trapezoid const & o);
 
+    Trapezoid(QPointF const & vec1, QPointF const & vec2);
+
+    Trapezoid(QPointF const & vec1, QPointF const & vec2, QPointF const & vec3);
+
 public:
     virtual void movePoint(QPointF const & pt) override;
 
