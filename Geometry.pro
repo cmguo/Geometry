@@ -42,6 +42,7 @@ include(base/base.pri)
 include(geometry2ds/geometry2ds.pri)
 include(geometry3ds/geometry3ds.pri)
 include(rulers/rulers.pri)
+include(algorithm/algorithm.pri)
 
 includes.files = $$PWD/*.h
 win32 {

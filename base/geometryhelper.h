@@ -41,7 +41,7 @@ public slots:
 
     static QPainterPath toRoundPolygon(QPolygonF const & polygon, QVector<qreal> const & radiuses);
 
-    static void * approxGeometryBegin(qreal epsilon);
+    static void * approxGeometryBegin(qreal epsilon = 0);
 
     static bool approxGeometryAddPoints(void * context, QVector<QPointF> pts);
 
