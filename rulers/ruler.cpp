@@ -70,7 +70,7 @@ QVector<QPointF> Ruler::tickMarkPoints(QPointF const & from, QPointF const & to,
             l = 2;
         }
         QPointF end = cur + scale * l;
-        if ((flags & ClipByShape) && l > 0 && !shape_.contains(end))
+        if ((flags & ClipByShape) && l > 0 && !shape1_.contains(end) && !shape2_.contains(end))
             break;
         points.append(cur);
         points.append(end);
@@ -80,6 +80,7 @@ QVector<QPointF> Ruler::tickMarkPoints(QPointF const & from, QPointF const & to,
     return points;
 }
 
+// Ticks with length 2, 3, 4 Units
 void Ruler::drawTickMarks(QPainter *painter, const QPointF &from, const QPointF &to, int flags)
 {
     if (flags & NeedRotate) {
@@ -92,10 +93,13 @@ void Ruler::drawTickMarks(QPainter *painter, const QPointF &from, const QPointF 
             QTransform o = painter->transform();
             painter->setTransform(t, true);
             if (flags & ClipByShape) {
-                QPainterPath shape = shape_;
-                shape_ = t2.map(shape);
+                QPainterPath shape1 = shape1_;
+                shape1_ = t2.map(shape1);
+                QPainterPath shape2 = shape2_;
+                shape2_ = t2.map(shape2);
                 drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
-                shape_ = shape;
+                shape2_ = shape2;
+                shape1_ = shape1;
             } else {
                 drawTickMarks(painter, {0, 0}, t2.map(to), flags & ~NeedRotate);
             }
@@ -114,7 +118,7 @@ void Ruler::drawTickMarks(QPainter *painter, const QPointF &from, const QPointF 
             QString mark = QString::number(i / 20);
             QRectF txtRect = GeometryHelper::textRect(
                         mark, marks[i + 1], alignment);
-            if (!shape_.contains(txtRect))
+            if (!shape2_.contains(txtRect))
                 break;
             painter->drawText(txtRect, mark);
         }

@@ -46,6 +46,7 @@ void TriangleRuler::updateShape()
     qreal ratio1 = isosceles_ ? (SQRT2_2 * 2 + 1.0) : (SQRT3_2 * 2);
     qreal ratio2 = isosceles_ ? (SQRT2_2 * 2 + 1.0) : (SQRT3_2 * 2 + 2.0);
     shape_ = QPainterPath();
+    // Countor shape
     shape_.addPolygon(QVector<QPointF>{
         {0, 0},
         {0, height_},
@@ -53,6 +54,7 @@ void TriangleRuler::updateShape()
     });
     qreal offset = Unit * 3;
     shape1_ = QPainterPath();
+    // Tick outer border, offset 3 Units
     shape1_.addPolygon(QVector<QPointF>{
         {offset, offset * ratio1},
         {offset, height_ - offset},
@@ -60,6 +62,7 @@ void TriangleRuler::updateShape()
     });
     offset += Unit * 3;
     shape2_ = QPainterPath();
+    // Tick inner border, offset 3 Units
     shape2_.addPolygon(QVector<QPointF>{
         {offset, offset * ratio1},
         {offset, height_ - offset},
@@ -71,6 +74,7 @@ void TriangleRuler::updateShape()
 void TriangleRuler::onDraw(QPainter *painter)
 {
     qreal offset = Unit * 3;
+    // Bottom tick line, offset 3 Units
     drawTickMarks(painter, {offset, height_ - offset}, {offset, offset},
                   CrossLittenEndian | NeedRotate | ClipByShape);
     drawTickMarks(painter, {offset, height_ - offset}, {width_ - offset, height_ - offset},
