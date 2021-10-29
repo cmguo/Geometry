@@ -113,6 +113,15 @@ void GeometryItem::setColor(const QColor & color)
     //editItem_->setBrush(QBrush(pen.color()));
 }
 
+void GeometryItem::setPenWidth(qreal width)
+{
+#ifdef SHOWBOARD_QUICK
+    (void) color;
+#else
+    QGraphicsPathItem::setPen(QPen(Qt::black, width));
+#endif
+}
+
 void GeometryItem::setContourPath(const QPainterPath &path)
 {
 #ifdef SHOWBOARD_QUICK

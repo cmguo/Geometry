@@ -48,9 +48,9 @@ protected:
 
     virtual void select(bool selected) override;
 
-protected:
-    void setColor(const QColor & color);
+    virtual void captureTo(const QString &file) override;
 
+protected:
     // update new path to item
     //  also update edit points when editing
     void updateGeometry();

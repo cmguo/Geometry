@@ -32,6 +32,8 @@ public:
 
     void setColor(const QColor & color);
 
+    void setPenWidth(qreal width);
+
     void setContourPath(const QPainterPath & path);
 
 private:

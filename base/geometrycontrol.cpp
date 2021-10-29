@@ -11,6 +11,7 @@
 #include <views/whitecanvas.h>
 #include <views/itemselector.h>
 #include <quick/quickhelper.h>
+#include <QtSvg/QSvgGenerator>
 
 #include <QFile>
 #include <QGraphicsItem>
@@ -19,6 +20,7 @@
 #include <QPen>
 #include <QQuickWidget>
 #include <QQuickItem>
+#include <QPainter>
 
 #include <float.h>
 
@@ -179,7 +181,9 @@ void GeometryControl::test()
 void GeometryControl::updateSettings()
 {
     Geometry * geometry = qobject_cast<Geometry *>(res_);
-    setColor(geometry->color());
+    GeometryItem * item = static_cast<GeometryItem *>(item_);
+    item->setColor(geometry->color());
+    item->setPenWidth(geometry->width());
 }
 
 void GeometryControl::geometryChanged(const QByteArray &key)
@@ -211,10 +215,29 @@ void GeometryControl::select(bool selected)
     Control::select(selected);
 }
 
-void GeometryControl::setColor(const QColor & color)
+void GeometryControl::captureTo(const QString &file)
 {
-    GeometryItem * item = static_cast<GeometryItem *>(item_);
-    item->setColor(color);
+    if (file.endsWith(".svg")) {
+        QSvgGenerator svg;
+        svg.setFileName(file);
+        svg.setTitle("Snapshot");
+        svg.setDescription("Geometry SVG");
+        GeometryItem * item = static_cast<GeometryItem *>(item_);
+        Geometry * geometry = qobject_cast<Geometry *>(res_);
+        QRect rect = item->boundingRect().toAlignedRect();
+        svg.setSize(rect.size());
+        svg.setViewBox(QRect(QPoint(), rect.size()));
+        QPainter painter(&svg);
+        painter.setPen(QPen(geometry->color(), geometry->width(), Qt::SolidLine, Qt::RoundCap));
+        painter.setTransform(QTransform::fromTranslate(rect.width() * 0.5, rect.height() * 0.5));
+        painter.drawPath(geometry->graphPath());
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(geometry->color());
+        painter.drawPath(geometry->textPath());
+        painter.end();
+        return;
+    }
+    Control::captureTo(file);
 }
 
 void GeometryControl::updateGeometry()

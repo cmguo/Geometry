@@ -206,7 +206,7 @@ Geometry *ApproxGeometry::approxGeometry4()
     qreal a13 = GeometryHelper::dotProduct(points_[1] - points_[0], points_[3] - points_[2]) / lengths[1] / lengths[3];
     qreal a20 = GeometryHelper::dotProduct(points_[2] - points_[1], points_[0] - points_[3]) / lengths[2] / lengths[0];
     qDebug() << "approxGeometry4 angles of both side edges (cos())" << a13 << a20;
-    if (a13 < -0.95 && a20 < -0.95) { // 2.9°
+    if (a13 < -0.98 && a20 < -0.98) { // 11.5°
         // Parallelogram
         QPointF middle = (points_[0] + points_[2]) / 2;
         QPointF v01 = points_[1] - points_[0];
@@ -237,7 +237,7 @@ Geometry *ApproxGeometry::approxGeometry4()
             QPointF p1 = tr.map(points_[1] - middle) + middle;
             return new Parallelogram(p0, p1, p2);
         }
-    } else if (a13 < -0.95 || a20 < -0.95) { // 2.9°
+    } else if (a13 < -0.98 || a20 < -0.98) { // 11.5°
         // Trapezoid
         QPointF v = (a13 < -0.9) ? points_[1] - points_[0] : points_[2] - points_[1];
         qreal length = (a13 < -0.9) ? lengths[1] : lengths[2];
